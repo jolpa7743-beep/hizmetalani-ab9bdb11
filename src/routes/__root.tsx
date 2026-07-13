@@ -126,66 +126,35 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       meta.push({ name: "google-site-verification", content: s.search_console_verification });
     }
 
-    const links = [
+    const links: Array<Record<string, string>> = [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "anonymous" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" },
     ];
 
-    const scripts: Array<Record<string, string>> = [];
-    // Organization + WebSite JSON-LD
+    const scripts: Array<Record<string, string | boolean>> = [];
     scripts.push({
       type: "application/ld+json",
       children: JSON.stringify({
         "@context": "https://schema.org",
         "@graph": [
-          {
-            "@type": "Organization",
-            name: s?.site_name ?? "hizmetalanı.com",
-            description,
-            email: s?.contact_email,
-            telephone: s?.contact_phone ?? undefined,
-          },
-          {
-            "@type": "WebSite",
-            name: s?.site_name ?? "hizmetalanı.com",
-            potentialAction: {
-              "@type": "SearchAction",
-              target: "/?q={search_term_string}",
-              "query-input": "required name=search_term_string",
-            },
-          },
+          { "@type": "Organization", name: s?.site_name ?? "hizmetalanı.com", description, email: s?.contact_email ?? undefined, telephone: s?.contact_phone ?? undefined },
+          { "@type": "WebSite", name: s?.site_name ?? "hizmetalanı.com", potentialAction: { "@type": "SearchAction", target: "/?q={search_term_string}", "query-input": "required name=search_term_string" } },
         ],
       }),
     });
-    // Google Analytics
     if (s?.ga_measurement_id) {
-      scripts.push({
-        src: `https://www.googletagmanager.com/gtag/js?id=${s.ga_measurement_id}`,
-        async: "true",
-      });
-      scripts.push({
-        children: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${s.ga_measurement_id}');`,
-      });
+      scripts.push({ src: `https://www.googletagmanager.com/gtag/js?id=${s.ga_measurement_id}`, async: true });
+      scripts.push({ children: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${s.ga_measurement_id}');` });
     }
-    // AdSense
     if (s?.adsense_publisher_id) {
-      scripts.push({
-        src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${s.adsense_publisher_id}`,
-        async: "true",
-        crossOrigin: "anonymous",
-      });
+      scripts.push({ src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${s.adsense_publisher_id}`, async: true, crossorigin: "anonymous" });
     }
-    return { meta, links, scripts } as unknown as { meta: unknown[]; links: unknown[]; scripts: unknown[] };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return { meta: meta as any, links: links as any, scripts: scripts as any };
   },
-  // Widen head return to bypass strict DOM prop typing (crossOrigin/async as strings).
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-} as any);
-type _keep = typeof Route;
-const _noop = ((): unknown => {
-  return;
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
