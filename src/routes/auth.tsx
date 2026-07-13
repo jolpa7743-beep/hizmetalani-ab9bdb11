@@ -126,16 +126,18 @@ function AuthPage() {
 
   const onGoogle = async () => {
     setLoading("google");
+    setSubmitError(null);
     const result = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: window.location.origin,
     });
     if (result.error) {
-      toast.error("Google ile giriş başarısız oldu");
+      const msg = translateAuthError(result.error);
+      toast.error(msg);
+      setSubmitError(msg);
       setLoading(null);
       return;
     }
     if (!result.redirected) {
-      // Session set in-place (popup flow)
       toast.success("Giriş başarılı!");
     }
   };
@@ -204,25 +206,83 @@ function AuthPage() {
                     type="email"
                     autoComplete="email"
                     value={form.email}
-                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    onChange={(e) => { setForm({ ...form, email: e.target.value }); setSubmitError(null); }}
                     placeholder="ornek@eposta.com"
                     required
+                    aria-invalid={!!emailError}
+                    aria-describedby={emailError ? "email-error" : undefined}
+                    className={emailError ? "border-destructive focus-visible:ring-destructive/40" : ""}
                   />
+                  {emailError && (
+                    <p id="email-error" className="mt-1 text-xs text-destructive flex items-center gap-1">
+                      <AlertCircle className="size-3" /> {emailError}
+                    </p>
+                  )}
                 </div>
                 <div>
-                  <Label htmlFor="password">Şifre</Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    autoComplete={tab === "signup" ? "new-password" : "current-password"}
-                    value={form.password}
-                    onChange={(e) => setForm({ ...form, password: e.target.value })}
-                    placeholder="En az 6 karakter"
-                    required
-                    minLength={6}
-                  />
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="password">Şifre</Label>
+                    {tab === "signup" && form.password && !passwordError && (
+                      <span className="text-[11px] text-muted-foreground flex items-center gap-1">
+                        <CheckCircle2 className="size-3 text-emerald-600" /> {passwordStrength.label}
+                      </span>
+                    )}
+                  </div>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      autoComplete={tab === "signup" ? "new-password" : "current-password"}
+                      value={form.password}
+                      onChange={(e) => { setForm({ ...form, password: e.target.value }); setSubmitError(null); }}
+                      placeholder="En az 6 karakter"
+                      required
+                      minLength={6}
+                      maxLength={72}
+                      aria-invalid={!!passwordError}
+                      aria-describedby={passwordError ? "password-error" : undefined}
+                      className={`pr-10 ${passwordError ? "border-destructive focus-visible:ring-destructive/40" : ""}`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((v) => !v)}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-muted-foreground hover:text-foreground rounded"
+                      aria-label={showPassword ? "Şifreyi gizle" : "Şifreyi göster"}
+                      tabIndex={-1}
+                    >
+                      {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                    </button>
+                  </div>
+                  {passwordError ? (
+                    <p id="password-error" className="mt-1 text-xs text-destructive flex items-center gap-1">
+                      <AlertCircle className="size-3" /> {passwordError}
+                    </p>
+                  ) : tab === "signup" && form.password ? (
+                    <div className="mt-1.5 flex gap-1" aria-hidden>
+                      {[0, 1, 2].map((i) => (
+                        <div
+                          key={i}
+                          className={`h-1 flex-1 rounded-full transition-colors ${
+                            i < passwordStrength.score ? passwordStrength.color : "bg-muted"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  ) : null}
                 </div>
-                <Button type="submit" disabled={loading !== null} className="w-full h-11 bg-brand hover:bg-brand/90">
+
+                {submitError && (
+                  <Alert variant="destructive" className="py-2">
+                    <AlertCircle className="size-4" />
+                    <AlertDescription className="text-sm">{submitError}</AlertDescription>
+                  </Alert>
+                )}
+
+                <Button
+                  type="submit"
+                  disabled={loading !== null || !!emailError || !!passwordError || !form.email || !form.password}
+                  className="w-full h-11 bg-brand hover:bg-brand/90"
+                >
                   {loading === "email" && <Loader2 className="size-4 mr-2 animate-spin" />}
                   {tab === "signup" ? "Ücretsiz Üye Ol" : "Giriş Yap"}
                 </Button>
