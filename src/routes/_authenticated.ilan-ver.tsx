@@ -260,21 +260,34 @@ function NewListing() {
               </div>
             </div>
 
-            {/* Müsait Günler */}
+            {/* Çalışma / İzin Günleri */}
             <div>
-              <Label>Müsait / İzinli Günler</Label>
+              <Label>Çalışma ve İzin Günleri</Label>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Bir güne tıklayın: 1. tık <span className="text-brand font-medium">mavi = çalışma günü</span>, 2. tık <span className="text-emerald-600 font-medium">yeşil = izinli gün</span>, 3. tık boşaltır.
+              </p>
               <div className="mt-2 flex flex-wrap gap-2">
                 {DAYS.map((d) => {
-                  const active = form.available_days.includes(d);
+                  const s = dayState(d);
+                  const cls =
+                    s === "work"
+                      ? "bg-brand text-brand-foreground border-brand"
+                      : s === "off"
+                      ? "bg-emerald-500 text-white border-emerald-500"
+                      : "border-border hover:bg-muted";
                   return (
-                    <button type="button" key={d} onClick={() => toggleDay(d)}
-                      className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${active ? "bg-brand text-brand-foreground border-brand" : "border-border hover:bg-muted"}`}>
+                    <button type="button" key={d} onClick={() => cycleDay(d)}
+                      className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${cls}`}
+                      aria-label={`${d} - ${s === "work" ? "çalışma günü" : s === "off" ? "izinli" : "seçili değil"}`}>
                       {d}
                     </button>
                   );
                 })}
               </div>
-              <p className="mt-1 text-xs text-muted-foreground">Çalışabileceğiniz veya izinli olduğunuz günleri seçebilirsiniz.</p>
+              <div className="mt-2 flex flex-wrap gap-3 text-xs text-muted-foreground">
+                <span className="inline-flex items-center gap-1.5"><span className="size-3 rounded-full bg-brand" /> Çalışma günü</span>
+                <span className="inline-flex items-center gap-1.5"><span className="size-3 rounded-full bg-emerald-500" /> İzinli gün</span>
+              </div>
             </div>
 
             {/* Saatler */}
