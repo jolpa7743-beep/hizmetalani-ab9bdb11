@@ -312,7 +312,7 @@ function ListingDetail() {
               ) : (
                 <div className="mt-6">
                   <h2 className="font-semibold mb-2">Çalışma / İzin Günleri</h2>
-                  <p className="text-sm text-muted-foreground">{NEG}</p>
+                  <p className="text-sm text-muted-foreground italic">{EMPTY.days}</p>
                 </div>
               )}
 
