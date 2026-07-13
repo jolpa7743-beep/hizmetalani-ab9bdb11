@@ -54,7 +54,7 @@ function HomePage() {
   });
 
   const setParam = (key: string, val: string | undefined) => {
-    navigate({ search: (prev) => ({ ...prev, [key]: val || undefined }) });
+    navigate({ search: (prev: Record<string, string | undefined>) => ({ ...prev, [key]: val || undefined }) });
   };
 
   return (
