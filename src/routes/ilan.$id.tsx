@@ -206,24 +206,7 @@ function ListingDetail() {
   const navigate = useNavigate();
   const [authDialog, setAuthDialog] = useState(false);
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["listing", id],
-    queryFn: async () => {
-      const { data: listing, error } = await supabase
-        .from("listings")
-        .select("id,user_id,title,description,type,category,city,district,price,price_type,created_at,view_count,work_type,available_days,off_days,available_hours,salary_min,salary_max,salary_period,experience_years,education_level,requirements,benefits,is_remote,is_urgent")
-        .eq("id", id)
-        .maybeSingle();
-      if (error) throw error;
-      if (!listing) return null;
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("full_name,avatar_url,is_verified,city,district")
-        .eq("id", listing.user_id)
-        .maybeSingle();
-      return { listing: listing as unknown as Listing, profile: (profile ?? null) as Profile | null };
-    },
-  });
+  const { data, isLoading, error } = useQuery(listingQueryOptions(id));
 
   useEffect(() => {
     supabase.rpc("increment_listing_view", { _id: id }).then(() => {});
