@@ -100,6 +100,9 @@ export function AppHeader() {
                   <DropdownMenuItem onClick={() => navigate({ to: "/mesajlar" })}>
                     <MessageSquare className="size-4 mr-2" aria-hidden /> Mesajlarım
                   </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate({ to: "/destek" })}>
+                    <LifeBuoy className="size-4 mr-2" aria-hidden /> Destek
+                  </DropdownMenuItem>
                   {isAdmin && (
                     <>
                       <DropdownMenuSeparator />
