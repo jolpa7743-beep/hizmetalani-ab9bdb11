@@ -29,6 +29,7 @@ type Listing = {
   price: number | null;
   price_type: string;
   created_at: string;
+  view_count: number;
   profiles: { full_name: string | null; avatar_url: string | null; is_verified: boolean; city: string | null } | null;
 };
 
@@ -42,13 +43,18 @@ function ListingDetail() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("listings")
-        .select("id,user_id,title,description,type,category,city,district,price,price_type,created_at, profiles(full_name,avatar_url,is_verified,city)")
+        .select("id,user_id,title,description,type,category,city,district,price,price_type,created_at,view_count, profiles(full_name,avatar_url,is_verified,city)")
         .eq("id", id)
         .maybeSingle();
       if (error) throw error;
       return data as unknown as Listing | null;
     },
   });
+
+  // Görüntülenme sayısını artır (popülerliğe göre sıralama için)
+  useEffect(() => {
+    supabase.rpc("increment_listing_view", { _id: id }).then(() => {});
+  }, [id]);
 
   const contactSeller = async () => {
     if (!user) {
