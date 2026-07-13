@@ -1,12 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { CATEGORY_MAP, TYPE_LABEL, formatPrice, type CategoryKey, type ListingType } from "@/lib/categories";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { MapPin, Clock, ShieldCheck, MessageSquare, ArrowLeft } from "lucide-react";
+import { MapPin, Clock, ShieldCheck, MessageSquare, ArrowLeft, Eye } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/ilan/$id")({
@@ -28,6 +29,7 @@ type Listing = {
   price: number | null;
   price_type: string;
   created_at: string;
+  view_count: number;
   profiles: { full_name: string | null; avatar_url: string | null; is_verified: boolean; city: string | null } | null;
 };
 
@@ -41,13 +43,18 @@ function ListingDetail() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("listings")
-        .select("id,user_id,title,description,type,category,city,district,price,price_type,created_at, profiles(full_name,avatar_url,is_verified,city)")
+        .select("id,user_id,title,description,type,category,city,district,price,price_type,created_at,view_count, profiles(full_name,avatar_url,is_verified,city)")
         .eq("id", id)
         .maybeSingle();
       if (error) throw error;
       return data as unknown as Listing | null;
     },
   });
+
+  // Görüntülenme sayısını artır (popülerliğe göre sıralama için)
+  useEffect(() => {
+    supabase.rpc("increment_listing_view", { _id: id }).then(() => {});
+  }, [id]);
 
   const contactSeller = async () => {
     if (!user) {
@@ -120,6 +127,9 @@ function ListingDetail() {
                 </span>
                 <span className="inline-flex items-center gap-1">
                   <Clock className="size-4" /> {new Date(data.created_at).toLocaleDateString("tr-TR")}
+                </span>
+                <span className="inline-flex items-center gap-1">
+                  <Eye className="size-4" /> {data.view_count} görüntülenme
                 </span>
               </div>
               <div className="mt-4 text-3xl font-bold text-brand">
