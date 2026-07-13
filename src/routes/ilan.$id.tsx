@@ -17,7 +17,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { MapPin, Clock, ShieldCheck, MessageSquare, ArrowLeft, Eye, Tag, Building2, User as UserIcon } from "lucide-react";
+import { MapPin, Clock, ShieldCheck, MessageSquare, ArrowLeft, Eye, Tag, Building2, User as UserIcon, ShieldAlert, Search } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/ilan/$id")({
