@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_logs: {
+        Row: {
+          context: Json | null
+          created_at: string
+          id: string
+          level: string
+          message: string
+          source: string
+          url: string | null
+          user_id: string | null
+        }
+        Insert: {
+          context?: Json | null
+          created_at?: string
+          id?: string
+          level?: string
+          message: string
+          source?: string
+          url?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          context?: Json | null
+          created_at?: string
+          id?: string
+          level?: string
+          message?: string
+          source?: string
+          url?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       conversations: {
         Row: {
           created_at: string
@@ -206,6 +239,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_get_user_id_by_email: { Args: { _email: string }; Returns: string }
       admin_list_users: { Args: never; Returns: Json }
       has_role: {
         Args: {
