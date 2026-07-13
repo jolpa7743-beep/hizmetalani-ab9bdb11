@@ -17,16 +17,60 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Loader2, X, Plus } from "lucide-react";
 
-const schema = z.object({
-  type: z.enum(["offering", "seeking"]),
-  category: z.string().min(1, "Kategori seçin"),
-  title: z.string().trim().min(3, "Başlık en az 3 karakter").max(120),
-  description: z.string().trim().min(10, "Açıklama en az 10 karakter").max(5000),
-  city: z.string().trim().min(1, "İl seçin"),
-  district: z.string().trim().max(60).optional(),
-  price: z.string().optional(),
-  price_type: z.enum(["hourly", "daily", "monthly", "job", "negotiable"]),
-});
+const schema = z
+  .object({
+    type: z.enum(["offering", "seeking"], { errorMap: () => ({ message: "İlan tipini seçin" }) }),
+    category: z.string().min(1, "Kategori seçin"),
+    title: z
+      .string()
+      .trim()
+      .min(3, "Başlık en az 3 karakter olmalı")
+      .max(120, "Başlık en fazla 120 karakter olabilir"),
+    description: z
+      .string()
+      .trim()
+      .min(10, "Açıklama en az 10 karakter olmalı")
+      .max(5000, "Açıklama en fazla 5000 karakter olabilir"),
+    city: z.string().trim().min(1, "İl seçin"),
+    district: z.string().trim().max(60).optional().or(z.literal("")),
+    price: z
+      .string()
+      .optional()
+      .refine((v) => !v || /^\d+(\.\d+)?$/.test(v), "Ücret sadece rakam olmalı"),
+    price_type: z.enum(["hourly", "daily", "monthly", "job", "negotiable"]),
+    salary_min: z
+      .string()
+      .optional()
+      .refine((v) => !v || /^\d+$/.test(v), "Maaş sadece rakam olmalı"),
+    salary_max: z
+      .string()
+      .optional()
+      .refine((v) => !v || /^\d+$/.test(v), "Maaş sadece rakam olmalı"),
+    experience_years: z
+      .string()
+      .optional()
+      .refine((v) => !v || (/^\d+$/.test(v) && +v <= 60), "0-60 yıl arası olmalı"),
+    hours_start: z.string().optional(),
+    hours_end: z.string().optional(),
+  })
+  .superRefine((v, ctx) => {
+    if (v.salary_min && v.salary_max && Number(v.salary_max) < Number(v.salary_min)) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["salary_max"],
+        message: "Maks. maaş, min. maaştan küçük olamaz",
+      });
+    }
+    if (v.hours_start && v.hours_end && v.hours_end <= v.hours_start) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["hours_end"],
+        message: "Bitiş saati başlangıçtan sonra olmalı",
+      });
+    }
+  });
+
+type FieldErrors = Partial<Record<string, string>>;
 
 export const Route = createFileRoute("/_authenticated/ilan-ver")({
   component: NewListing,
@@ -57,6 +101,11 @@ function NewListing() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState<FieldErrors>({});
+  const setField = <K extends string>(k: K, v: unknown) => {
+    setForm((f) => ({ ...f, [k]: v }));
+    if (errors[k]) setErrors((e) => ({ ...e, [k]: undefined }));
+  };
   const [form, setForm] = useState({
     type: "offering" as ListingType,
     category: "",
@@ -123,7 +172,21 @@ function NewListing() {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const parsed = schema.safeParse(form);
-    if (!parsed.success) return toast.error(parsed.error.issues[0].message);
+    if (!parsed.success) {
+      const fe: FieldErrors = {};
+      for (const iss of parsed.error.issues) {
+        const key = String(iss.path[0] ?? "form");
+        if (!fe[key]) fe[key] = iss.message;
+      }
+      setErrors(fe);
+      toast.error("Lütfen zorunlu alanları doldurun");
+      // ilk hatalı alana kaydır
+      const firstKey = Object.keys(fe)[0];
+      const el = document.querySelector<HTMLElement>(`[data-field="${firstKey}"]`);
+      el?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+    setErrors({});
     if (!user) return;
 
     setSaving(true);
@@ -200,42 +263,58 @@ function NewListing() {
               </RadioGroup>
             </div>
 
-            <div>
+            <div data-field="category">
               <Label htmlFor="category">Kategori *</Label>
-              <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v })}>
-                <SelectTrigger><SelectValue placeholder="Kategori seçin" /></SelectTrigger>
+              <Select value={form.category} onValueChange={(v) => setField("category", v)}>
+                <SelectTrigger className={errors.category ? "border-destructive" : ""}>
+                  <SelectValue placeholder="Kategori seçin" />
+                </SelectTrigger>
                 <SelectContent>
                   {availableCategories.map((c) => (
                     <SelectItem key={c.key} value={c.key}>{c.label}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
+              <FieldError msg={errors.category} />
             </div>
 
-            <div>
+            <div data-field="title">
               <Label htmlFor="title">Başlık *</Label>
               <Input id="title" value={form.title}
-                onChange={(e) => setForm({ ...form, title: e.target.value })}
-                placeholder="ör. Kadıköy'de deneyimli çocuk bakıcısı" maxLength={120} />
-              <div className="mt-1 text-xs text-muted-foreground text-right">{form.title.length}/120</div>
+                onChange={(e) => setField("title", e.target.value)}
+                placeholder="ör. Kadıköy'de deneyimli çocuk bakıcısı" maxLength={120}
+                className={errors.title ? "border-destructive" : ""}
+                aria-invalid={!!errors.title} />
+              <div className="mt-1 flex justify-between text-xs">
+                <FieldError msg={errors.title} />
+                <span className="text-muted-foreground ml-auto">{form.title.length}/120</span>
+              </div>
             </div>
 
-            <div>
+            <div data-field="description">
               <Label htmlFor="description">Açıklama *</Label>
               <Textarea id="description" value={form.description}
-                onChange={(e) => setForm({ ...form, description: e.target.value })}
-                placeholder="Deneyiminiz, çalışma günleriniz, beklentileriniz vb." rows={6} maxLength={5000} />
-              <div className="mt-1 text-xs text-muted-foreground text-right">{form.description.length}/5000</div>
+                onChange={(e) => setField("description", e.target.value)}
+                placeholder="Deneyiminiz, çalışma günleriniz, beklentileriniz vb." rows={6} maxLength={5000}
+                className={errors.description ? "border-destructive" : ""}
+                aria-invalid={!!errors.description} />
+              <div className="mt-1 flex justify-between text-xs">
+                <FieldError msg={errors.description} />
+                <span className="text-muted-foreground ml-auto">{form.description.length}/5000</span>
+              </div>
             </div>
 
-            <IlIlceSelect
-              il={form.city}
-              ilce={form.district}
-              onIlChange={(v) => setForm({ ...form, city: v })}
-              onIlceChange={(v) => setForm({ ...form, district: v })}
-              ilLabel="İl *"
-              required
-            />
+            <div data-field="city">
+              <IlIlceSelect
+                il={form.city}
+                ilce={form.district}
+                onIlChange={(v) => setField("city", v)}
+                onIlceChange={(v) => setField("district", v)}
+                ilLabel="İl *"
+                required
+              />
+              <FieldError msg={errors.city} />
+            </div>
 
             {/* Çalışma Tipi + Uzaktan / Acil */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -292,27 +371,37 @@ function NewListing() {
 
             {/* Saatler */}
             <div className="grid grid-cols-2 gap-4">
-              <div>
+              <div data-field="hours_start">
                 <Label htmlFor="hs">Saat (Başlangıç)</Label>
-                <Input id="hs" type="time" value={form.hours_start} onChange={(e) => setForm({ ...form, hours_start: e.target.value })} />
+                <Input id="hs" type="time" value={form.hours_start}
+                  onChange={(e) => setField("hours_start", e.target.value)}
+                  className={errors.hours_start ? "border-destructive" : ""} />
+                <FieldError msg={errors.hours_start} />
               </div>
-              <div>
+              <div data-field="hours_end">
                 <Label htmlFor="he">Saat (Bitiş)</Label>
-                <Input id="he" type="time" value={form.hours_end} onChange={(e) => setForm({ ...form, hours_end: e.target.value })} />
+                <Input id="he" type="time" value={form.hours_end}
+                  onChange={(e) => setField("hours_end", e.target.value)}
+                  className={errors.hours_end ? "border-destructive" : ""} />
+                <FieldError msg={errors.hours_end} />
               </div>
             </div>
 
             {/* Maaş aralığı */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
+              <div data-field="salary_min">
                 <Label>Maaş Min (₺)</Label>
                 <Input type="number" min={0} value={form.salary_min}
-                  onChange={(e) => setForm({ ...form, salary_min: e.target.value })} placeholder="ör. 15000" />
+                  onChange={(e) => setField("salary_min", e.target.value)} placeholder="ör. 15000"
+                  className={errors.salary_min ? "border-destructive" : ""} />
+                <FieldError msg={errors.salary_min} />
               </div>
-              <div>
+              <div data-field="salary_max">
                 <Label>Maaş Max (₺)</Label>
                 <Input type="number" min={0} value={form.salary_max}
-                  onChange={(e) => setForm({ ...form, salary_max: e.target.value })} placeholder="ör. 25000" />
+                  onChange={(e) => setField("salary_max", e.target.value)} placeholder="ör. 25000"
+                  className={errors.salary_max ? "border-destructive" : ""} />
+                <FieldError msg={errors.salary_max} />
               </div>
               <div>
                 <Label>Maaş Periyodu</Label>
@@ -330,10 +419,12 @@ function NewListing() {
 
             {/* Deneyim + Eğitim */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
+              <div data-field="experience_years">
                 <Label>Deneyim (Yıl)</Label>
                 <Input type="number" min={0} max={60} value={form.experience_years}
-                  onChange={(e) => setForm({ ...form, experience_years: e.target.value })} placeholder="ör. 3" />
+                  onChange={(e) => setField("experience_years", e.target.value)} placeholder="ör. 3"
+                  className={errors.experience_years ? "border-destructive" : ""} />
+                <FieldError msg={errors.experience_years} />
               </div>
               <div>
                 <Label>Eğitim Seviyesi</Label>
@@ -431,3 +522,8 @@ function NewListing() {
   );
 }
 
+
+function FieldError({ msg }: { msg?: string }) {
+  if (!msg) return null;
+  return <p className="mt-1 text-xs text-destructive font-medium">{msg}</p>;
+}
