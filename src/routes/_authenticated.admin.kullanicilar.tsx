@@ -134,11 +134,14 @@ function AdminUsers() {
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1">
                         {isAdmin && <Badge className="bg-brand">Admin</Badge>}
-                        {u.is_verified && (
-                          <Badge className="bg-emerald-600 gap-1">
-                            <BadgeCheck className="size-3" /> Güven Rozeti
-                          </Badge>
-                        )}
+                        {u.trust_level > 0 && (() => {
+                          const meta = trustBadgeMeta(u.trust_level);
+                          return (
+                            <Badge className={`${meta.className} gap-1`}>
+                              <meta.icon className="size-3" /> {meta.label}
+                            </Badge>
+                          );
+                        })()}
                         {u.email_confirmed_at ? (
                           <Badge variant="secondary" className="gap-1">
                             <CheckCircle2 className="size-3" /> Doğrulandı
@@ -154,16 +157,20 @@ function AdminUsers() {
                       {new Date(u.created_at).toLocaleDateString("tr-TR")}
                     </td>
                     <td className="px-4 py-3">
-                      <div className="flex justify-end gap-1">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => onToggleVerified(u.id, u.is_verified)}
-                          title={u.is_verified ? "Güven rozetini kaldır" : "Güven rozeti ver"}
-                          className={u.is_verified ? "text-emerald-600" : ""}
+                      <div className="flex justify-end gap-1 items-center">
+                        <Select
+                          value={String(u.trust_level)}
+                          onValueChange={(v) => onSetTrust(u.id, Number(v))}
                         >
-                          {u.is_verified ? <BadgeX className="size-4" /> : <BadgeCheck className="size-4" />}
-                        </Button>
+                          <SelectTrigger className="h-8 w-[140px]" aria-label="Güven Seviyesi">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {TRUST_LEVELS.map((t) => (
+                              <SelectItem key={t.level} value={String(t.level)}>{t.label}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <Button
                           size="sm"
                           variant="outline"
