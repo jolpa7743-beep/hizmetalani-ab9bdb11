@@ -9,8 +9,8 @@ export function AppFooter() {
         <div className="col-span-2">
           <BrandLogo />
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground max-w-xs">
-            Türkiye'nin ev ve bakım hizmetleri ilan platformu. Bakıcı, temizlikçi ve evcil hayvan
-            geçici yuva ilanlarını güvenle bulun ya da yayınlayın.
+            Türkiye'nin ev ve bakım hizmetleri ilan platformu. Bakıcı, temizlik personeli ve evcil hayvan
+            geçici konaklama ilanlarını güvenle bulun ya da yayınlayın.
           </p>
           <div className="mt-4 flex items-center gap-1">
             <FooterIcon href="#" label="Twitter"><Twitter className="size-5" aria-hidden /></FooterIcon>
@@ -24,8 +24,8 @@ export function AppFooter() {
           <FooterLink to="/" search={{ kategori: "bakici" }}>Bakıcı</FooterLink>
           <FooterLink to="/" search={{ kategori: "ev_temizlik" }}>Ev Temizliği</FooterLink>
           <FooterLink to="/" search={{ kategori: "ofis_temizlik" }}>Ofis Temizliği</FooterLink>
-          <FooterLink to="/" search={{ kategori: "merdiven_temizlik" }}>Merdiven Temizliği</FooterLink>
-          <FooterLink to="/" search={{ kategori: "evcil_yuva_veren" }}>Evcil Yuva</FooterLink>
+          <FooterLink to="/" search={{ kategori: "merdiven_temizlik" }}>Bina Temizliği</FooterLink>
+          <FooterLink to="/" search={{ kategori: "evcil_yuva_veren" }}>Geçici Konaklama</FooterLink>
         </FooterCol>
 
         <FooterCol title="Kurumsal">
