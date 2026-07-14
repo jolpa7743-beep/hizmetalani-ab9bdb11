@@ -62,10 +62,10 @@ function AdminUsers() {
     }
   };
 
-  const onToggleVerified = async (userId: string, verified: boolean) => {
+  const onSetTrust = async (userId: string, level: number) => {
     try {
-      await setVerified({ data: { userId, verified: !verified } });
-      toast.success(verified ? "Güven rozeti kaldırıldı" : "Güven rozeti verildi");
+      await setTrust({ data: { userId, level } });
+      toast.success("Güven seviyesi güncellendi");
       qc.invalidateQueries({ queryKey: ["admin-users"] });
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Hata");
