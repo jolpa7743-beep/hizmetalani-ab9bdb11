@@ -446,11 +446,8 @@ function ListingDetail() {
                 </AvatarFallback>
               </Avatar>
               <div className="min-w-0 flex-1">
-                <div className="font-medium truncate flex items-center gap-1">
+                <div className="font-medium truncate">
                   {profile?.full_name ?? "İlan Sahibi"}
-                  {profile?.is_verified && (
-                    <ShieldCheck className="size-4 text-emerald-600" aria-label="Doğrulanmış üye" />
-                  )}
                 </div>
                 <div className="text-xs text-muted-foreground truncate">
                   {profile?.city ?? listing.city}
@@ -458,11 +455,16 @@ function ListingDetail() {
                 </div>
               </div>
             </div>
-            {profile?.is_verified && (
-              <div className="mt-3 flex items-center gap-1.5 text-xs px-2 py-1.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
-                <BadgeCheck className="size-3.5" /> Bu üyeye güven rozeti verilmiştir
-              </div>
-            )}
+            {(() => {
+              const lvl = profile?.trust_level ?? (profile?.is_verified ? 1 : 0);
+              if (!shouldShowBadge(lvl, badgeVisibility)) return null;
+              const meta = trustBadgeMeta(lvl);
+              return (
+                <div className={`mt-3 inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md ${meta.className}`}>
+                  <meta.icon className="size-3.5" /> {meta.label}
+                </div>
+              );
+            })()}
             {profile?.created_at && (
               <div className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
                 <CalendarDays className="size-3.5" />
