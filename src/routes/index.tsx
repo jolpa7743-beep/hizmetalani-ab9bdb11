@@ -5,6 +5,7 @@ import { z } from "zod";
 import { Search, X, SlidersHorizontal, Filter } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ListingCard, type ListingRow } from "@/components/ListingCard";
+import { AdSlot } from "@/components/AdSlot";
 import { CATEGORIES, type CategoryKey } from "@/lib/categories";
 import { ILLER, getIlceler } from "@/lib/turkiye";
 import { Input } from "@/components/ui/input";
