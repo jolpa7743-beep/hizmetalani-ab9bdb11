@@ -4,7 +4,7 @@ const PAGES: Record<string, { title: string; body: string }> = {
   hakkimizda: {
     title: "Hakkımızda",
     body:
-      "hizmetalanı.com; bakıcı, ev/ofis/merdiven temizliği ve evcil hayvan geçici yuva ihtiyaçlarını " +
+      "hizmetalanı.com; bakıcı, ev/ofis/bina temizliği ve evcil hayvan geçici konaklama ihtiyaçlarını " +
       "bir araya getiren Türkiye merkezli bir ilan platformudur. Hem hizmet arayanların hem de " +
       "hizmet verenlerin güvenle buluşmasını amaçlıyoruz.",
   },
