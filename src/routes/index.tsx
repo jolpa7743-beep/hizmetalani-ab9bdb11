@@ -86,6 +86,15 @@ function HomePage() {
     },
   });
 
+  const fetchStats = useServerFn(getOwnerStatsBulk);
+  const ownerIds = Array.from(new Set((listings ?? []).map((l) => l.user_id).filter((x): x is string => !!x)));
+  const { data: ownerStats } = useQuery({
+    queryKey: ["owner-stats", ownerIds.slice().sort().join(",")],
+    queryFn: () => fetchStats({ data: { userIds: ownerIds } }),
+    enabled: ownerIds.length > 0,
+    staleTime: 60_000,
+  });
+
   const setParam = (key: string, val: string | undefined) => {
     navigate({ search: (prev: Record<string, string | undefined>) => ({ ...prev, [key]: val || undefined }) });
   };
