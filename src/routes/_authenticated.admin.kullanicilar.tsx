@@ -27,7 +27,7 @@ function AdminUsers() {
   const fetchUsers = useServerFn(adminListUsers);
   const toggleRole = useServerFn(adminToggleRole);
   const deleteUser = useServerFn(adminDeleteUser);
-  const setVerified = useServerFn(adminSetVerified);
+  const setTrust = useServerFn(adminSetTrustLevel);
   const qc = useQueryClient();
   const [q, setQ] = useState("");
 
