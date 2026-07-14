@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import { CATEGORY_MAP, TYPE_LABEL, formatPrice, type CategoryKey, type ListingType } from "@/lib/categories";
-import { CATEGORY_MAP, TYPE_LABEL, formatPrice, type CategoryKey, type ListingType } from "@/lib/categories";
 
 export type ListingRow = {
   id: string;
