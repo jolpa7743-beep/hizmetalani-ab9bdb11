@@ -20,6 +20,8 @@ function AdminLayout() {
     { to: "/admin", label: "Panel", icon: LayoutDashboard, exact: true },
     { to: "/admin/kullanicilar", label: "Kullanıcılar", icon: Users },
     { to: "/admin/ilanlar", label: "İlanlar", icon: ListChecks },
+    { to: "/admin/yorumlar", label: "Yorumlar", icon: Star },
+    { to: "/admin/raporlar", label: "Şikayetler", icon: Flag },
     { to: "/admin/ticketlar", label: "Destek Talepleri", icon: MessageCircle },
     { to: "/admin/duyurular", label: "Duyurular", icon: Megaphone },
     { to: "/admin/yayin", label: "Toplu DM", icon: Send },
