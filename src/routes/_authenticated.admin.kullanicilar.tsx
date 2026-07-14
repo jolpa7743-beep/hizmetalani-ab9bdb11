@@ -132,6 +132,11 @@ function AdminUsers() {
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1">
                         {isAdmin && <Badge className="bg-brand">Admin</Badge>}
+                        {u.is_verified && (
+                          <Badge className="bg-emerald-600 gap-1">
+                            <BadgeCheck className="size-3" /> Güven Rozeti
+                          </Badge>
+                        )}
                         {u.email_confirmed_at ? (
                           <Badge variant="secondary" className="gap-1">
                             <CheckCircle2 className="size-3" /> Doğrulandı
@@ -148,6 +153,15 @@ function AdminUsers() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex justify-end gap-1">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => onToggleVerified(u.id, u.is_verified)}
+                          title={u.is_verified ? "Güven rozetini kaldır" : "Güven rozeti ver"}
+                          className={u.is_verified ? "text-emerald-600" : ""}
+                        >
+                          {u.is_verified ? <BadgeX className="size-4" /> : <BadgeCheck className="size-4" />}
+                        </Button>
                         <Button
                           size="sm"
                           variant="outline"
