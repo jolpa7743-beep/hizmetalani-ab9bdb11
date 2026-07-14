@@ -240,8 +240,19 @@ function HomePage() {
                   </div>
                 </div>
               )}
-              {listings?.map((item) => <ListingCard key={item.id} item={item} />)}
+              {listings?.map((item, i) => (
+                <>
+                  <ListingCard key={item.id} item={item} />
+                  {i === 5 && (
+                    <div key="ad-inline" className="col-span-full">
+                      <AdSlot slot="sidebar" />
+                    </div>
+                  )}
+                </>
+              ))}
             </section>
+
+            <AdSlot slot="footer" className="mt-8" />
           </div>
         </div>
       </div>
