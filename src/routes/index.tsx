@@ -241,14 +241,14 @@ function HomePage() {
                 </div>
               )}
               {listings?.map((item, i) => (
-                <React.Fragment key={item.id}>
+                <Fragment key={item.id}>
                   <ListingCard item={item} />
                   {i === 5 && (
                     <div className="col-span-full">
                       <AdSlot slot="sidebar" />
                     </div>
                   )}
-                </React.Fragment>
+                </Fragment>
               ))}
             </section>
 
