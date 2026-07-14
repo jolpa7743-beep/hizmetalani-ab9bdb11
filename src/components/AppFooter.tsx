@@ -24,8 +24,8 @@ export function AppFooter() {
           <FooterLink to="/" search={{ kategori: "bakici" }}>Bakıcı</FooterLink>
           <FooterLink to="/" search={{ kategori: "ev_temizlik" }}>Ev Temizliği</FooterLink>
           <FooterLink to="/" search={{ kategori: "ofis_temizlik" }}>Ofis Temizliği</FooterLink>
-          <FooterLink to="/" search={{ kategori: "merdiven_temizlik" }}>Merdiven Temizliği</FooterLink>
-          <FooterLink to="/" search={{ kategori: "evcil_yuva_veren" }}>Evcil Yuva</FooterLink>
+          <FooterLink to="/" search={{ kategori: "merdiven_temizlik" }}>Bina Temizliği</FooterLink>
+          <FooterLink to="/" search={{ kategori: "evcil_yuva_veren" }}>Geçici Konaklama</FooterLink>
         </FooterCol>
 
         <FooterCol title="Kurumsal">
