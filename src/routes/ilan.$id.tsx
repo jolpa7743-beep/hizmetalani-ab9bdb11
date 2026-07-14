@@ -163,6 +163,7 @@ type Profile = {
   is_verified: boolean;
   city: string | null;
   district: string | null;
+  created_at: string;
 };
 
 const WORK_TYPE_LABEL: Record<string, string> = {
