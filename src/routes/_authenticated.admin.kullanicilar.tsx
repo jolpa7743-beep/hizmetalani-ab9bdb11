@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { z } from "zod";
 import { adminListUsers, adminToggleRole, adminDeleteUser } from "@/lib/admin.functions";
 import { adminSetTrustLevel } from "@/lib/reviews.functions";
 import { Button } from "@/components/ui/button";
@@ -12,7 +13,10 @@ import { Shield, ShieldOff, Trash2, Search, CheckCircle2, XCircle } from "lucide
 import { TRUST_LEVELS, trustBadgeMeta } from "@/lib/trust";
 import { toast } from "sonner";
 
+const searchSchema = z.object({ q: z.string().optional() });
+
 export const Route = createFileRoute("/_authenticated/admin/kullanicilar")({
+  validateSearch: searchSchema,
   component: AdminUsers,
 });
 
