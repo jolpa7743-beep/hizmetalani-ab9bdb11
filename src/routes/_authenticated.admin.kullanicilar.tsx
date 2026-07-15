@@ -34,9 +34,11 @@ function AdminUsers() {
   const toggleRole = useServerFn(adminToggleRole);
   const deleteUser = useServerFn(adminDeleteUser);
   const setTrust = useServerFn(adminSetTrustLevel);
+  const updateProfile = useServerFn(adminUpdateProfile);
   const qc = useQueryClient();
   const search = Route.useSearch();
   const [q, setQ] = useState(search.q ?? "");
+  const [editUser, setEditUser] = useState<AdminUser | null>(null);
 
   useEffect(() => { if (search.q) setQ(search.q); }, [search.q]);
 
