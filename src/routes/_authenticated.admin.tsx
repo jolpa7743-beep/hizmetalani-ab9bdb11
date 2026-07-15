@@ -27,6 +27,7 @@ function AdminLayout() {
   });
   const nav = [
     { to: "/admin", label: "Panel", icon: LayoutDashboard, exact: true, count: 0 },
+    { to: "/admin/bildirimler", label: "Bildirim Merkezi", icon: Inbox, count: (counts?.pendingReviews ?? 0) + (counts?.openReports ?? 0) },
     { to: "/admin/kullanicilar", label: "Kullanıcılar", icon: Users, count: 0 },
     { to: "/admin/ilanlar", label: "İlanlar", icon: ListChecks, count: 0 },
     { to: "/admin/yorumlar", label: "Yorumlar", icon: Star, count: counts?.pendingReviews ?? 0 },
