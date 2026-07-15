@@ -177,7 +177,7 @@ export const adminUpdateProfile = createServerFn({ method: "POST" })
     }
     if (!Object.keys(patch).length) return { ok: true };
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { error } = await supabaseAdmin.from("profiles").update(patch).eq("id", data.userId);
+    const { error } = await (supabaseAdmin as unknown as { from: (t: string) => { update: (v: unknown) => { eq: (c: string, id: string) => Promise<{ error: { message: string } | null }> } } }).from("profiles").update(patch).eq("id", data.userId);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
