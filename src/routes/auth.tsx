@@ -244,7 +244,24 @@ function AuthPage() {
                 <div>
                   <div className="flex items-center justify-between">
                     <Label htmlFor="password">Şifre</Label>
+                    <div className="flex items-center gap-2">
                     {tab === "signup" && form.password && !passwordError && (
+                      <span className="text-[11px] text-muted-foreground flex items-center gap-1">
+                        <CheckCircle2 className="size-3 text-emerald-600" /> {passwordStrength.label}
+                      </span>
+                    )}
+                    {tab === "signin" && (
+                      <button
+                        type="button"
+                        onClick={onForgotPassword}
+                        disabled={loading !== null}
+                        className="text-[11px] font-medium text-brand hover:underline disabled:opacity-50"
+                      >
+                        {loading === "reset" ? "Gönderiliyor…" : "Şifremi unuttum"}
+                      </button>
+                    )}
+                    </div>
+                  </div>
                       <span className="text-[11px] text-muted-foreground flex items-center gap-1">
                         <CheckCircle2 className="size-3 text-emerald-600" /> {passwordStrength.label}
                       </span>
