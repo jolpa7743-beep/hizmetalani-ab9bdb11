@@ -21,7 +21,8 @@ import {
 import { MapPin, Clock, ShieldCheck, MessageSquare, ArrowLeft, Eye, Tag, Building2, User as UserIcon, ShieldAlert, CalendarDays, BadgeCheck } from "lucide-react";
 import { toast } from "sonner";
 import { AdSlot } from "@/components/AdSlot";
-import { UserReviews } from "@/components/UserReviews";
+import { StarRow } from "@/components/UserReviews";
+import { getUserReviews } from "@/lib/reviews.functions";
 import { getSiteSettings } from "@/lib/settings.functions";
 import { shouldShowBadge, trustBadgeMeta, type BadgeVisibility } from "@/lib/trust";
 
