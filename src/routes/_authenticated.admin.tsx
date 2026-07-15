@@ -88,6 +88,7 @@ function AdminLayout() {
       key: "settings", label: "Ayarlar", icon: Settings,
       items: [
         { to: "/admin/seo", label: "SEO & Reklam", icon: Search },
+        { to: "/admin/smtp", label: "SMTP / E-posta", icon: Mail },
       ],
     },
   ];

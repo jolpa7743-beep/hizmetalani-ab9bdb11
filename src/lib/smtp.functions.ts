@@ -16,10 +16,8 @@ export type SmtpSettings = {
 
 export type SmtpFormValues = Omit<SmtpSettings, "id" | "updated_at">;
 
-async function assertAdmin(context: {
-  supabase: { rpc: (fn: string, args: Record<string, unknown>) => Promise<{ data: unknown }> };
-  userId: string;
-}) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function assertAdmin(context: any) {
   const { data } = await context.supabase.rpc("has_role", {
     _user_id: context.userId,
     _role: "admin",
@@ -47,11 +45,11 @@ export const updateSmtpSettings = createServerFn({ method: "POST" })
     await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const patch: Record<string, unknown> = { ...data, updated_at: new Date().toISOString() };
-    // If password blank, don't overwrite existing
     if (patch.password === "") delete patch.password;
     const { error } = await supabaseAdmin
       .from("smtp_settings")
-      .update(patch)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .update(patch as any)
       .eq("id", 1);
     if (error) throw new Error(error.message);
     return { ok: true };
