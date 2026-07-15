@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   LayoutDashboard, Users, ListChecks, ArrowLeft, ScrollText, Search, MessageCircle,
   Megaphone, Send, Star, Flag, ShieldCheck, Inbox, Layers, ChevronDown,
-  ShieldAlert, Settings, Database, UsersRound,
+  ShieldAlert, Settings, Database, UsersRound, Mail,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { adminModerationCounts } from "@/lib/admin.functions";
