@@ -1,19 +1,17 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { useAuth } from "@/hooks/use-auth";
-import { seedDemoUsers } from "@/lib/admin.functions";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, Sparkles, AlertCircle, CheckCircle2, Eye, EyeOff } from "lucide-react";
+import { Loader2, AlertCircle, CheckCircle2, Eye, EyeOff } from "lucide-react";
 import { translateAuthError, validatePasswordLive, validateEmailLive } from "@/lib/auth-errors";
 
 const searchSchema = z.object({
@@ -43,11 +41,10 @@ function AuthPage() {
   const search = Route.useSearch();
   const navigate = useNavigate();
   const [tab, setTab] = useState<"signin" | "signup">(search.mode ?? "signin");
-  const [loading, setLoading] = useState<null | "email" | "google" | "seed" | "reset">(null);
+  const [loading, setLoading] = useState<null | "email" | "google" | "reset">(null);
   const [form, setForm] = useState({ email: "", password: "", fullName: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const seed = useServerFn(seedDemoUsers);
 
   const onForgotPassword = async () => {
     if (!form.email || emailError) {
@@ -75,28 +72,6 @@ function AuthPage() {
   const emailError = validateEmailLive(form.email);
   const passwordError = validatePasswordLive(form.password);
   const passwordStrength = getPasswordStrength(form.password);
-
-  const fillDemo = (kind: "demo" | "admin") => {
-    setTab("signin");
-    setSubmitError(null);
-    const password = kind === "demo" ? "demo1234" : "admin123";
-    setForm({ email: `${kind}@${kind}.com`, password, fullName: "" });
-  };
-
-  const runSeed = async () => {
-    setLoading("seed");
-    setSubmitError(null);
-    try {
-      await seed();
-      toast.success("Demo hesaplar hazır! demo@demo.com/demo1234 veya admin@admin.com/admin123");
-    } catch (e) {
-      const msg = translateAuthError(e);
-      toast.error(msg);
-      setSubmitError(msg);
-    } finally {
-      setLoading(null);
-    }
-  };
 
   useEffect(() => {
     if (user) navigate({ to: search.redirect ?? "/" });
@@ -322,31 +297,6 @@ function AuthPage() {
                 </Button>
               </form>
 
-              <div className="rounded-lg border border-dashed border-brand/40 bg-brand/5 p-3 space-y-2">
-                <div className="flex items-center gap-2 text-xs font-medium text-brand">
-                  <Sparkles className="size-3.5" /> Demo Hesaplar
-                </div>
-                <p className="text-[11px] text-muted-foreground">
-                  Test için hazır hesaplar. İlk kez kullanıyorsanız "Oluştur" ile hesapları hazırlayın.
-                </p>
-                <div className="grid grid-cols-3 gap-1.5">
-                  <Button type="button" size="sm" variant="outline" className="h-8 text-xs" onClick={() => fillDemo("demo")}>
-                    demo1234
-                  </Button>
-                  <Button type="button" size="sm" variant="outline" className="h-8 text-xs" onClick={() => fillDemo("admin")}>
-                    admin123
-                  </Button>
-                  <Button
-                    type="button"
-                    size="sm"
-                    className="h-8 text-xs bg-brand hover:bg-brand/90"
-                    onClick={runSeed}
-                    disabled={loading !== null}
-                  >
-                    {loading === "seed" ? <Loader2 className="size-3 animate-spin" /> : "Oluştur"}
-                  </Button>
-                </div>
-              </div>
 
               <p className="text-xs text-muted-foreground text-center">
                 Devam ederek{" "}
