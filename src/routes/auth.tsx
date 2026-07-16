@@ -41,11 +41,10 @@ function AuthPage() {
   const search = Route.useSearch();
   const navigate = useNavigate();
   const [tab, setTab] = useState<"signin" | "signup">(search.mode ?? "signin");
-  const [loading, setLoading] = useState<null | "email" | "google" | "seed" | "reset">(null);
+  const [loading, setLoading] = useState<null | "email" | "google" | "reset">(null);
   const [form, setForm] = useState({ email: "", password: "", fullName: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const seed = useServerFn(seedDemoUsers);
 
   const onForgotPassword = async () => {
     if (!form.email || emailError) {
@@ -73,28 +72,6 @@ function AuthPage() {
   const emailError = validateEmailLive(form.email);
   const passwordError = validatePasswordLive(form.password);
   const passwordStrength = getPasswordStrength(form.password);
-
-  const fillDemo = (kind: "demo" | "admin") => {
-    setTab("signin");
-    setSubmitError(null);
-    const password = kind === "demo" ? "demo1234" : "admin123";
-    setForm({ email: `${kind}@${kind}.com`, password, fullName: "" });
-  };
-
-  const runSeed = async () => {
-    setLoading("seed");
-    setSubmitError(null);
-    try {
-      await seed();
-      toast.success("Demo hesaplar hazır! demo@demo.com/demo1234 veya admin@admin.com/admin123");
-    } catch (e) {
-      const msg = translateAuthError(e);
-      toast.error(msg);
-      setSubmitError(msg);
-    } finally {
-      setLoading(null);
-    }
-  };
 
   useEffect(() => {
     if (user) navigate({ to: search.redirect ?? "/" });
