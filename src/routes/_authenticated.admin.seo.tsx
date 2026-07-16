@@ -162,6 +162,26 @@ function AdminSEO() {
         </CardContent>
       </Card>
 
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2"><LogIn className="size-4" /> Giriş Yöntemleri</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <Label htmlFor="google-login" className="text-sm">Google ile Giriş</Label>
+              <p className="text-xs text-muted-foreground mt-1">
+                Kapatırsanız giriş / üye ol ekranındaki "Google ile devam et" düğmesi gizlenir.
+                Google OAuth kimlik bilgileri (Client ID / Secret) Lovable Cloud tarafından otomatik yönetilir;
+                kendi Google Cloud hesabınızı kullanmak isterseniz Backend panelinden ayarlayabilirsiniz.
+              </p>
+            </div>
+            <Switch id="google-login" checked={form.google_login_enabled ?? true} onCheckedChange={(v) => set("google_login_enabled", v)} />
+          </div>
+        </CardContent>
+      </Card>
+
+
       <div className="flex gap-3">
         <Button onClick={() => save.mutate(form)} disabled={save.isPending} className="bg-brand hover:bg-brand/90">
           <Save className="size-4 mr-2" /> {save.isPending ? "Kaydediliyor…" : "Ayarları Kaydet"}
