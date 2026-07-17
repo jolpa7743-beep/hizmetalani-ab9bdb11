@@ -15,6 +15,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as NasilCalisirRouteImport } from './routes/nasil-calisir'
 import { Route as KvkkRouteImport } from './routes/kvkk'
 import { Route as KullanimKosullariRouteImport } from './routes/kullanim-kosullari'
+import { Route as IstanbulRouteImport } from './routes/istanbul'
 import { Route as IletisimRouteImport } from './routes/iletisim'
 import { Route as HakkimizdaRouteImport } from './routes/hakkimizda'
 import { Route as GuvenlikRouteImport } from './routes/guvenlik'
@@ -25,8 +26,11 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdsDottxtRouteImport } from './routes/ads[.]txt'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as IstanbulIndexRouteImport } from './routes/istanbul.index'
 import { Route as UyeIdRouteImport } from './routes/uye.$id'
+import { Route as IstanbulIlceRouteImport } from './routes/istanbul.$ilce'
 import { Route as IlanIdRouteImport } from './routes/ilan.$id'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedPromosyonlarimRouteImport } from './routes/_authenticated.promosyonlarim'
 import { Route as AuthenticatedProfilRouteImport } from './routes/_authenticated.profil'
 import { Route as AuthenticatedIlanlarimRouteImport } from './routes/_authenticated.ilanlarim'
@@ -89,6 +93,11 @@ const KullanimKosullariRoute = KullanimKosullariRouteImport.update({
   path: '/kullanim-kosullari',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IstanbulRoute = IstanbulRouteImport.update({
+  id: '/istanbul',
+  path: '/istanbul',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IletisimRoute = IletisimRouteImport.update({
   id: '/iletisim',
   path: '/iletisim',
@@ -138,15 +147,30 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IstanbulIndexRoute = IstanbulIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => IstanbulRoute,
+} as any)
 const UyeIdRoute = UyeIdRouteImport.update({
   id: '/uye/$id',
   path: '/uye/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IstanbulIlceRoute = IstanbulIlceRouteImport.update({
+  id: '/$ilce',
+  path: '/$ilce',
+  getParentRoute: () => IstanbulRoute,
+} as any)
 const IlanIdRoute = IlanIdRouteImport.update({
   id: '/ilan/$id',
   path: '/ilan/$id',
   getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogRoute,
 } as any)
 const AuthenticatedPromosyonlarimRoute =
   AuthenticatedPromosyonlarimRouteImport.update({
@@ -327,12 +351,13 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/ads.txt': typeof AdsDottxtRoute
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/cerez-politikasi': typeof CerezPolitikasiRoute
   '/gizlilik': typeof GizlilikRoute
   '/guvenlik': typeof GuvenlikRoute
   '/hakkimizda': typeof HakkimizdaRoute
   '/iletisim': typeof IletisimRoute
+  '/istanbul': typeof IstanbulRouteWithChildren
   '/kullanim-kosullari': typeof KullanimKosullariRoute
   '/kvkk': typeof KvkkRoute
   '/nasil-calisir': typeof NasilCalisirRoute
@@ -345,8 +370,11 @@ export interface FileRoutesByFullPath {
   '/ilanlarim': typeof AuthenticatedIlanlarimRoute
   '/profil': typeof AuthenticatedProfilRoute
   '/promosyonlarim': typeof AuthenticatedPromosyonlarimRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/ilan/$id': typeof IlanIdRoute
+  '/istanbul/$ilce': typeof IstanbulIlceRoute
   '/uye/$id': typeof UyeIdRoute
+  '/istanbul/': typeof IstanbulIndexRoute
   '/admin/bildirimler': typeof AuthenticatedAdminBildirimlerRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/dosyalar': typeof AuthenticatedAdminDosyalarRoute
@@ -377,7 +405,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/ads.txt': typeof AdsDottxtRoute
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/cerez-politikasi': typeof CerezPolitikasiRoute
   '/gizlilik': typeof GizlilikRoute
   '/guvenlik': typeof GuvenlikRoute
@@ -394,8 +422,11 @@ export interface FileRoutesByTo {
   '/ilanlarim': typeof AuthenticatedIlanlarimRoute
   '/profil': typeof AuthenticatedProfilRoute
   '/promosyonlarim': typeof AuthenticatedPromosyonlarimRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/ilan/$id': typeof IlanIdRoute
+  '/istanbul/$ilce': typeof IstanbulIlceRoute
   '/uye/$id': typeof UyeIdRoute
+  '/istanbul': typeof IstanbulIndexRoute
   '/admin/bildirimler': typeof AuthenticatedAdminBildirimlerRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/dosyalar': typeof AuthenticatedAdminDosyalarRoute
@@ -428,12 +459,13 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/ads.txt': typeof AdsDottxtRoute
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/cerez-politikasi': typeof CerezPolitikasiRoute
   '/gizlilik': typeof GizlilikRoute
   '/guvenlik': typeof GuvenlikRoute
   '/hakkimizda': typeof HakkimizdaRoute
   '/iletisim': typeof IletisimRoute
+  '/istanbul': typeof IstanbulRouteWithChildren
   '/kullanim-kosullari': typeof KullanimKosullariRoute
   '/kvkk': typeof KvkkRoute
   '/nasil-calisir': typeof NasilCalisirRoute
@@ -446,8 +478,11 @@ export interface FileRoutesById {
   '/_authenticated/ilanlarim': typeof AuthenticatedIlanlarimRoute
   '/_authenticated/profil': typeof AuthenticatedProfilRoute
   '/_authenticated/promosyonlarim': typeof AuthenticatedPromosyonlarimRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/ilan/$id': typeof IlanIdRoute
+  '/istanbul/$ilce': typeof IstanbulIlceRoute
   '/uye/$id': typeof UyeIdRoute
+  '/istanbul/': typeof IstanbulIndexRoute
   '/_authenticated/admin/bildirimler': typeof AuthenticatedAdminBildirimlerRoute
   '/_authenticated/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/_authenticated/admin/dosyalar': typeof AuthenticatedAdminDosyalarRoute
@@ -486,6 +521,7 @@ export interface FileRouteTypes {
     | '/guvenlik'
     | '/hakkimizda'
     | '/iletisim'
+    | '/istanbul'
     | '/kullanim-kosullari'
     | '/kvkk'
     | '/nasil-calisir'
@@ -498,8 +534,11 @@ export interface FileRouteTypes {
     | '/ilanlarim'
     | '/profil'
     | '/promosyonlarim'
+    | '/blog/$slug'
     | '/ilan/$id'
+    | '/istanbul/$ilce'
     | '/uye/$id'
+    | '/istanbul/'
     | '/admin/bildirimler'
     | '/admin/blog'
     | '/admin/dosyalar'
@@ -547,8 +586,11 @@ export interface FileRouteTypes {
     | '/ilanlarim'
     | '/profil'
     | '/promosyonlarim'
+    | '/blog/$slug'
     | '/ilan/$id'
+    | '/istanbul/$ilce'
     | '/uye/$id'
+    | '/istanbul'
     | '/admin/bildirimler'
     | '/admin/blog'
     | '/admin/dosyalar'
@@ -586,6 +628,7 @@ export interface FileRouteTypes {
     | '/guvenlik'
     | '/hakkimizda'
     | '/iletisim'
+    | '/istanbul'
     | '/kullanim-kosullari'
     | '/kvkk'
     | '/nasil-calisir'
@@ -598,8 +641,11 @@ export interface FileRouteTypes {
     | '/_authenticated/ilanlarim'
     | '/_authenticated/profil'
     | '/_authenticated/promosyonlarim'
+    | '/blog/$slug'
     | '/ilan/$id'
+    | '/istanbul/$ilce'
     | '/uye/$id'
+    | '/istanbul/'
     | '/_authenticated/admin/bildirimler'
     | '/_authenticated/admin/blog'
     | '/_authenticated/admin/dosyalar'
@@ -632,12 +678,13 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AdsDottxtRoute: typeof AdsDottxtRoute
   AuthRoute: typeof AuthRoute
-  BlogRoute: typeof BlogRoute
+  BlogRoute: typeof BlogRouteWithChildren
   CerezPolitikasiRoute: typeof CerezPolitikasiRoute
   GizlilikRoute: typeof GizlilikRoute
   GuvenlikRoute: typeof GuvenlikRoute
   HakkimizdaRoute: typeof HakkimizdaRoute
   IletisimRoute: typeof IletisimRoute
+  IstanbulRoute: typeof IstanbulRouteWithChildren
   KullanimKosullariRoute: typeof KullanimKosullariRoute
   KvkkRoute: typeof KvkkRoute
   NasilCalisirRoute: typeof NasilCalisirRoute
@@ -690,6 +737,13 @@ declare module '@tanstack/react-router' {
       path: '/kullanim-kosullari'
       fullPath: '/kullanim-kosullari'
       preLoaderRoute: typeof KullanimKosullariRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/istanbul': {
+      id: '/istanbul'
+      path: '/istanbul'
+      fullPath: '/istanbul'
+      preLoaderRoute: typeof IstanbulRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/iletisim': {
@@ -762,6 +816,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/istanbul/': {
+      id: '/istanbul/'
+      path: '/'
+      fullPath: '/istanbul/'
+      preLoaderRoute: typeof IstanbulIndexRouteImport
+      parentRoute: typeof IstanbulRoute
+    }
     '/uye/$id': {
       id: '/uye/$id'
       path: '/uye/$id'
@@ -769,12 +830,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UyeIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/istanbul/$ilce': {
+      id: '/istanbul/$ilce'
+      path: '/$ilce'
+      fullPath: '/istanbul/$ilce'
+      preLoaderRoute: typeof IstanbulIlceRouteImport
+      parentRoute: typeof IstanbulRoute
+    }
     '/ilan/$id': {
       id: '/ilan/$id'
       path: '/ilan/$id'
       fullPath: '/ilan/$id'
       preLoaderRoute: typeof IlanIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof BlogRoute
     }
     '/_authenticated/promosyonlarim': {
       id: '/_authenticated/promosyonlarim'
@@ -1077,17 +1152,42 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
   AuthenticatedRouteChildren,
 )
 
+interface BlogRouteChildren {
+  BlogSlugRoute: typeof BlogSlugRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogSlugRoute: BlogSlugRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
+
+interface IstanbulRouteChildren {
+  IstanbulIlceRoute: typeof IstanbulIlceRoute
+  IstanbulIndexRoute: typeof IstanbulIndexRoute
+}
+
+const IstanbulRouteChildren: IstanbulRouteChildren = {
+  IstanbulIlceRoute: IstanbulIlceRoute,
+  IstanbulIndexRoute: IstanbulIndexRoute,
+}
+
+const IstanbulRouteWithChildren = IstanbulRoute._addFileChildren(
+  IstanbulRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AdsDottxtRoute: AdsDottxtRoute,
   AuthRoute: AuthRoute,
-  BlogRoute: BlogRoute,
+  BlogRoute: BlogRouteWithChildren,
   CerezPolitikasiRoute: CerezPolitikasiRoute,
   GizlilikRoute: GizlilikRoute,
   GuvenlikRoute: GuvenlikRoute,
   HakkimizdaRoute: HakkimizdaRoute,
   IletisimRoute: IletisimRoute,
+  IstanbulRoute: IstanbulRouteWithChildren,
   KullanimKosullariRoute: KullanimKosullariRoute,
   KvkkRoute: KvkkRoute,
   NasilCalisirRoute: NasilCalisirRoute,

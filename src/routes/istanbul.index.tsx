@@ -5,7 +5,7 @@ import { MapPin } from "lucide-react";
 const BASE = "https://hizmetalani.lovable.app";
 const URL = `${BASE}/istanbul`;
 
-export const Route = createFileRoute("/istanbul")({
+export const Route = createFileRoute("/istanbul/")({
   head: () => ({
     meta: [
       { title: "İstanbul Ev Hizmetleri — 39 İlçede Temizlik, Bakıcı, Pet Sitter | HizmetAlanı" },
