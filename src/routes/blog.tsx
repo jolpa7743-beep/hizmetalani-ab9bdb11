@@ -1,5 +1,4 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useServerFn } from "@tanstack/react-start";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { listPublishedPosts, type BlogListItem } from "@/lib/blog.functions";
 import { Calendar, Eye, ArrowRight } from "lucide-react";
@@ -8,15 +7,8 @@ const CANONICAL = "https://hizmetalani.lovable.app/blog";
 
 const postsQuery = queryOptions({
   queryKey: ["blog-published"],
-  queryFn: () => listPublishedPostsCaller(),
+  queryFn: () => listPublishedPosts(),
 });
-
-// SSR-safe caller wrapper (avoid using hook at module scope)
-let cachedFn: ReturnType<typeof useServerFn<typeof listPublishedPosts>> | null = null;
-function listPublishedPostsCaller() {
-  // Call the server fn directly; at SSR/loader time this uses the RPC transport
-  return listPublishedPosts();
-}
 
 export const Route = createFileRoute("/blog")({
   loader: ({ context }) => context.queryClient.ensureQueryData(postsQuery),
