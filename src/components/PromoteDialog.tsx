@@ -13,7 +13,6 @@ import {
   createPromotionOrder,
   getActiveBankAccounts,
   type PromotionKind,
-  type PromotionKind,
 } from "@/lib/promotions.functions";
 
 const KIND_META: Record<PromotionKind, { label: string; icon: typeof Rocket; color: string }> = {
