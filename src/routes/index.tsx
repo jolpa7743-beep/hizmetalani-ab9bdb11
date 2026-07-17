@@ -33,6 +33,18 @@ type SortValue = (typeof SORT_OPTIONS)[number]["value"];
 
 const PAGE_SIZE = 24;
 
+function getPageNumbers(current: number, total: number): (number | "…")[] {
+  const pages: (number | "…")[] = [];
+  const push = (n: number | "…") => { if (pages[pages.length - 1] !== n) pages.push(n); };
+  const add = (n: number) => { if (n >= 1 && n <= total) push(n); };
+  add(1);
+  if (current - 2 > 2) push("…");
+  for (let i = current - 1; i <= current + 1; i++) add(i);
+  if (current + 2 < total - 1) push("…");
+  add(total);
+  return pages;
+}
+
 const searchSchema = z.object({
   kategori: z.string().optional(),
   tip: z.enum(["offering", "seeking"]).optional(),
