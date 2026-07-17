@@ -89,6 +89,45 @@ export type Database = {
         }
         Relationships: []
       }
+      bank_accounts: {
+        Row: {
+          account_holder: string
+          bank_name: string
+          branch: string | null
+          created_at: string
+          iban: string
+          id: string
+          is_active: boolean
+          note: string | null
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          account_holder: string
+          bank_name: string
+          branch?: string | null
+          created_at?: string
+          iban: string
+          id?: string
+          is_active?: boolean
+          note?: string | null
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          account_holder?: string
+          bank_name?: string
+          branch?: string | null
+          created_at?: string
+          iban?: string
+          id?: string
+          is_active?: boolean
+          note?: string | null
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       category_groups: {
         Row: {
           created_at: string
@@ -189,11 +228,79 @@ export type Database = {
           },
         ]
       }
+      listing_promotions: {
+        Row: {
+          created_at: string
+          ends_at: string | null
+          id: string
+          kind: string
+          listing_id: string
+          package_id: string
+          payment_id: string | null
+          price_try: number
+          starts_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          kind: string
+          listing_id: string
+          package_id: string
+          payment_id?: string | null
+          price_try: number
+          starts_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          kind?: string
+          listing_id?: string
+          package_id?: string
+          payment_id?: string | null
+          price_try?: number
+          starts_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listing_promotions_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "listing_promotions_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "promotion_packages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lp_payment_fk"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       listings: {
         Row: {
           available_days: string[] | null
           available_hours: Json | null
           benefits: string[] | null
+          boost_score: number
           category: Database["public"]["Enums"]["listing_category"]
           city: string
           created_at: string
@@ -201,24 +308,29 @@ export type Database = {
           district: string | null
           education_level: string | null
           experience_years: number | null
+          featured_until: string | null
           id: string
           images: string[]
           is_featured: boolean
           is_remote: boolean
+          is_showcase: boolean
           is_urgent: boolean
           meta_description: string | null
           meta_title: string | null
           off_days: string[] | null
           price: number | null
           price_type: Database["public"]["Enums"]["price_type"]
+          promoted_until: string | null
           requirements: string[] | null
           salary_max: number | null
           salary_min: number | null
           salary_period: string | null
+          showcase_until: string | null
           status: Database["public"]["Enums"]["listing_status"]
           title: string
           type: Database["public"]["Enums"]["listing_type"]
           updated_at: string
+          urgent_until: string | null
           user_id: string
           view_count: number
           work_type: string | null
@@ -227,6 +339,7 @@ export type Database = {
           available_days?: string[] | null
           available_hours?: Json | null
           benefits?: string[] | null
+          boost_score?: number
           category: Database["public"]["Enums"]["listing_category"]
           city: string
           created_at?: string
@@ -234,24 +347,29 @@ export type Database = {
           district?: string | null
           education_level?: string | null
           experience_years?: number | null
+          featured_until?: string | null
           id?: string
           images?: string[]
           is_featured?: boolean
           is_remote?: boolean
+          is_showcase?: boolean
           is_urgent?: boolean
           meta_description?: string | null
           meta_title?: string | null
           off_days?: string[] | null
           price?: number | null
           price_type?: Database["public"]["Enums"]["price_type"]
+          promoted_until?: string | null
           requirements?: string[] | null
           salary_max?: number | null
           salary_min?: number | null
           salary_period?: string | null
+          showcase_until?: string | null
           status?: Database["public"]["Enums"]["listing_status"]
           title: string
           type: Database["public"]["Enums"]["listing_type"]
           updated_at?: string
+          urgent_until?: string | null
           user_id: string
           view_count?: number
           work_type?: string | null
@@ -260,6 +378,7 @@ export type Database = {
           available_days?: string[] | null
           available_hours?: Json | null
           benefits?: string[] | null
+          boost_score?: number
           category?: Database["public"]["Enums"]["listing_category"]
           city?: string
           created_at?: string
@@ -267,24 +386,29 @@ export type Database = {
           district?: string | null
           education_level?: string | null
           experience_years?: number | null
+          featured_until?: string | null
           id?: string
           images?: string[]
           is_featured?: boolean
           is_remote?: boolean
+          is_showcase?: boolean
           is_urgent?: boolean
           meta_description?: string | null
           meta_title?: string | null
           off_days?: string[] | null
           price?: number | null
           price_type?: Database["public"]["Enums"]["price_type"]
+          promoted_until?: string | null
           requirements?: string[] | null
           salary_max?: number | null
           salary_min?: number | null
           salary_period?: string | null
+          showcase_until?: string | null
           status?: Database["public"]["Enums"]["listing_status"]
           title?: string
           type?: Database["public"]["Enums"]["listing_type"]
           updated_at?: string
+          urgent_until?: string | null
           user_id?: string
           view_count?: number
           work_type?: string | null
@@ -362,6 +486,65 @@ export type Database = {
         }
         Relationships: []
       }
+      payments: {
+        Row: {
+          admin_note: string | null
+          amount_try: number
+          bank_note: string | null
+          created_at: string
+          external_id: string | null
+          id: string
+          method: string
+          paid_at: string | null
+          promotion_id: string | null
+          raw: Json | null
+          reference: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_note?: string | null
+          amount_try: number
+          bank_note?: string | null
+          created_at?: string
+          external_id?: string | null
+          id?: string
+          method: string
+          paid_at?: string | null
+          promotion_id?: string | null
+          raw?: Json | null
+          reference?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_note?: string | null
+          amount_try?: number
+          bank_note?: string | null
+          created_at?: string
+          external_id?: string | null
+          id?: string
+          method?: string
+          paid_at?: string | null
+          promotion_id?: string | null
+          raw?: Json | null
+          reference?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_promotion_id_fkey"
+            columns: ["promotion_id"]
+            isOneToOne: false
+            referencedRelation: "listing_promotions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -425,6 +608,48 @@ export type Database = {
           trust_level?: number
           updated_at?: string
           website?: string | null
+        }
+        Relationships: []
+      }
+      promotion_packages: {
+        Row: {
+          boost_score: number
+          created_at: string
+          description: string | null
+          duration_hours: number
+          id: string
+          is_active: boolean
+          kind: string
+          name: string
+          price_try: number
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          boost_score?: number
+          created_at?: string
+          description?: string | null
+          duration_hours: number
+          id?: string
+          is_active?: boolean
+          kind: string
+          name: string
+          price_try: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          boost_score?: number
+          created_at?: string
+          description?: string | null
+          duration_hours?: number
+          id?: string
+          is_active?: boolean
+          kind?: string
+          name?: string
+          price_try?: number
+          sort_order?: number
+          updated_at?: string
         }
         Relationships: []
       }
@@ -509,6 +734,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      shopier_settings: {
+        Row: {
+          api_key: string | null
+          api_secret: string | null
+          callback_url: string | null
+          id: number
+          is_enabled: boolean
+          test_mode: boolean
+          updated_at: string
+          website_index: number | null
+        }
+        Insert: {
+          api_key?: string | null
+          api_secret?: string | null
+          callback_url?: string | null
+          id?: number
+          is_enabled?: boolean
+          test_mode?: boolean
+          updated_at?: string
+          website_index?: number | null
+        }
+        Update: {
+          api_key?: string | null
+          api_secret?: string | null
+          callback_url?: string | null
+          id?: number
+          is_enabled?: boolean
+          test_mode?: boolean
+          updated_at?: string
+          website_index?: number | null
+        }
+        Relationships: []
       }
       site_settings: {
         Row: {
@@ -630,6 +888,60 @@ export type Database = {
           secure?: boolean
           updated_at?: string
           username?: string
+        }
+        Relationships: []
+      }
+      sponsor_ads: {
+        Row: {
+          alt_text: string | null
+          clicks: number
+          created_at: string
+          ends_at: string | null
+          id: string
+          image_url: string
+          impressions: number
+          is_active: boolean
+          priority: number
+          slot: string
+          sponsor_name: string | null
+          starts_at: string | null
+          target_url: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          alt_text?: string | null
+          clicks?: number
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          image_url: string
+          impressions?: number
+          is_active?: boolean
+          priority?: number
+          slot: string
+          sponsor_name?: string | null
+          starts_at?: string | null
+          target_url: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          alt_text?: string | null
+          clicks?: number
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          image_url?: string
+          impressions?: number
+          is_active?: boolean
+          priority?: number
+          slot?: string
+          sponsor_name?: string | null
+          starts_at?: string | null
+          target_url?: string
+          title?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -798,13 +1110,30 @@ export type Database = {
       }
     }
     Functions: {
+      activate_paid_promotion: {
+        Args: { _payment_id: string }
+        Returns: undefined
+      }
+      activate_promotion: {
+        Args: { _promotion_id: string }
+        Returns: undefined
+      }
+      admin_approve_bank_payment: {
+        Args: { _note?: string; _payment_id: string }
+        Returns: undefined
+      }
       admin_broadcast_dm: { Args: { _body: string }; Returns: number }
       admin_get_user_id_by_email: { Args: { _email: string }; Returns: string }
+      admin_list_payments: { Args: { _status?: string }; Returns: Json }
       admin_list_review_reports: { Args: never; Returns: Json }
       admin_list_reviews: { Args: { _status?: string }; Returns: Json }
       admin_list_users: { Args: never; Returns: Json }
       admin_moderation_inbox: { Args: never; Returns: Json }
       admin_recent_mod_actions: { Args: { _limit?: number }; Returns: Json }
+      admin_reject_payment: {
+        Args: { _note?: string; _payment_id: string }
+        Returns: undefined
+      }
       admin_set_banned: {
         Args: { _banned: boolean; _reason: string; _user_id: string }
         Returns: undefined
@@ -833,6 +1162,11 @@ export type Database = {
         Args: { _user_id: string; _verified: boolean }
         Returns: undefined
       }
+      create_promotion_order: {
+        Args: { _listing_id: string; _method: string; _package_id: string }
+        Returns: Json
+      }
+      expire_promotions: { Args: never; Returns: number }
       get_my_profile: {
         Args: never
         Returns: {
@@ -878,6 +1212,10 @@ export type Database = {
           review_count: number
           user_id: string
         }[]
+      }
+      track_ad_event: {
+        Args: { _ad_id: string; _event: string }
+        Returns: undefined
       }
       user_review_stats: {
         Args: { _user_id: string }

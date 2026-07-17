@@ -1,85 +1,73 @@
 
-# Uygulama Planı
+## Amaç
+Kullanıcılar ilanlarını ücretli olarak "vitrin / öne çıkan / acil" gibi paketlerle öne çıkarabilsin. Ödemeler Shopier (kredi kartı) veya havale/EFT ile alınsın. Admin hem Shopier ayarlarını hem de AdSense dışı sponsor reklam alanlarını panelden yönetsin.
 
-Kapsam büyük olduğu için 4 tura böleceğim. Her tur bittiğinde bir sonrakine geçeceğim; sen istediğinde durabilirsin.
+## 1. Ücretli öne çıkarma (promosyon paketleri)
 
-## Tur 1 — Veri altyapısı + emoji temizliği + görseller
+### Veritabanı
+- `promotion_packages` — paket tanımları (ad, tip: `featured` | `showcase` | `urgent` | `top`, süre (saat), fiyat TRY, aktif mi, sıralama). Admin CRUD.
+- `listings` tablosuna kolonlar:
+  - `is_featured boolean`, `featured_until timestamptz` (vitrin)
+  - `is_showcase boolean`, `showcase_until timestamptz` (öne çıkan)
+  - `is_urgent boolean`, `urgent_until timestamptz` (acil)
+  - `boost_score int` (sıralama için)
+- `listing_promotions` — satın alma geçmişi (listing_id, user_id, package_id, ödeme yöntemi, tutar, başlangıç/bitiş, durum).
+- `payments` — genel ödeme kayıtları (kullanıcı, tutar, yöntem: `shopier` | `bank_transfer`, referans, durum: `pending`/`paid`/`failed`/`refunded`, ilgili promotion_id).
+- `bank_accounts` — admin panelinden yönetilen havale hesap bilgileri (banka, IBAN, hesap sahibi, aktif mi).
+- Cron/temizlik: bitiş tarihi geçen promosyonları pasifleştiren SQL fonksiyonu + günlük tetiklenen `/api/public/cron/expire-promotions` route.
 
-**Türkiye il/ilçe verisi**
-- `src/data/turkiye.json` — 81 il, tüm ilçeler (statik JSON)
-- `src/lib/turkiye.ts` — yardımcı fonksiyonlar (`getIller`, `getIlceler(il)`, arama)
-- İlan verme formunda, filtre panelinde, profil düzenlemede il/ilçe seçimi bu kaynağa bağlanır (mevcut serbest metin alanları combobox'a döner)
+### UI
+- İlan detay/panel sayfasında "Öne Çıkar" butonu → paket seçim ekranı → ödeme yöntemi seçimi.
+- İlan listelemede vitrin/öne çıkan/acil rozetleri (renkli border + badge). Vitrin ilanlar arama sonuçlarının üstünde ayrı bir şerit, öne çıkanlar normal listede boost_score'a göre yukarıda.
+- Kullanıcı panelinde "Promosyonlarım" sekmesi (aktif/geçmiş).
 
-**Veritabanı migration'ı (tek migration)**
-- `site_settings` — SEO ayarları (site adı, açıklama, og:image URL, keywords, GA ID, Search Console doğrulama kodu, adsense pub-id, robots.txt override)
-- `tickets` + `ticket_messages` — kullanıcı destek talepleri, admin ile canlı yazışma
-- `announcements` — admin'in tüm kullanıcılara toplu duyurusu (banner + bildirim)
-- `listing_details` alanları eklenir: `work_type` (full_time/part_time/freelance/gecici), `available_days` (jsonb: pzt-paz), `available_hours` (jsonb: başlangıç-bitiş), `salary_min`, `salary_max`, `salary_period` (saatlik/günlük/aylık), `experience_years`, `education_level`, `requirements` (text[]), `benefits` (text[]), `is_remote`, `is_urgent`
-- Realtime: `tickets`, `ticket_messages`, `messages`, `announcements`
+## 2. Ödeme entegrasyonu
 
-**Emoji temizliği**
-- Tüm `src/**` altında emoji ve emoji karakterlerini tarayıp lucide-react ikonlarıyla değiştir
+### Shopier
+- Admin panelinden `shopier_settings` (API key, secret, mağaza ID, test/canlı, aktif mi) yönetilebilsin. Secret sadece server tarafında okunur.
+- `POST /api/public/payments/shopier/create` — sunucuda imzalı ödeme talebi oluşturur, Shopier redirect URL döner.
+- `POST /api/public/webhooks/shopier` — Shopier callback'i imza doğrulaması ile alır, `payments` kaydını `paid` yapar ve ilgili promosyonu aktifleştirir.
+- Server function `getShopierCheckoutUrl` — kullanıcının seçtiği paket için ödeme başlatır.
 
-**Görseller (imagegen)**
-- `src/assets/hero.jpg` — Türkiye temalı iş/işveren buluşma hero görseli
-- `src/assets/og-default.jpg` — 1200x630 sosyal paylaşım
-- `public/favicon.ico` (yeni logo)
+### Havale / EFT
+- Kullanıcı paketi seçip "Havale ile öde"yi seçince `payments` kaydı `pending` olarak açılır, ekranda IBAN'lar ve referans kodu gösterilir.
+- Admin panelinde "Bekleyen Havaleler" ekranı → tek tıkla "Onayla" (payment paid + promosyon aktif) veya "Reddet".
 
-## Tur 2 — Admin paneli tamamlama
+## 3. Sponsor reklam alanları (AdSense dışı)
 
-- `/admin/ticketlar` — açık/kapalı ticket listesi, canlı sohbet paneli (realtime)
-- `/admin/mesajlar` — admin'in herhangi bir kullanıcıya DM atma paneli
-- `/admin/duyurular` — toplu duyuru oluşturma, aktif/pasif toggle, hedef (herkes / işveren / iş arayan)
-- `/admin/seo` — site meta, og:image yükleme, GA/Search Console/AdSense kodları, robots.txt editörü, sitemap yeniden üretme butonu
-- `/admin/ilanlar` — düzenleme modal'ı (statü, öne çıkar, sil, kategori değiştir)
-- `/admin/kullanicilar` — rol atama, ban, doğrulama işareti, şifre sıfırlama linki
-- Sidebar navigasyon, dashboard istatistik kartları (kullanıcı sayısı, aktif ilan, açık ticket, günlük yeni kayıt)
+### Veritabanı
+- `sponsor_ads` — slot (`header` | `sidebar_left` | `sidebar_right` | `listing_inline` | `footer` | `home_hero`), başlık, görsel URL, hedef URL, başlangıç/bitiş, aktif mi, öncelik, tıklanma/gösterim sayaçları, sponsor adı.
+- Var olan `AdSlot` bileşenini genişlet: eğer o slot için aktif bir `sponsor_ads` varsa AdSense yerine sponsoru göster (rotasyon: priority + tarih aralığı içindekiler arasından rasgele).
+- `POST /api/public/ads/track` — impression/click event'i (rate-limited).
 
-## Tur 3 — Kullanıcı tarafı: ilan detayları + DM + destek
+### Admin paneli
+- `/_authenticated/admin/reklamlar` — sponsor reklamları CRUD + görsel yükleme (mevcut Supabase storage veya URL).
+- İstatistik: her sponsorun toplam gösterim/tık, CTR.
 
-- İlan ver formu: yeni alanlar (çalışma tipi, izinli günler, çalışma saatleri, maaş aralığı, deneyim, eğitim, şartlar, yan haklar, uzaktan, acil)
-- İlan detay sayfası: tüm bu alanlar zengin şekilde gösterilir; iş veren ile iş arayan birbirinin şartlarını net görür
-- `/mesajlar` — kullanıcı DM kutusu (realtime, okundu bilgisi, konuşma listesi + panel)
-- `/destek` — kullanıcının kendi ticket'larını görme, yeni ticket açma, admin ile canlı yazışma
-- Site geneli duyuru bandı (aktif announcement varsa üstte gösterilir)
+## 4. Admin paneli eklemeleri
+Mevcut accordion menüye "Kazanç" başlığı altında:
+- Promosyon paketleri
+- Bekleyen havaleler
+- Ödeme geçmişi
+- Shopier ayarları
+- Havale hesapları
+- Sponsor reklamları
 
-## Tur 4 — Hard SEO + AdSense hazırlığı
+## Teknik notlar
+- Tüm yeni tablolara RLS: paketler/sponsorlar herkese SELECT (aktif olanlar), yazma sadece admin. `payments` ve `listing_promotions` sadece sahibine SELECT + admin'e tümü. Havale onayı/Shopier webhook için admin RPC + service_role kullanılacak.
+- Shopier API secret'ı `add_secret` ile istenecek (webhook doğrulama için). Kullanıcı henüz Shopier hesabı yoksa ayar ekranı "boş" durumda kalır, sadece havale çalışır.
+- Sıralama: `ORDER BY is_featured DESC, is_showcase DESC, boost_score DESC, created_at DESC`.
+- Ücret gösterimi TRY. Para birimi şimdilik sabit.
 
-**Sayfa bazlı meta (her route için özel `head()`)**
-- `/` — dinamik: site_settings'ten title/description + JSON-LD WebSite + Organization
-- `/ilanlar`, `/is-arayanlar`, `/is-verenler` — kategoriye özel meta + BreadcrumbList
-- `/ilan/$id` — ilan bazlı title/description, og:image (opsiyonel özel), JobPosting schema.org JSON-LD (Google Jobs uyumu — çok güçlü SEO), BreadcrumbList
-- `/kategori/$slug` — kategori adı + il bazlı dinamik title ("İstanbul Temizlik İlanları")
+## Sıralama (yapılış adımları)
+1. Migration: yeni tablolar + `listings` kolonları + RLS + admin RPC'leri + seed paketler.
+2. Kullanıcı akışı: paket seçim modalı, havale ekranı, "Promosyonlarım" sekmesi.
+3. Shopier server fonksiyonları + webhook route + admin ayar ekranı.
+4. Admin: paketler, bekleyen havaleler, ödemeler, Shopier, havale hesapları ekranları.
+5. Sponsor reklam sistemi: tablo + admin CRUD + `AdSlot` entegrasyonu + tracking.
+6. Listeleme sıralamasına promosyon boost'u + rozetler.
 
-**Teknik SEO**
-- `src/routes/sitemap[.]xml.ts` — dinamik: tüm aktif ilanlar + kategori + il kombinasyonları
-- `public/robots.txt` — admin'den override edilebilir; varsayılan Google/Bing için optimize
-- `src/routes/__root.tsx` — canonical yaklaşımı, hreflang tr-TR, Organization JSON-LD, GA/AdSense/Search Console script'leri site_settings'ten okunur
-- Görsel: tüm `<img>` etiketlerine `alt` + `loading="lazy"` + `width/height`
-- Semantik HTML: her sayfada tek `<h1>`, düzgün heading hiyerarşisi, `<article>`, `<nav>`, `<main>`, `<aside>`
-- Performans: TanStack Query stale time ayarı, gereksiz re-render'lar
-- Zengin anchor text (iç link stratejisi): kategori sayfaları il+kategori kombinasyonlarına link verir (uzun kuyruk)
-- `/hakkimizda`, `/gizlilik`, `/kullanim-sartlari`, `/iletisim`, `/sss` sayfaları (AdSense onayı için zorunlu içerik)
-
-**AdSense onay şartları için ek**
-- Gizlilik politikası + KVKK metni + çerez bildirimi banner'ı
-- İletişim sayfası (gerçek e-posta, form)
-- Hakkımızda sayfası (300+ kelime, özgün)
-- SSS sayfası (FAQPage schema.org JSON-LD)
-- 404 sayfası düzgün, `noindex`
-- Site hızı: hero görseli optimize (WebP), font preload
-- Türkçe içerik kalitesi: her kategori için 200+ kelime açıklama metni
-
-## Teknik Notlar
-
-- Tüm yeni tablolar RLS + GRANT (public grant chart'a göre)
-- Realtime publication: `tickets`, `ticket_messages`, `messages`, `announcements`
-- Admin route'ları `_authenticated/admin/*` altında, `has_role(uid, 'admin')` kontrolü
-- `site_settings` tek satırlı (id=1) singleton tablo; loader'da `ensureQueryData` ile cache'lenir, `__root.tsx` head'inde okunur
-- İlan detay `head()` loader'dan gelen veriye göre JobPosting JSON-LD üretir
-- Görsel üretimi: standard tier (hero için) ve premium (og default için değil, çünkü metin yok — standard yeter)
-- Emoji temizliği için ripgrep ile Unicode emoji aralığı taraması (U+1F300-U+1FAFF, U+2600-U+27BF)
-
-## Onay
-
-"Tur 1'e başla" dersen sırayla başlarım. "Hepsini kesintisiz yap" dersen 4 turu arka arkaya yapıp özet dönerim (uzun sürer, çok dosya değişir).
+## Onayınıza sunulan sorular
+- **Shopier hesabınız var mı?** Yoksa altyapıyı hazır bırakırım, sadece havale/EFT aktif başlar; Shopier API bilgilerini sonra girip aktif edebilirsiniz.
+- **Sponsor reklam görselleri için**: admin panelinden dosya yükleme (Storage bucket açayım) mı yoksa sadece URL girme mi tercih edersiniz?
+- **Paket örnekleri**: başlangıç için "24 saat vitrin — 20 TL", "7 gün öne çıkan — 50 TL", "3 gün acil — 15 TL" gibi seed'leyeyim mi, yoksa fiyatları siz mi belirlersiniz?
