@@ -159,6 +159,10 @@ type Listing = {
   benefits: string[] | null;
   is_remote: boolean | null;
   is_urgent: boolean | null;
+  is_featured: boolean | null;
+  is_showcase: boolean | null;
+  boost_score: number | null;
+  promoted_until: string | null;
 };
 
 type Profile = {
