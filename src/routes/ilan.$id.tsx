@@ -621,7 +621,7 @@ function OwnerEditDialog({ listing }: { listing: Listing }) {
         title: title.trim(),
         description: description.trim(),
         price: price ? Number(price) : null,
-        price_type: priceType,
+        price_type: priceType as "hourly" | "daily" | "monthly" | "job" | "negotiable",
       })
       .eq("id", listing.id);
     setSaving(false);
