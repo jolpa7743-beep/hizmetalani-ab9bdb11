@@ -579,3 +579,110 @@ function InfoBox({ label, value, isEmpty }: { label: string; value: string; isEm
   );
 }
 
+function PromoBadge({ listing }: { listing: Listing }) {
+  const active = listing.promoted_until ? new Date(listing.promoted_until) > new Date() : false;
+  const isFeatured = listing.is_featured && active;
+  const isShowcase = listing.is_showcase && active;
+  const isUrgent = listing.is_urgent;
+  const isSponsored = isFeatured || isShowcase;
+  if (!isSponsored && !isUrgent) return null;
+  const label = isFeatured ? "VİTRİN" : isShowcase ? "ÖNE ÇIKAN" : "ACİL";
+  const Icon = isFeatured ? Sparkles : isShowcase ? StarIcon : Flame;
+  const gradient = isFeatured
+    ? "from-amber-400 via-yellow-500 to-amber-600"
+    : isShowcase
+    ? "from-brand via-brand/80 to-brand"
+    : "from-red-500 via-rose-600 to-red-700";
+  return (
+    <div className="absolute top-3 right-3 z-10 select-none">
+      <div className={`relative inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold text-white shadow-lg bg-gradient-to-r ${gradient} animate-pulse ring-2 ring-white/40`}>
+        <span className="absolute inset-0 rounded-full bg-white/25 blur-md animate-ping" aria-hidden />
+        <Icon className="size-4 relative drop-shadow" />
+        <span className="relative tracking-wide">{label}</span>
+      </div>
+    </div>
+  );
+}
+
+function OwnerEditDialog({ listing }: { listing: Listing }) {
+  const qc = useQueryClient();
+  const [open, setOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [title, setTitle] = useState(listing.title);
+  const [price, setPrice] = useState<string>(listing.price != null ? String(listing.price) : "");
+  const [priceType, setPriceType] = useState<string>(listing.price_type);
+  const [description, setDescription] = useState(listing.description);
+
+  const save = async () => {
+    setSaving(true);
+    const { error } = await supabase
+      .from("listings")
+      .update({
+        title: title.trim(),
+        description: description.trim(),
+        price: price ? Number(price) : null,
+        price_type: priceType,
+      })
+      .eq("id", listing.id);
+    setSaving(false);
+    if (error) return toast.error(error.message);
+    toast.success("İlan güncellendi");
+    setOpen(false);
+    qc.invalidateQueries({ queryKey: ["listing", listing.id] });
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm" className="w-full">
+          <Pencil className="size-4 mr-2" /> İlanı Düzenle
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle>İlanı Düzenle</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-3">
+          <div>
+            <Label>Başlık</Label>
+            <Input value={title} onChange={(e) => setTitle(e.target.value)} />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label>Fiyat (₺)</Label>
+              <Input type="number" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="Boş = pazarlıklı" />
+            </div>
+            <div>
+              <Label>Ücret Tipi</Label>
+              <Select value={priceType} onValueChange={setPriceType}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="hourly">Saatlik</SelectItem>
+                  <SelectItem value="daily">Günlük</SelectItem>
+                  <SelectItem value="monthly">Aylık</SelectItem>
+                  <SelectItem value="job">İş Başı</SelectItem>
+                  <SelectItem value="negotiable">Pazarlıklı</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div>
+            <Label>Açıklama</Label>
+            <textarea
+              className="w-full min-h-24 rounded-md border border-input bg-background p-2 text-sm"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="ghost" onClick={() => setOpen(false)}>Vazgeç</Button>
+          <Button onClick={save} disabled={saving}>
+            {saving ? "Kaydediliyor..." : "Kaydet"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
