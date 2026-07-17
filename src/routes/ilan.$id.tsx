@@ -581,25 +581,26 @@ function InfoBox({ label, value, isEmpty }: { label: string; value: string; isEm
 
 function PromoBadge({ listing }: { listing: Listing }) {
   const active = listing.promoted_until ? new Date(listing.promoted_until) > new Date() : false;
-  const isFeatured = listing.is_featured && active;
-  const isShowcase = listing.is_showcase && active;
-  const isUrgent = listing.is_urgent;
-  const isSponsored = isFeatured || isShowcase;
-  if (!isSponsored && !isUrgent) return null;
-  const label = isFeatured ? "VİTRİN" : isShowcase ? "ÖNE ÇIKAN" : "ACİL";
-  const Icon = isFeatured ? Sparkles : isShowcase ? StarIcon : Flame;
-  const gradient = isFeatured
-    ? "from-amber-400 via-yellow-500 to-amber-600"
-    : isShowcase
-    ? "from-brand via-brand/80 to-brand"
-    : "from-red-500 via-rose-600 to-red-700";
+  const badges: { key: string; label: string; Icon: typeof Sparkles; gradient: string; pulse: boolean }[] = [];
+  if (listing.is_featured && active) {
+    badges.push({ key: "featured", label: "VİTRİN", Icon: Sparkles, gradient: "from-amber-400 via-yellow-500 to-amber-600", pulse: true });
+  }
+  if (listing.is_showcase && active) {
+    badges.push({ key: "showcase", label: "ÖNE ÇIKAN", Icon: StarIcon, gradient: "from-brand via-blue-500 to-brand", pulse: false });
+  }
+  if (listing.is_urgent) {
+    badges.push({ key: "urgent", label: "ACİL", Icon: Flame, gradient: "from-red-500 via-rose-600 to-red-700", pulse: true });
+  }
+  if (badges.length === 0) return null;
   return (
-    <div className="absolute top-3 right-3 z-10 select-none">
-      <div className={`relative inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold text-white shadow-lg bg-gradient-to-r ${gradient} animate-pulse ring-2 ring-white/40`}>
-        <span className="absolute inset-0 rounded-full bg-white/25 blur-md animate-ping" aria-hidden />
-        <Icon className="size-4 relative drop-shadow" />
-        <span className="relative tracking-wide">{label}</span>
-      </div>
+    <div className="absolute top-3 right-3 z-10 flex flex-col gap-1.5 items-end select-none">
+      {badges.map(({ key, label, Icon, gradient, pulse }) => (
+        <div key={key} className={`relative inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold text-white shadow-lg bg-gradient-to-r ${gradient} ${pulse ? "animate-pulse" : ""} ring-2 ring-white/40`}>
+          {pulse && <span className="absolute inset-0 rounded-full bg-white/25 blur-md animate-ping" aria-hidden />}
+          <Icon className="size-4 relative drop-shadow" />
+          <span className="relative tracking-wide">{label}</span>
+        </div>
+      ))}
     </div>
   );
 }
