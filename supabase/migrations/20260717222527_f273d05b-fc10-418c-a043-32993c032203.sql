@@ -1,0 +1,2 @@
+GRANT SELECT (id, full_name, avatar_url, city, district, bio, is_verified, trust_level, created_at) ON public.profiles TO anon;
+GRANT SELECT (id, full_name, avatar_url, city, district, bio, is_verified, trust_level, created_at) ON public.profiles TO authenticated;
