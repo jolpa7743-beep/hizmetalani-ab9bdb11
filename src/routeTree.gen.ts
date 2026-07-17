@@ -41,6 +41,7 @@ import { Route as AuthenticatedAdminSmtpRouteImport } from './routes/_authentica
 import { Route as AuthenticatedAdminShopierRouteImport } from './routes/_authenticated.admin.shopier'
 import { Route as AuthenticatedAdminSeoRouteImport } from './routes/_authenticated.admin.seo'
 import { Route as AuthenticatedAdminRozetlerRouteImport } from './routes/_authenticated.admin.rozetler'
+import { Route as AuthenticatedAdminReklamlarRouteImport } from './routes/_authenticated.admin.reklamlar'
 import { Route as AuthenticatedAdminRaporlarRouteImport } from './routes/_authenticated.admin.raporlar'
 import { Route as AuthenticatedAdminPaketlerRouteImport } from './routes/_authenticated.admin.paketler'
 import { Route as AuthenticatedAdminOdemelerRouteImport } from './routes/_authenticated.admin.odemeler'
@@ -217,6 +218,12 @@ const AuthenticatedAdminRozetlerRoute =
     path: '/rozetler',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminReklamlarRoute =
+  AuthenticatedAdminReklamlarRouteImport.update({
+    id: '/reklamlar',
+    path: '/reklamlar',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminRaporlarRoute =
   AuthenticatedAdminRaporlarRouteImport.update({
     id: '/raporlar',
@@ -317,6 +324,7 @@ export interface FileRoutesByFullPath {
   '/admin/odemeler': typeof AuthenticatedAdminOdemelerRoute
   '/admin/paketler': typeof AuthenticatedAdminPaketlerRoute
   '/admin/raporlar': typeof AuthenticatedAdminRaporlarRoute
+  '/admin/reklamlar': typeof AuthenticatedAdminReklamlarRoute
   '/admin/rozetler': typeof AuthenticatedAdminRozetlerRoute
   '/admin/seo': typeof AuthenticatedAdminSeoRoute
   '/admin/shopier': typeof AuthenticatedAdminShopierRoute
@@ -360,6 +368,7 @@ export interface FileRoutesByTo {
   '/admin/odemeler': typeof AuthenticatedAdminOdemelerRoute
   '/admin/paketler': typeof AuthenticatedAdminPaketlerRoute
   '/admin/raporlar': typeof AuthenticatedAdminRaporlarRoute
+  '/admin/reklamlar': typeof AuthenticatedAdminReklamlarRoute
   '/admin/rozetler': typeof AuthenticatedAdminRozetlerRoute
   '/admin/seo': typeof AuthenticatedAdminSeoRoute
   '/admin/shopier': typeof AuthenticatedAdminShopierRoute
@@ -406,6 +415,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/odemeler': typeof AuthenticatedAdminOdemelerRoute
   '/_authenticated/admin/paketler': typeof AuthenticatedAdminPaketlerRoute
   '/_authenticated/admin/raporlar': typeof AuthenticatedAdminRaporlarRoute
+  '/_authenticated/admin/reklamlar': typeof AuthenticatedAdminReklamlarRoute
   '/_authenticated/admin/rozetler': typeof AuthenticatedAdminRozetlerRoute
   '/_authenticated/admin/seo': typeof AuthenticatedAdminSeoRoute
   '/_authenticated/admin/shopier': typeof AuthenticatedAdminShopierRoute
@@ -452,6 +462,7 @@ export interface FileRouteTypes {
     | '/admin/odemeler'
     | '/admin/paketler'
     | '/admin/raporlar'
+    | '/admin/reklamlar'
     | '/admin/rozetler'
     | '/admin/seo'
     | '/admin/shopier'
@@ -495,6 +506,7 @@ export interface FileRouteTypes {
     | '/admin/odemeler'
     | '/admin/paketler'
     | '/admin/raporlar'
+    | '/admin/reklamlar'
     | '/admin/rozetler'
     | '/admin/seo'
     | '/admin/shopier'
@@ -540,6 +552,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/odemeler'
     | '/_authenticated/admin/paketler'
     | '/_authenticated/admin/raporlar'
+    | '/_authenticated/admin/reklamlar'
     | '/_authenticated/admin/rozetler'
     | '/_authenticated/admin/seo'
     | '/_authenticated/admin/shopier'
@@ -798,6 +811,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRozetlerRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/reklamlar': {
+      id: '/_authenticated/admin/reklamlar'
+      path: '/reklamlar'
+      fullPath: '/admin/reklamlar'
+      preLoaderRoute: typeof AuthenticatedAdminReklamlarRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/raporlar': {
       id: '/_authenticated/admin/raporlar'
       path: '/raporlar'
@@ -890,6 +910,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminOdemelerRoute: typeof AuthenticatedAdminOdemelerRoute
   AuthenticatedAdminPaketlerRoute: typeof AuthenticatedAdminPaketlerRoute
   AuthenticatedAdminRaporlarRoute: typeof AuthenticatedAdminRaporlarRoute
+  AuthenticatedAdminReklamlarRoute: typeof AuthenticatedAdminReklamlarRoute
   AuthenticatedAdminRozetlerRoute: typeof AuthenticatedAdminRozetlerRoute
   AuthenticatedAdminSeoRoute: typeof AuthenticatedAdminSeoRoute
   AuthenticatedAdminShopierRoute: typeof AuthenticatedAdminShopierRoute
@@ -912,6 +933,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminOdemelerRoute: AuthenticatedAdminOdemelerRoute,
   AuthenticatedAdminPaketlerRoute: AuthenticatedAdminPaketlerRoute,
   AuthenticatedAdminRaporlarRoute: AuthenticatedAdminRaporlarRoute,
+  AuthenticatedAdminReklamlarRoute: AuthenticatedAdminReklamlarRoute,
   AuthenticatedAdminRozetlerRoute: AuthenticatedAdminRozetlerRoute,
   AuthenticatedAdminSeoRoute: AuthenticatedAdminSeoRoute,
   AuthenticatedAdminShopierRoute: AuthenticatedAdminShopierRoute,
