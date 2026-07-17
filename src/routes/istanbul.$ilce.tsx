@@ -1,7 +1,7 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { ISTANBUL_ILCELERI, getIlce } from "@/lib/istanbul-ilceler";
 import { CATEGORIES } from "@/lib/categories";
-import { Home, MapPin, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Home as _Home, MapPin, ArrowRight, CheckCircle2 } from "lucide-react";
 
 const BASE = "https://hizmetalani.lovable.app";
 
@@ -156,10 +156,9 @@ function IlcePage() {
           <h2 className="text-2xl font-bold mb-4">{ilce.name}'da Sunulan Hizmetler</h2>
           <div className="grid sm:grid-cols-2 gap-3">
             {CATEGORIES.map((c) => (
-              <Link
+              <a
                 key={c.key}
-                to="/kategori/$category/$subcategory"
-                params={{ category: c.slug, subcategory: `istanbul-${ilce.slug}` }}
+                href={`/?kategori=${c.slug}&il=istanbul&ilce=${ilce.slug}`}
                 className="group flex items-center gap-3 p-4 bg-card border rounded-xl hover:border-brand hover:shadow-sm transition-all"
               >
                 <div className="size-10 rounded-lg bg-brand/10 flex items-center justify-center text-brand">
@@ -170,7 +169,7 @@ function IlcePage() {
                   <div className="text-xs text-muted-foreground truncate">{c.seoDescription}</div>
                 </div>
                 <ArrowRight className="size-4 text-muted-foreground group-hover:text-brand" />
-              </Link>
+              </a>
             ))}
           </div>
         </section>
