@@ -170,14 +170,18 @@ function autoLinkInternal(html: string): string {
     for (const b of BLOG_ANCHORS) {
       if (usedBlog.has(b.slug)) continue;
       for (const pat of b.patterns) {
+    // Blog anchors — first mention per anchor
+    for (const b of BLOG_ANCHORS) {
+      if (usedBlog.has(b.slug)) continue;
+      for (const pat of b.patterns) {
         const needle = trFold(pat);
-        const foldedNow = trFold(text.replace(/<[^>]+>/g, "")); // rough
-        if (!foldedNow.includes(needle)) continue;
-        const re = new RegExp(escRegex(needle), "i");
-        // Do a plain match on folded text of this segment
         const foldSeg = trFold(text);
-        const at = foldSeg.search(re);
+        const at = foldSeg.indexOf(needle);
         if (at < 0) continue;
+        const before = text.slice(0, at);
+        const openA = before.lastIndexOf("<a ");
+        const closeA = before.lastIndexOf("</a>");
+        if (openA > closeA) continue;
         const orig = text.slice(at, at + pat.length);
         text =
           text.slice(0, at) +
