@@ -303,7 +303,8 @@ function ListingDetail() {
 
       <div className="grid md:grid-cols-3 gap-6">
         <div className="md:col-span-2 space-y-4">
-          <div className="bg-surface border border-border rounded-xl overflow-hidden">
+          <div className="relative bg-surface border border-border rounded-xl overflow-hidden">
+            <PromoBadge listing={listing} />
             <div className="p-6">
               <div className="flex flex-wrap items-center gap-2 mb-3">
                 <Badge className={isOffering ? "bg-brand text-brand-foreground" : "bg-brand-accent text-brand-foreground"}>
