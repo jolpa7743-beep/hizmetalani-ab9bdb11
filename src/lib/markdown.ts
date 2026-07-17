@@ -166,10 +166,6 @@ function autoLinkInternal(html: string): string {
       usedIlce.add(ilce.slug);
     }
 
-    // Blog anchors
-    for (const b of BLOG_ANCHORS) {
-      if (usedBlog.has(b.slug)) continue;
-      for (const pat of b.patterns) {
     // Blog anchors — first mention per anchor
     for (const b of BLOG_ANCHORS) {
       if (usedBlog.has(b.slug)) continue;
