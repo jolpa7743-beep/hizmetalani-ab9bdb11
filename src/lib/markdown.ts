@@ -92,5 +92,99 @@ export function renderMarkdown(src: string): string {
     }
     out.push(`<p class="my-4 leading-7">${inline(buf.join(" "))}</p>`);
   }
-  return out.join("\n");
+  return autoLinkInternal(out.join("\n"));
+}
+
+// ---------- Auto internal linking ----------
+// Injects links to /istanbul/$slug for the first mention of each district
+// and /blog/$slug for known blog anchors. Skips content inside existing
+// <a>...</a>, headings, code, and tables. Case/diacritic-insensitive match.
+
+import { ISTANBUL_ILCELERI } from "./istanbul-ilceler";
+
+const BLOG_ANCHORS: Array<{ slug: string; patterns: string[] }> = [
+  { slug: "kartal-ev-temizligi-fiyatlari-2026", patterns: ["kartal ev temizliği fiyatları", "kartal temizlik fiyatı"] },
+  { slug: "istanbul-bakici-hizmeti-nasil-secilir", patterns: ["bakıcı seçimi", "güvenilir bakıcı", "çocuk bakıcısı seçimi"] },
+  { slug: "ev-temizligi-kontrol-listesi", patterns: ["temizlik kontrol listesi", "temizlik checklist"] },
+  { slug: "gecici-hayvan-yuvasi-bakimi", patterns: ["geçici hayvan yuvası", "pet sitter", "hayvan oteli"] },
+  { slug: "istanbul-ilcelerine-gore-hizmet-yogunlugu", patterns: ["istanbul ilçelerine göre", "hizmet yoğunluğu haritası"] },
+];
+
+function trFold(s: string): string {
+  return s.toLocaleLowerCase("tr")
+    .replace(/ğ/g, "g").replace(/ü/g, "u").replace(/ş/g, "s")
+    .replace(/ı/g, "i").replace(/İ/g, "i").replace(/ö/g, "o").replace(/ç/g, "c");
+}
+
+function escRegex(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+// Walk HTML, protecting tags/anchors/headings/code/table cells from replacement.
+function autoLinkInternal(html: string): string {
+  // Split into segments we CAN edit vs must skip (existing anchors, headings, code, tables).
+  const skipTag = /(<a\b[^>]*>[\s\S]*?<\/a>|<h[1-4][^>]*>[\s\S]*?<\/h[1-4]>|<code[^>]*>[\s\S]*?<\/code>|<table[^>]*>[\s\S]*?<\/table>|<[^>]+>)/gi;
+  const parts: string[] = [];
+  let last = 0;
+  let m: RegExpExecArray | null;
+  while ((m = skipTag.exec(html)) !== null) {
+    if (m.index > last) parts.push(html.slice(last, m.index)); // editable text
+    parts.push("\0KEEP\0" + m[0]); // marker for skip
+    last = m.index + m[0].length;
+  }
+  if (last < html.length) parts.push(html.slice(last));
+
+  // Track used anchors so we only link the FIRST mention across the whole doc.
+  const usedIlce = new Set<string>();
+  const usedBlog = new Set<string>();
+
+  const edited = parts.map((seg) => {
+    if (seg.startsWith("\0KEEP\0")) return seg.slice(6);
+    let text = seg;
+    const foldedText = trFold(text);
+
+    // Ilce links
+    for (const ilce of ISTANBUL_ILCELERI) {
+      if (usedIlce.has(ilce.slug)) continue;
+      const needle = trFold(ilce.name);
+      // word boundary at ASCII (safe after fold)
+      const re = new RegExp(`\\b${escRegex(needle)}\\b`);
+      const idx = foldedText.search(re);
+      if (idx < 0) continue;
+      // Find the same-length match in the ORIGINAL text at idx (folding preserves length)
+      const original = text.slice(idx, idx + ilce.name.length);
+      const before = text.slice(0, idx);
+      const after = text.slice(idx + ilce.name.length);
+      text =
+        before +
+        `<a href="/istanbul/${ilce.slug}" class="text-brand underline hover:no-underline" title="${ilce.name} ev hizmetleri">${original}</a>` +
+        after;
+      usedIlce.add(ilce.slug);
+    }
+
+    // Blog anchors
+    for (const b of BLOG_ANCHORS) {
+      if (usedBlog.has(b.slug)) continue;
+      for (const pat of b.patterns) {
+        const needle = trFold(pat);
+        const foldedNow = trFold(text.replace(/<[^>]+>/g, "")); // rough
+        if (!foldedNow.includes(needle)) continue;
+        const re = new RegExp(escRegex(needle), "i");
+        // Do a plain match on folded text of this segment
+        const foldSeg = trFold(text);
+        const at = foldSeg.search(re);
+        if (at < 0) continue;
+        const orig = text.slice(at, at + pat.length);
+        text =
+          text.slice(0, at) +
+          `<a href="/blog/${b.slug}" class="text-brand underline hover:no-underline">${orig}</a>` +
+          text.slice(at + pat.length);
+        usedBlog.add(b.slug);
+        break;
+      }
+    }
+    return text;
+  });
+
+  return edited.join("");
 }
