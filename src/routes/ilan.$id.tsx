@@ -519,8 +519,15 @@ function ListingDetail() {
                 <MessageSquare className="size-4 mr-2" /> Mesaj Gönder
               </Button>
             ) : (
-              <div className="mt-4 p-3 rounded-md bg-muted text-sm text-center">
-                Bu sizin ilanınız
+              <div className="mt-4 space-y-2">
+                <div className="p-2 rounded-md bg-muted text-xs text-center text-muted-foreground">
+                  Bu sizin ilanınız — buradan yönetebilirsiniz
+                </div>
+                <OwnerEditDialog listing={listing} />
+                <PromoteDialog listingId={listing.id} listingTitle={listing.title} />
+                <Link to="/ilanlarim" className="block">
+                  <Button variant="ghost" size="sm" className="w-full">Tüm ilanlarım</Button>
+                </Link>
               </div>
             )}
           </div>
