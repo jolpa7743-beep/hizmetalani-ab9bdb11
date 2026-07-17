@@ -284,6 +284,33 @@ function HomePage() {
               ))}
             </section>
 
+            {/* Sayfalama */}
+            {!isLoading && totalPages > 1 && (
+              <nav aria-label="Sayfalama" className="mt-8 flex flex-wrap items-center justify-center gap-2">
+                <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => goToPage(page - 1)}>
+                  ← Önceki
+                </Button>
+                {getPageNumbers(page, totalPages).map((p, i) =>
+                  p === "…" ? (
+                    <span key={`e${i}`} className="px-2 text-muted-foreground">…</span>
+                  ) : (
+                    <Button
+                      key={p}
+                      variant={p === page ? "default" : "outline"}
+                      size="sm"
+                      className={p === page ? "bg-brand hover:bg-brand/90" : ""}
+                      onClick={() => goToPage(p as number)}
+                    >
+                      {p}
+                    </Button>
+                  ),
+                )}
+                <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => goToPage(page + 1)}>
+                  Sonraki →
+                </Button>
+              </nav>
+            )}
+
             <AdSlot slot="footer" className="mt-8" />
           </div>
         </div>
