@@ -15,6 +15,10 @@ export type ListingRow = {
   created_at: string;
   description: string;
   view_count?: number;
+  is_featured?: boolean;
+  is_showcase?: boolean;
+  is_urgent?: boolean;
+  boost_score?: number;
 };
 
 function shortDate(iso: string) {

@@ -62,7 +62,7 @@ function HomePage() {
     queryFn: async () => {
       let query = supabase
         .from("listings")
-        .select("id, user_id, title, type, category, city, district, price, price_type, created_at, description, view_count")
+        .select("id, user_id, title, type, category, city, district, price, price_type, created_at, description, view_count, is_featured, is_showcase, is_urgent, boost_score")
         .eq("status", "active")
         .limit(90);
 
@@ -71,6 +71,11 @@ function HomePage() {
       if (search.sehir) query = query.eq("city", search.sehir);
       if (search.ilce) query = query.ilike("district", `%${search.ilce}%`);
       if (search.q) query = query.or(`title.ilike.%${search.q}%,description.ilike.%${search.q}%`);
+
+      // Öne çıkarılan ilanlar her zaman üstte
+      query = query
+        .order("is_featured", { ascending: false })
+        .order("boost_score", { ascending: false });
 
       switch (sort) {
         case "oldest": query = query.order("created_at", { ascending: true }); break;

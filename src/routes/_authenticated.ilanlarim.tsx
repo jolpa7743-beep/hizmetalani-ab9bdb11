@@ -5,8 +5,9 @@ import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CATEGORY_MAP, formatPrice, type CategoryKey, type ListingType } from "@/lib/categories";
-import { Eye, Pencil, Trash2, Plus } from "lucide-react";
+import { Eye, Pencil, Trash2, Plus, Sparkles, Flame } from "lucide-react";
 import { toast } from "sonner";
+import { PromoteDialog } from "@/components/PromoteDialog";
 
 export const Route = createFileRoute("/_authenticated/ilanlarim")({
   component: MyListings,
@@ -17,6 +18,7 @@ type MyListing = {
   id: string; title: string; category: CategoryKey; type: ListingType;
   city: string; district: string | null; price: number | null; price_type: string;
   status: "active" | "paused" | "closed"; view_count: number; created_at: string;
+  is_featured?: boolean; is_urgent?: boolean; is_showcase?: boolean;
 };
 
 function MyListings() {
@@ -29,7 +31,7 @@ function MyListings() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("listings")
-        .select("id,title,category,type,city,district,price,price_type,status,view_count,created_at")
+        .select("id,title,category,type,city,district,price,price_type,status,view_count,created_at,is_featured,is_urgent,is_showcase")
         .eq("user_id", user!.id)
         .order("created_at", { ascending: false });
       if (error) throw error;
@@ -57,9 +59,14 @@ function MyListings() {
     <div className="mx-auto max-w-5xl px-4 py-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">İlanlarım</h1>
-        <Link to="/ilan-ver">
-          <Button className="bg-brand hover:bg-brand/90"><Plus className="size-4 mr-1" /> Yeni İlan</Button>
-        </Link>
+        <div className="flex gap-2">
+          <Link to="/promosyonlarim">
+            <Button variant="outline"><Sparkles className="size-4 mr-1" /> Promosyonlarım</Button>
+          </Link>
+          <Link to="/ilan-ver">
+            <Button className="bg-brand hover:bg-brand/90"><Plus className="size-4 mr-1" /> Yeni İlan</Button>
+          </Link>
+        </div>
       </div>
 
       {isLoading && <p>Yükleniyor...</p>}
@@ -81,6 +88,8 @@ function MyListings() {
                 <Badge variant={l.status === "active" ? "default" : "secondary"} className={l.status === "active" ? "bg-emerald-600" : ""}>
                   {l.status === "active" ? "Aktif" : l.status === "paused" ? "Duraklatıldı" : "Kapalı"}
                 </Badge>
+                {l.is_featured && <Badge className="bg-amber-500"><Sparkles className="size-3 mr-0.5" />Vitrin</Badge>}
+                {l.is_urgent && <Badge className="bg-red-500"><Flame className="size-3 mr-0.5" />Acil</Badge>}
                 <span className="text-xs text-muted-foreground">{CATEGORY_MAP[l.category]?.short}</span>
               </div>
               <h3 className="font-semibold truncate">{l.title}</h3>
@@ -91,10 +100,11 @@ function MyListings() {
                 <Eye className="size-3" /> {l.view_count} görüntüleme • {new Date(l.created_at).toLocaleDateString("tr-TR")}
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <Link to="/ilan/$id" params={{ id: l.id }}>
                 <Button variant="outline" size="sm"><Eye className="size-4" /></Button>
               </Link>
+              {l.status === "active" && <PromoteDialog listingId={l.id} listingTitle={l.title} />}
               <Button variant="outline" size="sm" onClick={() => toggleStatus(l.id, l.status)}>
                 <Pencil className="size-4 mr-1" />{l.status === "active" ? "Durdur" : "Aktif Et"}
               </Button>

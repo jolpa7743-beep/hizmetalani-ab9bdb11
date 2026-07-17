@@ -7,6 +7,7 @@ import {
   LayoutDashboard, Users, ListChecks, ArrowLeft, ScrollText, Search, MessageCircle,
   Megaphone, Send, Star, Flag, ShieldCheck, Inbox, Layers, ChevronDown,
   ShieldAlert, Settings, Database, UsersRound, Mail,
+  Wallet, Sparkles, Landmark, CreditCard, Image as ImageIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { adminModerationCounts } from "@/lib/admin.functions";
@@ -83,6 +84,16 @@ function AdminLayout() {
         { to: "/admin/mesajlar", label: "Kullanıcı Mesajları", icon: MessageCircle },
         { to: "/admin/duyurular", label: "Duyurular", icon: Megaphone },
         { to: "/admin/yayin", label: "Toplu DM", icon: Send },
+      ],
+    },
+    {
+      key: "revenue", label: "Kazanç", icon: Wallet,
+      items: [
+        { to: "/admin/paketler", label: "Öne Çıkarma Paketleri", icon: Sparkles },
+        { to: "/admin/odemeler", label: "Ödemeler", icon: CreditCard },
+        { to: "/admin/havale", label: "Banka Hesapları", icon: Landmark },
+        { to: "/admin/shopier", label: "Shopier Ayarları", icon: CreditCard },
+        { to: "/admin/reklamlar", label: "Sponsor Reklamlar", icon: ImageIcon },
       ],
     },
     {
