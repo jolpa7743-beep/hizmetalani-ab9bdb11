@@ -26,6 +26,7 @@ import { Route as AdsDottxtRouteImport } from './routes/ads[.]txt'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as IstanbulIndexRouteImport } from './routes/istanbul.index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as UyeIdRouteImport } from './routes/uye.$id'
 import { Route as IstanbulIlceRouteImport } from './routes/istanbul.$ilce'
 import { Route as IlanIdRouteImport } from './routes/ilan.$id'
@@ -145,6 +146,11 @@ const IstanbulIndexRoute = IstanbulIndexRouteImport.update({
   id: '/istanbul/',
   path: '/istanbul/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BlogRoute,
 } as any)
 const UyeIdRoute = UyeIdRouteImport.update({
   id: '/uye/$id',
@@ -367,6 +373,7 @@ export interface FileRoutesByFullPath {
   '/ilan/$id': typeof IlanIdRoute
   '/istanbul/$ilce': typeof IstanbulIlceRoute
   '/uye/$id': typeof UyeIdRoute
+  '/blog/': typeof BlogIndexRoute
   '/istanbul/': typeof IstanbulIndexRoute
   '/admin/bildirimler': typeof AuthenticatedAdminBildirimlerRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
@@ -398,7 +405,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/ads.txt': typeof AdsDottxtRoute
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRouteWithChildren
   '/cerez-politikasi': typeof CerezPolitikasiRoute
   '/gizlilik': typeof GizlilikRoute
   '/guvenlik': typeof GuvenlikRoute
@@ -419,6 +425,7 @@ export interface FileRoutesByTo {
   '/ilan/$id': typeof IlanIdRoute
   '/istanbul/$ilce': typeof IstanbulIlceRoute
   '/uye/$id': typeof UyeIdRoute
+  '/blog': typeof BlogIndexRoute
   '/istanbul': typeof IstanbulIndexRoute
   '/admin/bildirimler': typeof AuthenticatedAdminBildirimlerRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
@@ -474,6 +481,7 @@ export interface FileRoutesById {
   '/ilan/$id': typeof IlanIdRoute
   '/istanbul/$ilce': typeof IstanbulIlceRoute
   '/uye/$id': typeof UyeIdRoute
+  '/blog/': typeof BlogIndexRoute
   '/istanbul/': typeof IstanbulIndexRoute
   '/_authenticated/admin/bildirimler': typeof AuthenticatedAdminBildirimlerRoute
   '/_authenticated/admin/blog': typeof AuthenticatedAdminBlogRoute
@@ -529,6 +537,7 @@ export interface FileRouteTypes {
     | '/ilan/$id'
     | '/istanbul/$ilce'
     | '/uye/$id'
+    | '/blog/'
     | '/istanbul/'
     | '/admin/bildirimler'
     | '/admin/blog'
@@ -560,7 +569,6 @@ export interface FileRouteTypes {
     | '/'
     | '/ads.txt'
     | '/auth'
-    | '/blog'
     | '/cerez-politikasi'
     | '/gizlilik'
     | '/guvenlik'
@@ -581,6 +589,7 @@ export interface FileRouteTypes {
     | '/ilan/$id'
     | '/istanbul/$ilce'
     | '/uye/$id'
+    | '/blog'
     | '/istanbul'
     | '/admin/bildirimler'
     | '/admin/blog'
@@ -635,6 +644,7 @@ export interface FileRouteTypes {
     | '/ilan/$id'
     | '/istanbul/$ilce'
     | '/uye/$id'
+    | '/blog/'
     | '/istanbul/'
     | '/_authenticated/admin/bildirimler'
     | '/_authenticated/admin/blog'
@@ -806,6 +816,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/istanbul/'
       preLoaderRoute: typeof IstanbulIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof BlogRoute
     }
     '/uye/$id': {
       id: '/uye/$id'
@@ -1138,10 +1155,12 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 
 interface BlogRouteChildren {
   BlogSlugRoute: typeof BlogSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
 }
 
 const BlogRouteChildren: BlogRouteChildren = {
   BlogSlugRoute: BlogSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
 }
 
 const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
@@ -1171,13 +1190,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
