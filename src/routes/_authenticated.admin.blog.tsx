@@ -1,5 +1,6 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
+import { useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { adminListAllPosts, adminSavePost, adminDeletePost, adminGetPost, type PostInput } from "@/lib/blog.functions";
@@ -121,7 +122,6 @@ function BlogAdmin() {
 function PostEditor({ id, onClose }: { id: string | null; onClose: () => void }) {
   const getFn = useServerFn(adminGetPost);
   const saveFn = useServerFn(adminSavePost);
-  const navigate = useNavigate();
 
   const { data: existing } = useQuery({
     queryKey: ["admin-blog-post", id],
@@ -142,23 +142,23 @@ function PostEditor({ id, onClose }: { id: string | null; onClose: () => void })
     meta_description: "",
   });
 
-  const [loaded, setLoaded] = useState(false);
-  if (existing && !loaded) {
-    setForm({
-      id: existing.id,
-      slug: existing.slug,
-      title: existing.title,
-      excerpt: existing.excerpt ?? "",
-      content: existing.content,
-      cover_url: existing.cover_url ?? "",
-      category: existing.category ?? "",
-      tags: existing.tags ?? [],
-      status: existing.status,
-      meta_title: existing.meta_title ?? "",
-      meta_description: existing.meta_description ?? "",
-    });
-    setLoaded(true);
-  }
+  useEffect(() => {
+    if (existing) {
+      setForm({
+        id: existing.id,
+        slug: existing.slug,
+        title: existing.title,
+        excerpt: existing.excerpt ?? "",
+        content: existing.content,
+        cover_url: existing.cover_url ?? "",
+        category: existing.category ?? "",
+        tags: existing.tags ?? [],
+        status: existing.status,
+        meta_title: existing.meta_title ?? "",
+        meta_description: existing.meta_description ?? "",
+      });
+    }
+  }, [existing]);
 
   const saveMut = useMutation({
     mutationFn: () => saveFn({ data: form }),
