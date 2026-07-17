@@ -235,7 +235,7 @@ function HomePage() {
                 </Sheet>
 
                 <p className="text-sm text-muted-foreground" aria-live="polite">
-                  {isLoading ? "Yükleniyor..." : `${listings?.length ?? 0} ilan`}
+                  {isLoading ? "Yükleniyor..." : `${totalCount} ilan · Sayfa ${page}/${totalPages}`}
                 </p>
               </div>
 
