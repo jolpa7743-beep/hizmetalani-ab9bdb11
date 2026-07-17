@@ -252,7 +252,7 @@ function NewListing() {
               >
                 <label className={`border rounded-lg p-3 cursor-pointer transition-colors ${form.type === "offering" ? "border-brand bg-brand/5" : "border-border"}`}>
                   <RadioGroupItem value="offering" className="sr-only" />
-                  <div className="font-medium">Hizmet Veriyorum</div>
+                  <div className="font-medium">Hizmet Sunuyorum</div>
                   <div className="text-xs text-muted-foreground">İş arayan / hizmet sunan</div>
                 </label>
                 <label className={`border rounded-lg p-3 cursor-pointer transition-colors ${form.type === "seeking" ? "border-brand bg-brand/5" : "border-border"}`}>
