@@ -26,8 +26,9 @@ const KIND_META: Record<PromotionKind, { label: string; icon: typeof Rocket; col
 export function PromoteDialog({ listingId, listingTitle }: { listingId: string; listingTitle: string }) {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<"pick" | "method" | "bank">("pick");
-  const [selected, setSelected] = useState<PromotionPackage | null>(null);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [ref, setRef] = useState<string | null>(null);
+  const [totalAmount, setTotalAmount] = useState<number>(0);
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -41,6 +42,9 @@ export function PromoteDialog({ listingId, listingTitle }: { listingId: string; 
     enabled: open,
   });
 
+  const selectedPackages = (packages ?? []).filter((p) => selectedIds.includes(p.id));
+  const total = selectedPackages.reduce((s, p) => s + Number(p.price_try), 0);
+
   const { data: banks } = useQuery({
     queryKey: ["bank-accounts"],
     queryFn: () => fetchBanks(),
@@ -49,21 +53,28 @@ export function PromoteDialog({ listingId, listingTitle }: { listingId: string; 
 
   const reset = () => {
     setStep("pick");
-    setSelected(null);
+    setSelectedIds([]);
     setRef(null);
     setCopied(false);
+    setTotalAmount(0);
+  };
+
+  const toggle = (id: string) => {
+    setSelectedIds((prev) => prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]);
   };
 
   const handleMethod = async (method: "shopier" | "bank_transfer") => {
-    if (!selected) return;
+    if (selectedPackages.length === 0) return;
     setLoading(true);
     try {
-      const result = await createOrder({ data: { listingId, packageId: selected.id, method } });
+      const results = await Promise.all(
+        selectedPackages.map((p) => createOrder({ data: { listingId, packageId: p.id, method } })),
+      );
       if (method === "bank_transfer") {
-        setRef(result.reference);
+        setRef(results.map((r) => r.reference).join(", "));
+        setTotalAmount(total);
         setStep("bank");
       } else {
-        // Shopier akışı — henüz aktif değilse kullanıcıya bilgi ver
         toast.info("Shopier ödeme entegrasyonu yakında aktif olacak. Şimdilik havale/EFT'yi kullanabilirsiniz.");
         setStep("method");
       }
