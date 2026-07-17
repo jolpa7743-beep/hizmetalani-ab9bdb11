@@ -1,0 +1,1 @@
+GRANT SELECT (is_banned) ON public.profiles TO anon, authenticated;
