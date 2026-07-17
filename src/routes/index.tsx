@@ -31,6 +31,20 @@ const SORT_OPTIONS = [
 ] as const;
 type SortValue = (typeof SORT_OPTIONS)[number]["value"];
 
+const PAGE_SIZE = 24;
+
+function getPageNumbers(current: number, total: number): (number | "…")[] {
+  const pages: (number | "…")[] = [];
+  const push = (n: number | "…") => { if (pages[pages.length - 1] !== n) pages.push(n); };
+  const add = (n: number) => { if (n >= 1 && n <= total) push(n); };
+  add(1);
+  if (current - 2 > 2) push("…");
+  for (let i = current - 1; i <= current + 1; i++) add(i);
+  if (current + 2 < total - 1) push("…");
+  add(total);
+  return pages;
+}
+
 const searchSchema = z.object({
   kategori: z.string().optional(),
   tip: z.enum(["offering", "seeking"]).optional(),
@@ -38,6 +52,7 @@ const searchSchema = z.object({
   ilce: z.string().optional(),
   q: z.string().optional(),
   siralama: z.enum(["newest", "oldest", "price_asc", "price_desc", "popular"]).optional(),
+  sayfa: z.coerce.number().int().min(1).optional(),
 });
 
 export const Route = createFileRoute("/")({
@@ -57,14 +72,17 @@ function HomePage() {
   const [ilceInput, setIlceInput] = useState(search.ilce ?? "");
   const sort: SortValue = search.siralama ?? "newest";
 
-  const { data: listings, isLoading } = useQuery({
-    queryKey: ["listings", search],
+  const page = Math.max(1, search.sayfa ?? 1);
+  const from = (page - 1) * PAGE_SIZE;
+  const to = from + PAGE_SIZE - 1;
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["listings", search, page],
     queryFn: async () => {
       let query = supabase
         .from("listings")
-        .select("id, user_id, title, type, category, city, district, price, price_type, created_at, description, view_count, is_featured, is_showcase, is_urgent, boost_score")
-        .eq("status", "active")
-        .limit(90);
+        .select("id, user_id, title, type, category, city, district, price, price_type, created_at, description, view_count, is_featured, is_showcase, is_urgent, boost_score", { count: "exact" })
+        .eq("status", "active");
 
       if (search.kategori) query = query.eq("category", search.kategori as CategoryKey);
       if (search.tip) query = query.eq("type", search.tip);
@@ -85,11 +103,15 @@ function HomePage() {
         default: query = query.order("created_at", { ascending: false });
       }
 
-      const { data, error } = await query;
+      const { data, error, count } = await query.range(from, to);
       if (error) throw error;
-      return (data ?? []) as ListingRow[];
+      return { rows: (data ?? []) as ListingRow[], count: count ?? 0 };
     },
   });
+
+  const listings = data?.rows;
+  const totalCount = data?.count ?? 0;
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
   const fetchStats = useServerFn(getOwnerStatsBulk);
   const ownerIds = Array.from(new Set((listings ?? []).map((l) => l.user_id).filter((x): x is string => !!x)));
@@ -101,7 +123,12 @@ function HomePage() {
   });
 
   const setParam = (key: string, val: string | undefined) => {
-    navigate({ search: (prev: Record<string, string | undefined>) => ({ ...prev, [key]: val || undefined }) });
+    navigate({ search: (prev: Record<string, string | undefined>) => ({ ...prev, [key]: val || undefined, sayfa: key === "sayfa" ? val || undefined : undefined }) });
+  };
+
+  const goToPage = (p: number) => {
+    navigate({ search: (prev: Record<string, unknown>) => ({ ...prev, sayfa: p <= 1 ? undefined : p }) });
+    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const clearAll = () => {
@@ -220,7 +247,7 @@ function HomePage() {
                 </Sheet>
 
                 <p className="text-sm text-muted-foreground" aria-live="polite">
-                  {isLoading ? "Yükleniyor..." : `${listings?.length ?? 0} ilan`}
+                  {isLoading ? "Yükleniyor..." : `${totalCount} ilan · Sayfa ${page}/${totalPages}`}
                 </p>
               </div>
 
@@ -268,6 +295,33 @@ function HomePage() {
                 </Fragment>
               ))}
             </section>
+
+            {/* Sayfalama */}
+            {!isLoading && totalPages > 1 && (
+              <nav aria-label="Sayfalama" className="mt-8 flex flex-wrap items-center justify-center gap-2">
+                <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => goToPage(page - 1)}>
+                  ← Önceki
+                </Button>
+                {getPageNumbers(page, totalPages).map((p, i) =>
+                  p === "…" ? (
+                    <span key={`e${i}`} className="px-2 text-muted-foreground">…</span>
+                  ) : (
+                    <Button
+                      key={p}
+                      variant={p === page ? "default" : "outline"}
+                      size="sm"
+                      className={p === page ? "bg-brand hover:bg-brand/90" : ""}
+                      onClick={() => goToPage(p as number)}
+                    >
+                      {p}
+                    </Button>
+                  ),
+                )}
+                <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => goToPage(page + 1)}>
+                  Sonraki →
+                </Button>
+              </nav>
+            )}
 
             <AdSlot slot="footer" className="mt-8" />
           </div>
