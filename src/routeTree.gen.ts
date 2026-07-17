@@ -15,7 +15,6 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as NasilCalisirRouteImport } from './routes/nasil-calisir'
 import { Route as KvkkRouteImport } from './routes/kvkk'
 import { Route as KullanimKosullariRouteImport } from './routes/kullanim-kosullari'
-import { Route as IstanbulRouteImport } from './routes/istanbul'
 import { Route as IletisimRouteImport } from './routes/iletisim'
 import { Route as HakkimizdaRouteImport } from './routes/hakkimizda'
 import { Route as GuvenlikRouteImport } from './routes/guvenlik'
@@ -93,11 +92,6 @@ const KullanimKosullariRoute = KullanimKosullariRouteImport.update({
   path: '/kullanim-kosullari',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IstanbulRoute = IstanbulRouteImport.update({
-  id: '/istanbul',
-  path: '/istanbul',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IletisimRoute = IletisimRouteImport.update({
   id: '/iletisim',
   path: '/iletisim',
@@ -148,9 +142,9 @@ const IndexRoute = IndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const IstanbulIndexRoute = IstanbulIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => IstanbulRoute,
+  id: '/istanbul/',
+  path: '/istanbul/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const UyeIdRoute = UyeIdRouteImport.update({
   id: '/uye/$id',
@@ -158,9 +152,9 @@ const UyeIdRoute = UyeIdRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const IstanbulIlceRoute = IstanbulIlceRouteImport.update({
-  id: '/$ilce',
-  path: '/$ilce',
-  getParentRoute: () => IstanbulRoute,
+  id: '/istanbul/$ilce',
+  path: '/istanbul/$ilce',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const IlanIdRoute = IlanIdRouteImport.update({
   id: '/ilan/$id',
@@ -357,7 +351,6 @@ export interface FileRoutesByFullPath {
   '/guvenlik': typeof GuvenlikRoute
   '/hakkimizda': typeof HakkimizdaRoute
   '/iletisim': typeof IletisimRoute
-  '/istanbul': typeof IstanbulRouteWithChildren
   '/kullanim-kosullari': typeof KullanimKosullariRoute
   '/kvkk': typeof KvkkRoute
   '/nasil-calisir': typeof NasilCalisirRoute
@@ -465,7 +458,6 @@ export interface FileRoutesById {
   '/guvenlik': typeof GuvenlikRoute
   '/hakkimizda': typeof HakkimizdaRoute
   '/iletisim': typeof IletisimRoute
-  '/istanbul': typeof IstanbulRouteWithChildren
   '/kullanim-kosullari': typeof KullanimKosullariRoute
   '/kvkk': typeof KvkkRoute
   '/nasil-calisir': typeof NasilCalisirRoute
@@ -521,7 +513,6 @@ export interface FileRouteTypes {
     | '/guvenlik'
     | '/hakkimizda'
     | '/iletisim'
-    | '/istanbul'
     | '/kullanim-kosullari'
     | '/kvkk'
     | '/nasil-calisir'
@@ -628,7 +619,6 @@ export interface FileRouteTypes {
     | '/guvenlik'
     | '/hakkimizda'
     | '/iletisim'
-    | '/istanbul'
     | '/kullanim-kosullari'
     | '/kvkk'
     | '/nasil-calisir'
@@ -684,7 +674,6 @@ export interface RootRouteChildren {
   GuvenlikRoute: typeof GuvenlikRoute
   HakkimizdaRoute: typeof HakkimizdaRoute
   IletisimRoute: typeof IletisimRoute
-  IstanbulRoute: typeof IstanbulRouteWithChildren
   KullanimKosullariRoute: typeof KullanimKosullariRoute
   KvkkRoute: typeof KvkkRoute
   NasilCalisirRoute: typeof NasilCalisirRoute
@@ -692,7 +681,9 @@ export interface RootRouteChildren {
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   IlanIdRoute: typeof IlanIdRoute
+  IstanbulIlceRoute: typeof IstanbulIlceRoute
   UyeIdRoute: typeof UyeIdRoute
+  IstanbulIndexRoute: typeof IstanbulIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -737,13 +728,6 @@ declare module '@tanstack/react-router' {
       path: '/kullanim-kosullari'
       fullPath: '/kullanim-kosullari'
       preLoaderRoute: typeof KullanimKosullariRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/istanbul': {
-      id: '/istanbul'
-      path: '/istanbul'
-      fullPath: '/istanbul'
-      preLoaderRoute: typeof IstanbulRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/iletisim': {
@@ -818,10 +802,10 @@ declare module '@tanstack/react-router' {
     }
     '/istanbul/': {
       id: '/istanbul/'
-      path: '/'
+      path: '/istanbul'
       fullPath: '/istanbul/'
       preLoaderRoute: typeof IstanbulIndexRouteImport
-      parentRoute: typeof IstanbulRoute
+      parentRoute: typeof rootRouteImport
     }
     '/uye/$id': {
       id: '/uye/$id'
@@ -832,10 +816,10 @@ declare module '@tanstack/react-router' {
     }
     '/istanbul/$ilce': {
       id: '/istanbul/$ilce'
-      path: '/$ilce'
+      path: '/istanbul/$ilce'
       fullPath: '/istanbul/$ilce'
       preLoaderRoute: typeof IstanbulIlceRouteImport
-      parentRoute: typeof IstanbulRoute
+      parentRoute: typeof rootRouteImport
     }
     '/ilan/$id': {
       id: '/ilan/$id'
@@ -1162,20 +1146,6 @@ const BlogRouteChildren: BlogRouteChildren = {
 
 const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
-interface IstanbulRouteChildren {
-  IstanbulIlceRoute: typeof IstanbulIlceRoute
-  IstanbulIndexRoute: typeof IstanbulIndexRoute
-}
-
-const IstanbulRouteChildren: IstanbulRouteChildren = {
-  IstanbulIlceRoute: IstanbulIlceRoute,
-  IstanbulIndexRoute: IstanbulIndexRoute,
-}
-
-const IstanbulRouteWithChildren = IstanbulRoute._addFileChildren(
-  IstanbulRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
@@ -1187,7 +1157,6 @@ const rootRouteChildren: RootRouteChildren = {
   GuvenlikRoute: GuvenlikRoute,
   HakkimizdaRoute: HakkimizdaRoute,
   IletisimRoute: IletisimRoute,
-  IstanbulRoute: IstanbulRouteWithChildren,
   KullanimKosullariRoute: KullanimKosullariRoute,
   KvkkRoute: KvkkRoute,
   NasilCalisirRoute: NasilCalisirRoute,
@@ -1195,7 +1164,9 @@ const rootRouteChildren: RootRouteChildren = {
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   IlanIdRoute: IlanIdRoute,
+  IstanbulIlceRoute: IstanbulIlceRoute,
   UyeIdRoute: UyeIdRoute,
+  IstanbulIndexRoute: IstanbulIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
