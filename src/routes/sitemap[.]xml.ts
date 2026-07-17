@@ -3,11 +3,14 @@ import type {} from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import { CATEGORIES } from "@/lib/categories";
 import { ILLER } from "@/lib/turkiye";
+import { ISTANBUL_ILCELERI } from "@/lib/istanbul-ilceler";
 
 const BASE_URL = "";
 
 const STATIC_ROUTES = [
   { path: "/", changefreq: "daily", priority: "1.0" },
+  { path: "/blog", changefreq: "daily", priority: "0.9" },
+  { path: "/istanbul", changefreq: "weekly", priority: "0.9" },
   { path: "/hakkimizda", changefreq: "monthly", priority: "0.7" },
   { path: "/iletisim", changefreq: "monthly", priority: "0.6" },
   { path: "/nasil-calisir", changefreq: "monthly", priority: "0.6" },
