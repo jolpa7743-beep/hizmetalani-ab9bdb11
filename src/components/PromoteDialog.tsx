@@ -107,23 +107,24 @@ export function PromoteDialog({ listingId, listingTitle }: { listingId: string; 
 
         {step === "pick" && (
           <div className="space-y-3">
-            <p className="text-sm text-muted-foreground">Bir paket seçin — ilanınız daha fazla kişiye ulaşsın.</p>
+            <p className="text-sm text-muted-foreground">Birden fazla paket seçebilirsiniz — hepsi birlikte aktifleşir.</p>
             <div className="grid gap-2 sm:grid-cols-2">
               {(packages ?? []).map((p) => {
                 const meta = KIND_META[p.kind];
                 const Icon = meta.icon;
-                const isSel = selected?.id === p.id;
+                const isSel = selectedIds.includes(p.id);
                 return (
                   <button
                     key={p.id}
-                    onClick={() => setSelected(p)}
-                    className={`text-left rounded-lg border-2 p-3 transition-all ${isSel ? "border-brand bg-brand/5" : "border-border hover:border-brand/30"}`}
+                    onClick={() => toggle(p.id)}
+                    className={`text-left rounded-lg border-2 p-3 transition-all ${isSel ? "border-brand bg-brand/5 ring-2 ring-brand/20" : "border-border hover:border-brand/30"}`}
                   >
                     <div className="flex items-center gap-2 mb-1">
                       <span className={`inline-flex size-6 items-center justify-center rounded ${meta.color} text-white`}>
                         <Icon className="size-3.5" />
                       </span>
                       <Badge variant="secondary" className="text-[10px]">{meta.label}</Badge>
+                      {isSel && <Check className="size-4 text-brand ml-auto" />}
                     </div>
                     <div className="font-semibold text-sm">{p.name}</div>
                     {p.description && <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{p.description}</p>}
@@ -136,9 +137,17 @@ export function PromoteDialog({ listingId, listingTitle }: { listingId: string; 
             {(packages?.length ?? 0) === 0 && (
               <p className="text-sm text-muted-foreground text-center py-6">Henüz aktif paket yok.</p>
             )}
+            {selectedPackages.length > 0 && (
+              <div className="rounded-lg bg-brand/5 border border-brand/20 p-3 flex items-center justify-between">
+                <div className="text-sm">
+                  <span className="font-medium">{selectedPackages.length} paket seçildi</span>
+                </div>
+                <div className="text-lg font-bold text-brand tabular-nums">{total.toLocaleString("tr-TR")} ₺</div>
+              </div>
+            )}
             <div className="flex justify-end pt-2">
               <Button
-                disabled={!selected}
+                disabled={selectedPackages.length === 0}
                 onClick={() => setStep("method")}
                 className="bg-brand hover:bg-brand/90"
               >
@@ -148,11 +157,19 @@ export function PromoteDialog({ listingId, listingTitle }: { listingId: string; 
           </div>
         )}
 
-        {step === "method" && selected && (
+        {step === "method" && selectedPackages.length > 0 && (
           <div className="space-y-3">
-            <div className="rounded-lg bg-muted/50 p-3 text-sm">
-              <div className="font-medium">{selected.name}</div>
-              <div className="text-muted-foreground">{selected.duration_hours} saat • <span className="font-bold text-brand">{selected.price_try.toLocaleString("tr-TR")} ₺</span></div>
+            <div className="rounded-lg bg-muted/50 p-3 text-sm space-y-1">
+              {selectedPackages.map((p) => (
+                <div key={p.id} className="flex justify-between">
+                  <span>{p.name} <span className="text-muted-foreground">({p.duration_hours} sa)</span></span>
+                  <span className="tabular-nums">{p.price_try.toLocaleString("tr-TR")} ₺</span>
+                </div>
+              ))}
+              <div className="flex justify-between border-t pt-1 mt-1 font-bold">
+                <span>Toplam</span>
+                <span className="text-brand tabular-nums">{total.toLocaleString("tr-TR")} ₺</span>
+              </div>
             </div>
             <p className="text-sm text-muted-foreground">Ödeme yöntemini seçin:</p>
             <div className="grid gap-2 sm:grid-cols-2">
@@ -182,17 +199,17 @@ export function PromoteDialog({ listingId, listingTitle }: { listingId: string; 
           </div>
         )}
 
-        {step === "bank" && ref && selected && (
+        {step === "bank" && ref && (
           <div className="space-y-4">
             <div className="rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-900">
               <div className="font-semibold mb-1">Ödemenizi tamamlayın</div>
-              <p>Aşağıdaki hesaplardan birine <strong>{selected.price_try.toLocaleString("tr-TR")} ₺</strong> tutarını gönderin. Açıklama kısmına referans kodunu yazmayı unutmayın.</p>
+              <p>Aşağıdaki hesaplardan birine <strong>{totalAmount.toLocaleString("tr-TR")} ₺</strong> tutarını gönderin. Açıklama kısmına referans kod(lar)ını yazmayı unutmayın.</p>
             </div>
 
             <div className="rounded-lg border p-3 flex items-center justify-between bg-brand/5">
               <div>
-                <div className="text-xs text-muted-foreground">Referans Kodu</div>
-                <div className="font-mono font-bold text-lg">{ref}</div>
+                <div className="text-xs text-muted-foreground">Referans Kod(ları)</div>
+                <div className="font-mono font-bold text-sm break-all">{ref}</div>
               </div>
               <Button size="sm" variant="outline" onClick={copyRef}>
                 {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
