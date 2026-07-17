@@ -57,13 +57,18 @@ export function ListingCard({
             {TYPE_LABEL[item.type]}
           </span>
           {item.is_featured && (
-            <span className="inline-flex items-center gap-1 rounded-sm bg-amber-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
-              Öne Çıkan
+            <span className="inline-flex items-center gap-1 rounded-sm bg-gradient-to-r from-amber-500 to-orange-500 px-1.5 py-0.5 text-[10px] font-bold text-white shadow-sm animate-pulse">
+              ✨ VİTRİN
+            </span>
+          )}
+          {item.is_showcase && (
+            <span className="inline-flex items-center gap-1 rounded-sm bg-gradient-to-r from-brand to-blue-600 px-1.5 py-0.5 text-[10px] font-bold text-white shadow-sm">
+              ⭐ ÖNE ÇIKAN
             </span>
           )}
           {item.is_urgent && (
-            <span className="inline-flex items-center gap-1 rounded-sm bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
-              Acil
+            <span className="inline-flex items-center gap-1 rounded-sm bg-gradient-to-r from-red-500 to-rose-600 px-1.5 py-0.5 text-[10px] font-bold text-white shadow-sm animate-pulse">
+              🔥 ACİL
             </span>
           )}
           <span className="ml-auto text-[11px] text-muted-foreground">{cat?.short}</span>
