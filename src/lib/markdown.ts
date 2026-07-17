@@ -141,24 +141,28 @@ function autoLinkInternal(html: string): string {
   const edited = parts.map((seg) => {
     if (seg.startsWith("\0KEEP\0")) return seg.slice(6);
     let text = seg;
-    const foldedText = trFold(text);
 
-    // Ilce links
+    // Ilce links — first mention per segment, only untagged text
     for (const ilce of ISTANBUL_ILCELERI) {
       if (usedIlce.has(ilce.slug)) continue;
       const needle = trFold(ilce.name);
-      // word boundary at ASCII (safe after fold)
       const re = new RegExp(`\\b${escRegex(needle)}\\b`);
-      const idx = foldedText.search(re);
-      if (idx < 0) continue;
-      // Find the same-length match in the ORIGINAL text at idx (folding preserves length)
-      const original = text.slice(idx, idx + ilce.name.length);
-      const before = text.slice(0, idx);
-      const after = text.slice(idx + ilce.name.length);
+      // Search only in current text, ignoring any tags we've already added
+      // Since parts skip tags at split time, at this stage `text` is pure text
+      // until the first replacement inserts a tag. Track running offset.
+      const folded = trFold(text);
+      const foundAt = folded.search(re);
+      if (foundAt < 0) continue;
+      // Make sure foundAt isn't inside a previously injected <a ...>...</a>
+      const before = text.slice(0, foundAt);
+      const openA = before.lastIndexOf("<a ");
+      const closeA = before.lastIndexOf("</a>");
+      if (openA > closeA) continue; // inside an existing anchor; skip
+      const original = text.slice(foundAt, foundAt + ilce.name.length);
       text =
-        before +
+        text.slice(0, foundAt) +
         `<a href="/istanbul/${ilce.slug}" class="text-brand underline hover:no-underline" title="${ilce.name} ev hizmetleri">${original}</a>` +
-        after;
+        text.slice(foundAt + ilce.name.length);
       usedIlce.add(ilce.slug);
     }
 
