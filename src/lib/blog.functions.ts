@@ -141,15 +141,16 @@ export const adminSavePost = createServerFn({ method: "POST" })
           : null,
     };
     if (data.id) {
-      const upd: Record<string, unknown> = { ...payload };
-      if (upd.published_at === undefined) delete upd.published_at;
+      const { published_at, ...rest } = payload;
+      const upd = published_at === undefined ? rest : { ...rest, published_at };
       const { error } = await context.supabase.from("blog_posts").update(upd).eq("id", data.id);
       if (error) throw new Error(error.message);
       return { ok: true, id: data.id };
     } else {
+      const insertPayload = { ...payload, published_at: payload.published_at ?? null };
       const { data: ins, error } = await context.supabase
         .from("blog_posts")
-        .insert(payload)
+        .insert(insertPayload)
         .select("id")
         .single();
       if (error) throw new Error(error.message);

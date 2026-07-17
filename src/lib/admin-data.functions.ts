@@ -33,7 +33,7 @@ export const adminTableRows = createServerFn({ method: "GET" })
       _limit: Math.min(Math.max(data.limit ?? 100, 1), 500),
     });
     if (error) throw new Error(error.message);
-    return (rows ?? []) as Array<Record<string, unknown>>;
+    return (rows ?? []) as unknown[];
   });
 
 // ---- Storage manager ----
