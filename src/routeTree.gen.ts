@@ -20,12 +20,16 @@ import { Route as HakkimizdaRouteImport } from './routes/hakkimizda'
 import { Route as GuvenlikRouteImport } from './routes/guvenlik'
 import { Route as GizlilikRouteImport } from './routes/gizlilik'
 import { Route as CerezPolitikasiRouteImport } from './routes/cerez-politikasi'
+import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdsDottxtRouteImport } from './routes/ads[.]txt'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as IstanbulIndexRouteImport } from './routes/istanbul.index'
 import { Route as UyeIdRouteImport } from './routes/uye.$id'
+import { Route as IstanbulIlceRouteImport } from './routes/istanbul.$ilce'
 import { Route as IlanIdRouteImport } from './routes/ilan.$id'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedPromosyonlarimRouteImport } from './routes/_authenticated.promosyonlarim'
 import { Route as AuthenticatedProfilRouteImport } from './routes/_authenticated.profil'
 import { Route as AuthenticatedIlanlarimRouteImport } from './routes/_authenticated.ilanlarim'
@@ -37,6 +41,7 @@ import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedMesajlarIdRouteImport } from './routes/_authenticated.mesajlar.$id'
 import { Route as AuthenticatedAdminYorumlarRouteImport } from './routes/_authenticated.admin.yorumlar'
 import { Route as AuthenticatedAdminYayinRouteImport } from './routes/_authenticated.admin.yayin'
+import { Route as AuthenticatedAdminVeriRouteImport } from './routes/_authenticated.admin.veri'
 import { Route as AuthenticatedAdminTicketlarRouteImport } from './routes/_authenticated.admin.ticketlar'
 import { Route as AuthenticatedAdminSmtpRouteImport } from './routes/_authenticated.admin.smtp'
 import { Route as AuthenticatedAdminShopierRouteImport } from './routes/_authenticated.admin.shopier'
@@ -53,6 +58,8 @@ import { Route as AuthenticatedAdminKategorilerRouteImport } from './routes/_aut
 import { Route as AuthenticatedAdminIlanlarRouteImport } from './routes/_authenticated.admin.ilanlar'
 import { Route as AuthenticatedAdminHavaleRouteImport } from './routes/_authenticated.admin.havale'
 import { Route as AuthenticatedAdminDuyurularRouteImport } from './routes/_authenticated.admin.duyurular'
+import { Route as AuthenticatedAdminDosyalarRouteImport } from './routes/_authenticated.admin.dosyalar'
+import { Route as AuthenticatedAdminBlogRouteImport } from './routes/_authenticated.admin.blog'
 import { Route as AuthenticatedAdminBildirimlerRouteImport } from './routes/_authenticated.admin.bildirimler'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -110,6 +117,11 @@ const CerezPolitikasiRoute = CerezPolitikasiRouteImport.update({
   path: '/cerez-politikasi',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -129,15 +141,30 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IstanbulIndexRoute = IstanbulIndexRouteImport.update({
+  id: '/istanbul/',
+  path: '/istanbul/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UyeIdRoute = UyeIdRouteImport.update({
   id: '/uye/$id',
   path: '/uye/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IstanbulIlceRoute = IstanbulIlceRouteImport.update({
+  id: '/istanbul/$ilce',
+  path: '/istanbul/$ilce',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IlanIdRoute = IlanIdRouteImport.update({
   id: '/ilan/$id',
   path: '/ilan/$id',
   getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogRoute,
 } as any)
 const AuthenticatedPromosyonlarimRoute =
   AuthenticatedPromosyonlarimRouteImport.update({
@@ -195,6 +222,11 @@ const AuthenticatedAdminYorumlarRoute =
 const AuthenticatedAdminYayinRoute = AuthenticatedAdminYayinRouteImport.update({
   id: '/yayin',
   path: '/yayin',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminVeriRoute = AuthenticatedAdminVeriRouteImport.update({
+  id: '/veri',
+  path: '/veri',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
 const AuthenticatedAdminTicketlarRoute =
@@ -291,6 +323,17 @@ const AuthenticatedAdminDuyurularRoute =
     path: '/duyurular',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminDosyalarRoute =
+  AuthenticatedAdminDosyalarRouteImport.update({
+    id: '/dosyalar',
+    path: '/dosyalar',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminBlogRoute = AuthenticatedAdminBlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminBildirimlerRoute =
   AuthenticatedAdminBildirimlerRouteImport.update({
     id: '/bildirimler',
@@ -302,6 +345,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/ads.txt': typeof AdsDottxtRoute
   '/auth': typeof AuthRoute
+  '/blog': typeof BlogRouteWithChildren
   '/cerez-politikasi': typeof CerezPolitikasiRoute
   '/gizlilik': typeof GizlilikRoute
   '/guvenlik': typeof GuvenlikRoute
@@ -319,9 +363,14 @@ export interface FileRoutesByFullPath {
   '/ilanlarim': typeof AuthenticatedIlanlarimRoute
   '/profil': typeof AuthenticatedProfilRoute
   '/promosyonlarim': typeof AuthenticatedPromosyonlarimRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/ilan/$id': typeof IlanIdRoute
+  '/istanbul/$ilce': typeof IstanbulIlceRoute
   '/uye/$id': typeof UyeIdRoute
+  '/istanbul/': typeof IstanbulIndexRoute
   '/admin/bildirimler': typeof AuthenticatedAdminBildirimlerRoute
+  '/admin/blog': typeof AuthenticatedAdminBlogRoute
+  '/admin/dosyalar': typeof AuthenticatedAdminDosyalarRoute
   '/admin/duyurular': typeof AuthenticatedAdminDuyurularRoute
   '/admin/havale': typeof AuthenticatedAdminHavaleRoute
   '/admin/ilanlar': typeof AuthenticatedAdminIlanlarRoute
@@ -338,6 +387,7 @@ export interface FileRoutesByFullPath {
   '/admin/shopier': typeof AuthenticatedAdminShopierRoute
   '/admin/smtp': typeof AuthenticatedAdminSmtpRoute
   '/admin/ticketlar': typeof AuthenticatedAdminTicketlarRoute
+  '/admin/veri': typeof AuthenticatedAdminVeriRoute
   '/admin/yayin': typeof AuthenticatedAdminYayinRoute
   '/admin/yorumlar': typeof AuthenticatedAdminYorumlarRoute
   '/mesajlar/$id': typeof AuthenticatedMesajlarIdRoute
@@ -348,6 +398,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/ads.txt': typeof AdsDottxtRoute
   '/auth': typeof AuthRoute
+  '/blog': typeof BlogRouteWithChildren
   '/cerez-politikasi': typeof CerezPolitikasiRoute
   '/gizlilik': typeof GizlilikRoute
   '/guvenlik': typeof GuvenlikRoute
@@ -364,9 +415,14 @@ export interface FileRoutesByTo {
   '/ilanlarim': typeof AuthenticatedIlanlarimRoute
   '/profil': typeof AuthenticatedProfilRoute
   '/promosyonlarim': typeof AuthenticatedPromosyonlarimRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/ilan/$id': typeof IlanIdRoute
+  '/istanbul/$ilce': typeof IstanbulIlceRoute
   '/uye/$id': typeof UyeIdRoute
+  '/istanbul': typeof IstanbulIndexRoute
   '/admin/bildirimler': typeof AuthenticatedAdminBildirimlerRoute
+  '/admin/blog': typeof AuthenticatedAdminBlogRoute
+  '/admin/dosyalar': typeof AuthenticatedAdminDosyalarRoute
   '/admin/duyurular': typeof AuthenticatedAdminDuyurularRoute
   '/admin/havale': typeof AuthenticatedAdminHavaleRoute
   '/admin/ilanlar': typeof AuthenticatedAdminIlanlarRoute
@@ -383,6 +439,7 @@ export interface FileRoutesByTo {
   '/admin/shopier': typeof AuthenticatedAdminShopierRoute
   '/admin/smtp': typeof AuthenticatedAdminSmtpRoute
   '/admin/ticketlar': typeof AuthenticatedAdminTicketlarRoute
+  '/admin/veri': typeof AuthenticatedAdminVeriRoute
   '/admin/yayin': typeof AuthenticatedAdminYayinRoute
   '/admin/yorumlar': typeof AuthenticatedAdminYorumlarRoute
   '/mesajlar/$id': typeof AuthenticatedMesajlarIdRoute
@@ -395,6 +452,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/ads.txt': typeof AdsDottxtRoute
   '/auth': typeof AuthRoute
+  '/blog': typeof BlogRouteWithChildren
   '/cerez-politikasi': typeof CerezPolitikasiRoute
   '/gizlilik': typeof GizlilikRoute
   '/guvenlik': typeof GuvenlikRoute
@@ -412,9 +470,14 @@ export interface FileRoutesById {
   '/_authenticated/ilanlarim': typeof AuthenticatedIlanlarimRoute
   '/_authenticated/profil': typeof AuthenticatedProfilRoute
   '/_authenticated/promosyonlarim': typeof AuthenticatedPromosyonlarimRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/ilan/$id': typeof IlanIdRoute
+  '/istanbul/$ilce': typeof IstanbulIlceRoute
   '/uye/$id': typeof UyeIdRoute
+  '/istanbul/': typeof IstanbulIndexRoute
   '/_authenticated/admin/bildirimler': typeof AuthenticatedAdminBildirimlerRoute
+  '/_authenticated/admin/blog': typeof AuthenticatedAdminBlogRoute
+  '/_authenticated/admin/dosyalar': typeof AuthenticatedAdminDosyalarRoute
   '/_authenticated/admin/duyurular': typeof AuthenticatedAdminDuyurularRoute
   '/_authenticated/admin/havale': typeof AuthenticatedAdminHavaleRoute
   '/_authenticated/admin/ilanlar': typeof AuthenticatedAdminIlanlarRoute
@@ -431,6 +494,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/shopier': typeof AuthenticatedAdminShopierRoute
   '/_authenticated/admin/smtp': typeof AuthenticatedAdminSmtpRoute
   '/_authenticated/admin/ticketlar': typeof AuthenticatedAdminTicketlarRoute
+  '/_authenticated/admin/veri': typeof AuthenticatedAdminVeriRoute
   '/_authenticated/admin/yayin': typeof AuthenticatedAdminYayinRoute
   '/_authenticated/admin/yorumlar': typeof AuthenticatedAdminYorumlarRoute
   '/_authenticated/mesajlar/$id': typeof AuthenticatedMesajlarIdRoute
@@ -443,6 +507,7 @@ export interface FileRouteTypes {
     | '/'
     | '/ads.txt'
     | '/auth'
+    | '/blog'
     | '/cerez-politikasi'
     | '/gizlilik'
     | '/guvenlik'
@@ -460,9 +525,14 @@ export interface FileRouteTypes {
     | '/ilanlarim'
     | '/profil'
     | '/promosyonlarim'
+    | '/blog/$slug'
     | '/ilan/$id'
+    | '/istanbul/$ilce'
     | '/uye/$id'
+    | '/istanbul/'
     | '/admin/bildirimler'
+    | '/admin/blog'
+    | '/admin/dosyalar'
     | '/admin/duyurular'
     | '/admin/havale'
     | '/admin/ilanlar'
@@ -479,6 +549,7 @@ export interface FileRouteTypes {
     | '/admin/shopier'
     | '/admin/smtp'
     | '/admin/ticketlar'
+    | '/admin/veri'
     | '/admin/yayin'
     | '/admin/yorumlar'
     | '/mesajlar/$id'
@@ -489,6 +560,7 @@ export interface FileRouteTypes {
     | '/'
     | '/ads.txt'
     | '/auth'
+    | '/blog'
     | '/cerez-politikasi'
     | '/gizlilik'
     | '/guvenlik'
@@ -505,9 +577,14 @@ export interface FileRouteTypes {
     | '/ilanlarim'
     | '/profil'
     | '/promosyonlarim'
+    | '/blog/$slug'
     | '/ilan/$id'
+    | '/istanbul/$ilce'
     | '/uye/$id'
+    | '/istanbul'
     | '/admin/bildirimler'
+    | '/admin/blog'
+    | '/admin/dosyalar'
     | '/admin/duyurular'
     | '/admin/havale'
     | '/admin/ilanlar'
@@ -524,6 +601,7 @@ export interface FileRouteTypes {
     | '/admin/shopier'
     | '/admin/smtp'
     | '/admin/ticketlar'
+    | '/admin/veri'
     | '/admin/yayin'
     | '/admin/yorumlar'
     | '/mesajlar/$id'
@@ -535,6 +613,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/ads.txt'
     | '/auth'
+    | '/blog'
     | '/cerez-politikasi'
     | '/gizlilik'
     | '/guvenlik'
@@ -552,9 +631,14 @@ export interface FileRouteTypes {
     | '/_authenticated/ilanlarim'
     | '/_authenticated/profil'
     | '/_authenticated/promosyonlarim'
+    | '/blog/$slug'
     | '/ilan/$id'
+    | '/istanbul/$ilce'
     | '/uye/$id'
+    | '/istanbul/'
     | '/_authenticated/admin/bildirimler'
+    | '/_authenticated/admin/blog'
+    | '/_authenticated/admin/dosyalar'
     | '/_authenticated/admin/duyurular'
     | '/_authenticated/admin/havale'
     | '/_authenticated/admin/ilanlar'
@@ -571,6 +655,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/shopier'
     | '/_authenticated/admin/smtp'
     | '/_authenticated/admin/ticketlar'
+    | '/_authenticated/admin/veri'
     | '/_authenticated/admin/yayin'
     | '/_authenticated/admin/yorumlar'
     | '/_authenticated/mesajlar/$id'
@@ -583,6 +668,7 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AdsDottxtRoute: typeof AdsDottxtRoute
   AuthRoute: typeof AuthRoute
+  BlogRoute: typeof BlogRouteWithChildren
   CerezPolitikasiRoute: typeof CerezPolitikasiRoute
   GizlilikRoute: typeof GizlilikRoute
   GuvenlikRoute: typeof GuvenlikRoute
@@ -595,7 +681,9 @@ export interface RootRouteChildren {
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   IlanIdRoute: typeof IlanIdRoute
+  IstanbulIlceRoute: typeof IstanbulIlceRoute
   UyeIdRoute: typeof UyeIdRoute
+  IstanbulIndexRoute: typeof IstanbulIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -677,6 +765,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CerezPolitikasiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -705,11 +800,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/istanbul/': {
+      id: '/istanbul/'
+      path: '/istanbul'
+      fullPath: '/istanbul/'
+      preLoaderRoute: typeof IstanbulIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/uye/$id': {
       id: '/uye/$id'
       path: '/uye/$id'
       fullPath: '/uye/$id'
       preLoaderRoute: typeof UyeIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/istanbul/$ilce': {
+      id: '/istanbul/$ilce'
+      path: '/istanbul/$ilce'
+      fullPath: '/istanbul/$ilce'
+      preLoaderRoute: typeof IstanbulIlceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ilan/$id': {
@@ -718,6 +827,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/ilan/$id'
       preLoaderRoute: typeof IlanIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof BlogRoute
     }
     '/_authenticated/promosyonlarim': {
       id: '/_authenticated/promosyonlarim'
@@ -794,6 +910,13 @@ declare module '@tanstack/react-router' {
       path: '/yayin'
       fullPath: '/admin/yayin'
       preLoaderRoute: typeof AuthenticatedAdminYayinRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/veri': {
+      id: '/_authenticated/admin/veri'
+      path: '/veri'
+      fullPath: '/admin/veri'
+      preLoaderRoute: typeof AuthenticatedAdminVeriRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/ticketlar': {
@@ -908,6 +1031,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminDuyurularRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/dosyalar': {
+      id: '/_authenticated/admin/dosyalar'
+      path: '/dosyalar'
+      fullPath: '/admin/dosyalar'
+      preLoaderRoute: typeof AuthenticatedAdminDosyalarRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/blog': {
+      id: '/_authenticated/admin/blog'
+      path: '/blog'
+      fullPath: '/admin/blog'
+      preLoaderRoute: typeof AuthenticatedAdminBlogRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/bildirimler': {
       id: '/_authenticated/admin/bildirimler'
       path: '/bildirimler'
@@ -920,6 +1057,8 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminBildirimlerRoute: typeof AuthenticatedAdminBildirimlerRoute
+  AuthenticatedAdminBlogRoute: typeof AuthenticatedAdminBlogRoute
+  AuthenticatedAdminDosyalarRoute: typeof AuthenticatedAdminDosyalarRoute
   AuthenticatedAdminDuyurularRoute: typeof AuthenticatedAdminDuyurularRoute
   AuthenticatedAdminHavaleRoute: typeof AuthenticatedAdminHavaleRoute
   AuthenticatedAdminIlanlarRoute: typeof AuthenticatedAdminIlanlarRoute
@@ -936,6 +1075,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminShopierRoute: typeof AuthenticatedAdminShopierRoute
   AuthenticatedAdminSmtpRoute: typeof AuthenticatedAdminSmtpRoute
   AuthenticatedAdminTicketlarRoute: typeof AuthenticatedAdminTicketlarRoute
+  AuthenticatedAdminVeriRoute: typeof AuthenticatedAdminVeriRoute
   AuthenticatedAdminYayinRoute: typeof AuthenticatedAdminYayinRoute
   AuthenticatedAdminYorumlarRoute: typeof AuthenticatedAdminYorumlarRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
@@ -943,6 +1083,8 @@ interface AuthenticatedAdminRouteChildren {
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminBildirimlerRoute: AuthenticatedAdminBildirimlerRoute,
+  AuthenticatedAdminBlogRoute: AuthenticatedAdminBlogRoute,
+  AuthenticatedAdminDosyalarRoute: AuthenticatedAdminDosyalarRoute,
   AuthenticatedAdminDuyurularRoute: AuthenticatedAdminDuyurularRoute,
   AuthenticatedAdminHavaleRoute: AuthenticatedAdminHavaleRoute,
   AuthenticatedAdminIlanlarRoute: AuthenticatedAdminIlanlarRoute,
@@ -959,6 +1101,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminShopierRoute: AuthenticatedAdminShopierRoute,
   AuthenticatedAdminSmtpRoute: AuthenticatedAdminSmtpRoute,
   AuthenticatedAdminTicketlarRoute: AuthenticatedAdminTicketlarRoute,
+  AuthenticatedAdminVeriRoute: AuthenticatedAdminVeriRoute,
   AuthenticatedAdminYayinRoute: AuthenticatedAdminYayinRoute,
   AuthenticatedAdminYorumlarRoute: AuthenticatedAdminYorumlarRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
@@ -993,11 +1136,22 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
   AuthenticatedRouteChildren,
 )
 
+interface BlogRouteChildren {
+  BlogSlugRoute: typeof BlogSlugRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogSlugRoute: BlogSlugRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AdsDottxtRoute: AdsDottxtRoute,
   AuthRoute: AuthRoute,
+  BlogRoute: BlogRouteWithChildren,
   CerezPolitikasiRoute: CerezPolitikasiRoute,
   GizlilikRoute: GizlilikRoute,
   GuvenlikRoute: GuvenlikRoute,
@@ -1010,7 +1164,9 @@ const rootRouteChildren: RootRouteChildren = {
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   IlanIdRoute: IlanIdRoute,
+  IstanbulIlceRoute: IstanbulIlceRoute,
   UyeIdRoute: UyeIdRoute,
+  IstanbulIndexRoute: IstanbulIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

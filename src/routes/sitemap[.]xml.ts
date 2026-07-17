@@ -3,11 +3,14 @@ import type {} from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import { CATEGORIES } from "@/lib/categories";
 import { ILLER } from "@/lib/turkiye";
+import { ISTANBUL_ILCELERI } from "@/lib/istanbul-ilceler";
 
 const BASE_URL = "";
 
 const STATIC_ROUTES = [
   { path: "/", changefreq: "daily", priority: "1.0" },
+  { path: "/blog", changefreq: "daily", priority: "0.9" },
+  { path: "/istanbul", changefreq: "weekly", priority: "0.9" },
   { path: "/hakkimizda", changefreq: "monthly", priority: "0.7" },
   { path: "/iletisim", changefreq: "monthly", priority: "0.6" },
   { path: "/nasil-calisir", changefreq: "monthly", priority: "0.6" },
@@ -37,9 +40,28 @@ export const Route = createFileRoute("/sitemap.xml")({
           listings = (data ?? []) as typeof listings;
         } catch {}
 
+        let posts: Array<{ slug: string; updated_at: string | null }> = [];
+        try {
+          const { data } = await supabase
+            .from("blog_posts")
+            .select("slug, updated_at")
+            .eq("status", "published")
+            .order("updated_at", { ascending: false })
+            .limit(1000);
+          posts = (data ?? []) as typeof posts;
+        } catch {}
+
         const entries: Array<{ path: string; lastmod?: string; changefreq?: string; priority?: string }> = [
           ...STATIC_ROUTES,
         ];
+        // İstanbul ilçe sayfaları — SEO odaklı
+        for (const i of ISTANBUL_ILCELERI) {
+          entries.push({ path: `/istanbul/${i.slug}`, changefreq: "weekly", priority: "0.85" });
+        }
+        // Blog yazıları
+        for (const p of posts) {
+          entries.push({ path: `/blog/${p.slug}`, lastmod: p.updated_at ?? undefined, changefreq: "weekly", priority: "0.8" });
+        }
         // Kategori sayfaları
         for (const c of CATEGORIES) {
           entries.push({ path: `/kategori/${c.slug}`, changefreq: "daily", priority: "0.8" });
@@ -61,6 +83,7 @@ export const Route = createFileRoute("/sitemap.xml")({
             priority: "0.7",
           });
         }
+
 
         const urls = entries.map((e) =>
           [

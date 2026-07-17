@@ -128,6 +128,63 @@ export type Database = {
         }
         Relationships: []
       }
+      blog_posts: {
+        Row: {
+          author_id: string | null
+          category: string | null
+          content: string
+          cover_url: string | null
+          created_at: string
+          excerpt: string | null
+          id: string
+          meta_description: string | null
+          meta_title: string | null
+          published_at: string | null
+          slug: string
+          status: string
+          tags: string[]
+          title: string
+          updated_at: string
+          view_count: number
+        }
+        Insert: {
+          author_id?: string | null
+          category?: string | null
+          content?: string
+          cover_url?: string | null
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          meta_description?: string | null
+          meta_title?: string | null
+          published_at?: string | null
+          slug: string
+          status?: string
+          tags?: string[]
+          title: string
+          updated_at?: string
+          view_count?: number
+        }
+        Update: {
+          author_id?: string | null
+          category?: string | null
+          content?: string
+          cover_url?: string | null
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          meta_description?: string | null
+          meta_title?: string | null
+          published_at?: string | null
+          slug?: string
+          status?: string
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          view_count?: number
+        }
+        Relationships: []
+      }
       category_groups: {
         Row: {
           created_at: string
@@ -1162,6 +1219,11 @@ export type Database = {
         Args: { _user_id: string; _verified: boolean }
         Returns: undefined
       }
+      admin_table_counts: { Args: never; Returns: Json }
+      admin_table_rows: {
+        Args: { _limit?: number; _table: string }
+        Returns: Json
+      }
       create_promotion_order: {
         Args: { _listing_id: string; _method: string; _package_id: string }
         Returns: Json
@@ -1204,6 +1266,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_blog_view: { Args: { _slug: string }; Returns: undefined }
       increment_listing_view: { Args: { _id: string }; Returns: undefined }
       listings_owner_stats: {
         Args: { _user_ids: string[] }

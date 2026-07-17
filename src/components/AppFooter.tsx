@@ -31,6 +31,8 @@ export function AppFooter() {
         <FooterCol title="Kurumsal">
           <FooterLink to="/hakkimizda">Hakkımızda</FooterLink>
           <FooterLink to="/nasil-calisir">Nasıl Çalışır?</FooterLink>
+          <FooterLink to="/blog">Blog</FooterLink>
+          <FooterLink to="/istanbul">İstanbul</FooterLink>
           <FooterLink to="/guvenlik">Güvenlik</FooterLink>
           <FooterLink to="/iletisim">İletişim</FooterLink>
         </FooterCol>

@@ -8,6 +8,7 @@ import {
   Megaphone, Send, Star, Flag, ShieldCheck, Inbox, Layers, ChevronDown,
   ShieldAlert, Settings, Database, UsersRound, Mail,
   Wallet, Sparkles, Landmark, CreditCard, Image as ImageIcon,
+  BookText, HardDrive,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { adminModerationCounts } from "@/lib/admin.functions";
@@ -69,6 +70,7 @@ function AdminLayout() {
       items: [
         { to: "/admin/ilanlar", label: "İlanlar", icon: ListChecks },
         { to: "/admin/kategoriler", label: "Kategoriler", icon: Layers },
+        { to: "/admin/blog", label: "Blog Yazıları", icon: BookText },
       ],
     },
     {
@@ -101,6 +103,8 @@ function AdminLayout() {
       items: [
         { to: "/admin/seo", label: "SEO & Reklam", icon: Search },
         { to: "/admin/smtp", label: "SMTP / E-posta", icon: Mail },
+        { to: "/admin/veri", label: "Veritabanı", icon: Database },
+        { to: "/admin/dosyalar", label: "Dosya Yöneticisi", icon: HardDrive },
       ],
     },
   ];

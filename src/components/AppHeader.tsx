@@ -50,6 +50,8 @@ export function AppHeader() {
             İlanlar
           </Link>
           <Link to="/nasil-calisir" className={navLink}>Nasıl Çalışır?</Link>
+          <Link to="/istanbul" className={navLink}>İstanbul</Link>
+          <Link to="/blog" className={navLink}>Blog</Link>
           <Link to="/guvenlik" className={navLink}>Güvenlik</Link>
           <Link to="/hakkimizda" className={navLink}>Hakkımızda</Link>
         </nav>
@@ -139,6 +141,12 @@ export function AppHeader() {
           </Link>
           <Link to="/nasil-calisir" className="block rounded-md px-3 py-3 text-base font-medium hover:bg-muted" onClick={() => setMobileOpen(false)}>
             Nasıl Çalışır?
+          </Link>
+          <Link to="/istanbul" className="block rounded-md px-3 py-3 text-base font-medium hover:bg-muted" onClick={() => setMobileOpen(false)}>
+            İstanbul
+          </Link>
+          <Link to="/blog" className="block rounded-md px-3 py-3 text-base font-medium hover:bg-muted" onClick={() => setMobileOpen(false)}>
+            Blog
           </Link>
           <Link to="/guvenlik" className="block rounded-md px-3 py-3 text-base font-medium hover:bg-muted" onClick={() => setMobileOpen(false)}>
             Güvenlik
