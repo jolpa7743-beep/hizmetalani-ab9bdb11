@@ -60,14 +60,17 @@ function HomePage() {
   const [ilceInput, setIlceInput] = useState(search.ilce ?? "");
   const sort: SortValue = search.siralama ?? "newest";
 
-  const { data: listings, isLoading } = useQuery({
-    queryKey: ["listings", search],
+  const page = Math.max(1, search.sayfa ?? 1);
+  const from = (page - 1) * PAGE_SIZE;
+  const to = from + PAGE_SIZE - 1;
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["listings", search, page],
     queryFn: async () => {
       let query = supabase
         .from("listings")
-        .select("id, user_id, title, type, category, city, district, price, price_type, created_at, description, view_count, is_featured, is_showcase, is_urgent, boost_score")
-        .eq("status", "active")
-        .limit(90);
+        .select("id, user_id, title, type, category, city, district, price, price_type, created_at, description, view_count, is_featured, is_showcase, is_urgent, boost_score", { count: "exact" })
+        .eq("status", "active");
 
       if (search.kategori) query = query.eq("category", search.kategori as CategoryKey);
       if (search.tip) query = query.eq("type", search.tip);
@@ -88,11 +91,15 @@ function HomePage() {
         default: query = query.order("created_at", { ascending: false });
       }
 
-      const { data, error } = await query;
+      const { data, error, count } = await query.range(from, to);
       if (error) throw error;
-      return (data ?? []) as ListingRow[];
+      return { rows: (data ?? []) as ListingRow[], count: count ?? 0 };
     },
   });
+
+  const listings = data?.rows;
+  const totalCount = data?.count ?? 0;
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
   const fetchStats = useServerFn(getOwnerStatsBulk);
   const ownerIds = Array.from(new Set((listings ?? []).map((l) => l.user_id).filter((x): x is string => !!x)));
