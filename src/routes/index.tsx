@@ -111,7 +111,12 @@ function HomePage() {
   });
 
   const setParam = (key: string, val: string | undefined) => {
-    navigate({ search: (prev: Record<string, string | undefined>) => ({ ...prev, [key]: val || undefined }) });
+    navigate({ search: (prev: Record<string, string | undefined>) => ({ ...prev, [key]: val || undefined, sayfa: key === "sayfa" ? val || undefined : undefined }) });
+  };
+
+  const goToPage = (p: number) => {
+    navigate({ search: (prev: Record<string, unknown>) => ({ ...prev, sayfa: p <= 1 ? undefined : p }) });
+    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const clearAll = () => {
