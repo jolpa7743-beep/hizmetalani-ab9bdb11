@@ -12,7 +12,7 @@ import {
   getActivePackages,
   createPromotionOrder,
   getActiveBankAccounts,
-  type PromotionPackage,
+  type PromotionKind,
   type PromotionKind,
 } from "@/lib/promotions.functions";
 
