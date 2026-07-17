@@ -31,6 +31,8 @@ const SORT_OPTIONS = [
 ] as const;
 type SortValue = (typeof SORT_OPTIONS)[number]["value"];
 
+const PAGE_SIZE = 24;
+
 const searchSchema = z.object({
   kategori: z.string().optional(),
   tip: z.enum(["offering", "seeking"]).optional(),
@@ -38,6 +40,7 @@ const searchSchema = z.object({
   ilce: z.string().optional(),
   q: z.string().optional(),
   siralama: z.enum(["newest", "oldest", "price_asc", "price_desc", "popular"]).optional(),
+  sayfa: z.coerce.number().int().min(1).optional(),
 });
 
 export const Route = createFileRoute("/")({
