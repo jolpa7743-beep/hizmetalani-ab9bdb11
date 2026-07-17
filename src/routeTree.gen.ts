@@ -26,6 +26,7 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as UyeIdRouteImport } from './routes/uye.$id'
 import { Route as IlanIdRouteImport } from './routes/ilan.$id'
+import { Route as AuthenticatedPromosyonlarimRouteImport } from './routes/_authenticated.promosyonlarim'
 import { Route as AuthenticatedProfilRouteImport } from './routes/_authenticated.profil'
 import { Route as AuthenticatedIlanlarimRouteImport } from './routes/_authenticated.ilanlarim'
 import { Route as AuthenticatedIlanVerRouteImport } from './routes/_authenticated.ilan-ver'
@@ -138,6 +139,12 @@ const IlanIdRoute = IlanIdRouteImport.update({
   path: '/ilan/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedPromosyonlarimRoute =
+  AuthenticatedPromosyonlarimRouteImport.update({
+    id: '/promosyonlarim',
+    path: '/promosyonlarim',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedProfilRoute = AuthenticatedProfilRouteImport.update({
   id: '/profil',
   path: '/profil',
@@ -311,6 +318,7 @@ export interface FileRoutesByFullPath {
   '/ilan-ver': typeof AuthenticatedIlanVerRoute
   '/ilanlarim': typeof AuthenticatedIlanlarimRoute
   '/profil': typeof AuthenticatedProfilRoute
+  '/promosyonlarim': typeof AuthenticatedPromosyonlarimRoute
   '/ilan/$id': typeof IlanIdRoute
   '/uye/$id': typeof UyeIdRoute
   '/admin/bildirimler': typeof AuthenticatedAdminBildirimlerRoute
@@ -355,6 +363,7 @@ export interface FileRoutesByTo {
   '/ilan-ver': typeof AuthenticatedIlanVerRoute
   '/ilanlarim': typeof AuthenticatedIlanlarimRoute
   '/profil': typeof AuthenticatedProfilRoute
+  '/promosyonlarim': typeof AuthenticatedPromosyonlarimRoute
   '/ilan/$id': typeof IlanIdRoute
   '/uye/$id': typeof UyeIdRoute
   '/admin/bildirimler': typeof AuthenticatedAdminBildirimlerRoute
@@ -402,6 +411,7 @@ export interface FileRoutesById {
   '/_authenticated/ilan-ver': typeof AuthenticatedIlanVerRoute
   '/_authenticated/ilanlarim': typeof AuthenticatedIlanlarimRoute
   '/_authenticated/profil': typeof AuthenticatedProfilRoute
+  '/_authenticated/promosyonlarim': typeof AuthenticatedPromosyonlarimRoute
   '/ilan/$id': typeof IlanIdRoute
   '/uye/$id': typeof UyeIdRoute
   '/_authenticated/admin/bildirimler': typeof AuthenticatedAdminBildirimlerRoute
@@ -449,6 +459,7 @@ export interface FileRouteTypes {
     | '/ilan-ver'
     | '/ilanlarim'
     | '/profil'
+    | '/promosyonlarim'
     | '/ilan/$id'
     | '/uye/$id'
     | '/admin/bildirimler'
@@ -493,6 +504,7 @@ export interface FileRouteTypes {
     | '/ilan-ver'
     | '/ilanlarim'
     | '/profil'
+    | '/promosyonlarim'
     | '/ilan/$id'
     | '/uye/$id'
     | '/admin/bildirimler'
@@ -539,6 +551,7 @@ export interface FileRouteTypes {
     | '/_authenticated/ilan-ver'
     | '/_authenticated/ilanlarim'
     | '/_authenticated/profil'
+    | '/_authenticated/promosyonlarim'
     | '/ilan/$id'
     | '/uye/$id'
     | '/_authenticated/admin/bildirimler'
@@ -705,6 +718,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/ilan/$id'
       preLoaderRoute: typeof IlanIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/promosyonlarim': {
+      id: '/_authenticated/promosyonlarim'
+      path: '/promosyonlarim'
+      fullPath: '/promosyonlarim'
+      preLoaderRoute: typeof AuthenticatedPromosyonlarimRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/profil': {
       id: '/_authenticated/profil'
@@ -953,6 +973,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedIlanVerRoute: typeof AuthenticatedIlanVerRoute
   AuthenticatedIlanlarimRoute: typeof AuthenticatedIlanlarimRoute
   AuthenticatedProfilRoute: typeof AuthenticatedProfilRoute
+  AuthenticatedPromosyonlarimRoute: typeof AuthenticatedPromosyonlarimRoute
   AuthenticatedMesajlarIdRoute: typeof AuthenticatedMesajlarIdRoute
   AuthenticatedMesajlarIndexRoute: typeof AuthenticatedMesajlarIndexRoute
 }
@@ -963,6 +984,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedIlanVerRoute: AuthenticatedIlanVerRoute,
   AuthenticatedIlanlarimRoute: AuthenticatedIlanlarimRoute,
   AuthenticatedProfilRoute: AuthenticatedProfilRoute,
+  AuthenticatedPromosyonlarimRoute: AuthenticatedPromosyonlarimRoute,
   AuthenticatedMesajlarIdRoute: AuthenticatedMesajlarIdRoute,
   AuthenticatedMesajlarIndexRoute: AuthenticatedMesajlarIndexRoute,
 }

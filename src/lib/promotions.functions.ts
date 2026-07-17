@@ -318,17 +318,16 @@ export const getSponsorAd = createServerFn({ method: "GET" })
     const now = new Date().toISOString();
     const { data: ads, error } = await sb
       .from("sponsor_ads")
-      .select("id, slot, title, sponsor_name, image_url, target_url, alt_text, priority")
+      .select("id, slot, title, sponsor_name, image_url, target_url, alt_text, priority, starts_at, ends_at")
       .eq("slot", data.slot)
       .eq("is_active", true)
-      .or(`starts_at.is.null,starts_at.lte.${now}`)
-      .or(`ends_at.is.null,ends_at.gte.${now}`)
       .order("priority", { ascending: false })
-      .limit(10);
+      .limit(20);
     if (error) throw new Error(error.message);
-    const list = (ads ?? []) as SponsorAd[];
+    const list = ((ads ?? []) as SponsorAd[]).filter((a) =>
+      (!a.starts_at || a.starts_at <= now) && (!a.ends_at || a.ends_at >= now)
+    );
     if (list.length === 0) return null;
-    // Weighted pick — items with higher priority dominate
     const total = list.reduce((s, a) => s + Math.max(1, a.priority + 1), 0);
     let r = Math.random() * total;
     for (const a of list) {
