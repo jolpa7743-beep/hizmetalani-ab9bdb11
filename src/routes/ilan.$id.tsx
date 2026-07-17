@@ -18,13 +18,19 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { MapPin, Clock, ShieldCheck, MessageSquare, ArrowLeft, Eye, Tag, Building2, User as UserIcon, ShieldAlert, CalendarDays, BadgeCheck } from "lucide-react";
+import { MapPin, Clock, ShieldCheck, MessageSquare, ArrowLeft, Eye, Tag, Building2, User as UserIcon, ShieldAlert, CalendarDays, BadgeCheck, Sparkles, Flame, Star as StarIcon, Pencil, Rocket } from "lucide-react";
 import { toast } from "sonner";
 import { AdSlot } from "@/components/AdSlot";
 import { StarRow } from "@/components/UserReviews";
 import { getUserReviews } from "@/lib/reviews.functions";
 import { getSiteSettings } from "@/lib/settings.functions";
 import { shouldShowBadge, trustBadgeMeta, type BadgeVisibility } from "@/lib/trust";
+import { PromoteDialog } from "@/components/PromoteDialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useQueryClient } from "@tanstack/react-query";
 
 // Loader ile ilan verisini önden çekip head() içinde title/description/OG üretiyoruz.
 const listingQueryOptions = (id: string) => ({
@@ -32,7 +38,7 @@ const listingQueryOptions = (id: string) => ({
   queryFn: async () => {
     const { data: listing, error } = await supabase
       .from("listings")
-      .select("id,user_id,title,description,type,category,city,district,price,price_type,created_at,view_count,work_type,available_days,off_days,available_hours,salary_min,salary_max,salary_period,experience_years,education_level,requirements,benefits,is_remote,is_urgent")
+      .select("id,user_id,title,description,type,category,city,district,price,price_type,created_at,view_count,work_type,available_days,off_days,available_hours,salary_min,salary_max,salary_period,experience_years,education_level,requirements,benefits,is_remote,is_urgent,is_featured,is_showcase,boost_score,promoted_until")
       .eq("id", id)
       .maybeSingle();
     if (error) throw error;
@@ -159,6 +165,10 @@ type Listing = {
   benefits: string[] | null;
   is_remote: boolean | null;
   is_urgent: boolean | null;
+  is_featured: boolean | null;
+  is_showcase: boolean | null;
+  boost_score: number | null;
+  promoted_until: string | null;
 };
 
 type Profile = {
@@ -293,7 +303,8 @@ function ListingDetail() {
 
       <div className="grid md:grid-cols-3 gap-6">
         <div className="md:col-span-2 space-y-4">
-          <div className="bg-surface border border-border rounded-xl overflow-hidden">
+          <div className="relative bg-surface border border-border rounded-xl overflow-hidden">
+            <PromoBadge listing={listing} />
             <div className="p-6">
               <div className="flex flex-wrap items-center gap-2 mb-3">
                 <Badge className={isOffering ? "bg-brand text-brand-foreground" : "bg-brand-accent text-brand-foreground"}>
@@ -508,8 +519,15 @@ function ListingDetail() {
                 <MessageSquare className="size-4 mr-2" /> Mesaj Gönder
               </Button>
             ) : (
-              <div className="mt-4 p-3 rounded-md bg-muted text-sm text-center">
-                Bu sizin ilanınız
+              <div className="mt-4 space-y-2">
+                <div className="p-2 rounded-md bg-muted text-xs text-center text-muted-foreground">
+                  Bu sizin ilanınız — buradan yönetebilirsiniz
+                </div>
+                <OwnerEditDialog listing={listing} />
+                <PromoteDialog listingId={listing.id} listingTitle={listing.title} />
+                <Link to="/ilanlarim" className="block">
+                  <Button variant="ghost" size="sm" className="w-full">Tüm ilanlarım</Button>
+                </Link>
               </div>
             )}
           </div>
@@ -558,6 +576,113 @@ function InfoBox({ label, value, isEmpty }: { label: string; value: string; isEm
         {value}
       </div>
     </div>
+  );
+}
+
+function PromoBadge({ listing }: { listing: Listing }) {
+  const active = listing.promoted_until ? new Date(listing.promoted_until) > new Date() : false;
+  const isFeatured = listing.is_featured && active;
+  const isShowcase = listing.is_showcase && active;
+  const isUrgent = listing.is_urgent;
+  const isSponsored = isFeatured || isShowcase;
+  if (!isSponsored && !isUrgent) return null;
+  const label = isFeatured ? "VİTRİN" : isShowcase ? "ÖNE ÇIKAN" : "ACİL";
+  const Icon = isFeatured ? Sparkles : isShowcase ? StarIcon : Flame;
+  const gradient = isFeatured
+    ? "from-amber-400 via-yellow-500 to-amber-600"
+    : isShowcase
+    ? "from-brand via-brand/80 to-brand"
+    : "from-red-500 via-rose-600 to-red-700";
+  return (
+    <div className="absolute top-3 right-3 z-10 select-none">
+      <div className={`relative inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold text-white shadow-lg bg-gradient-to-r ${gradient} animate-pulse ring-2 ring-white/40`}>
+        <span className="absolute inset-0 rounded-full bg-white/25 blur-md animate-ping" aria-hidden />
+        <Icon className="size-4 relative drop-shadow" />
+        <span className="relative tracking-wide">{label}</span>
+      </div>
+    </div>
+  );
+}
+
+function OwnerEditDialog({ listing }: { listing: Listing }) {
+  const qc = useQueryClient();
+  const [open, setOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [title, setTitle] = useState(listing.title);
+  const [price, setPrice] = useState<string>(listing.price != null ? String(listing.price) : "");
+  const [priceType, setPriceType] = useState<string>(listing.price_type);
+  const [description, setDescription] = useState(listing.description);
+
+  const save = async () => {
+    setSaving(true);
+    const { error } = await supabase
+      .from("listings")
+      .update({
+        title: title.trim(),
+        description: description.trim(),
+        price: price ? Number(price) : null,
+        price_type: priceType as "hourly" | "daily" | "monthly" | "job" | "negotiable",
+      })
+      .eq("id", listing.id);
+    setSaving(false);
+    if (error) return toast.error(error.message);
+    toast.success("İlan güncellendi");
+    setOpen(false);
+    qc.invalidateQueries({ queryKey: ["listing", listing.id] });
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm" className="w-full">
+          <Pencil className="size-4 mr-2" /> İlanı Düzenle
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle>İlanı Düzenle</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-3">
+          <div>
+            <Label>Başlık</Label>
+            <Input value={title} onChange={(e) => setTitle(e.target.value)} />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label>Fiyat (₺)</Label>
+              <Input type="number" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="Boş = pazarlıklı" />
+            </div>
+            <div>
+              <Label>Ücret Tipi</Label>
+              <Select value={priceType} onValueChange={setPriceType}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="hourly">Saatlik</SelectItem>
+                  <SelectItem value="daily">Günlük</SelectItem>
+                  <SelectItem value="monthly">Aylık</SelectItem>
+                  <SelectItem value="job">İş Başı</SelectItem>
+                  <SelectItem value="negotiable">Pazarlıklı</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div>
+            <Label>Açıklama</Label>
+            <textarea
+              className="w-full min-h-24 rounded-md border border-input bg-background p-2 text-sm"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="ghost" onClick={() => setOpen(false)}>Vazgeç</Button>
+          <Button onClick={save} disabled={saving}>
+            {saving ? "Kaydediliyor..." : "Kaydet"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 
