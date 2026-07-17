@@ -40,9 +40,28 @@ export const Route = createFileRoute("/sitemap.xml")({
           listings = (data ?? []) as typeof listings;
         } catch {}
 
+        let posts: Array<{ slug: string; updated_at: string | null }> = [];
+        try {
+          const { data } = await supabase
+            .from("blog_posts")
+            .select("slug, updated_at")
+            .eq("status", "published")
+            .order("updated_at", { ascending: false })
+            .limit(1000);
+          posts = (data ?? []) as typeof posts;
+        } catch {}
+
         const entries: Array<{ path: string; lastmod?: string; changefreq?: string; priority?: string }> = [
           ...STATIC_ROUTES,
         ];
+        // İstanbul ilçe sayfaları — SEO odaklı
+        for (const i of ISTANBUL_ILCELERI) {
+          entries.push({ path: `/istanbul/${i.slug}`, changefreq: "weekly", priority: "0.85" });
+        }
+        // Blog yazıları
+        for (const p of posts) {
+          entries.push({ path: `/blog/${p.slug}`, lastmod: p.updated_at ?? undefined, changefreq: "weekly", priority: "0.8" });
+        }
         // Kategori sayfaları
         for (const c of CATEGORIES) {
           entries.push({ path: `/kategori/${c.slug}`, changefreq: "daily", priority: "0.8" });
@@ -64,6 +83,7 @@ export const Route = createFileRoute("/sitemap.xml")({
             priority: "0.7",
           });
         }
+
 
         const urls = entries.map((e) =>
           [
