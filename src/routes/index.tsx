@@ -153,6 +153,9 @@ function HomePage() {
 
   return (
     <div className="bg-hero-grid">
+      <h1 className="sr-only">
+        hizmetalanı.com — Bakıcı, Ev/Ofis Temizliği ve Evcil Hayvan Bakımı İlanları
+      </h1>
       <div className="mx-auto max-w-7xl px-4 sm:px-6"><AdSlot slot="header" /></div>
       {/* Sahibinden tarzı üst arama çubuğu */}
       <div className="border-b border-border bg-surface/70 backdrop-blur">
