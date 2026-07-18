@@ -28,6 +28,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as IstanbulIndexRouteImport } from './routes/istanbul.index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as UyeIdRouteImport } from './routes/uye.$id'
+import { Route as RehberEvcilHayvanBakimiFiyatlariRouteImport } from './routes/rehber.evcil-hayvan-bakimi-fiyatlari'
 import { Route as IstanbulIlceRouteImport } from './routes/istanbul.$ilce'
 import { Route as IlanIdRouteImport } from './routes/ilan.$id'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
@@ -157,6 +158,12 @@ const UyeIdRoute = UyeIdRouteImport.update({
   path: '/uye/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RehberEvcilHayvanBakimiFiyatlariRoute =
+  RehberEvcilHayvanBakimiFiyatlariRouteImport.update({
+    id: '/rehber/evcil-hayvan-bakimi-fiyatlari',
+    path: '/rehber/evcil-hayvan-bakimi-fiyatlari',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const IstanbulIlceRoute = IstanbulIlceRouteImport.update({
   id: '/istanbul/$ilce',
   path: '/istanbul/$ilce',
@@ -372,6 +379,7 @@ export interface FileRoutesByFullPath {
   '/blog/$slug': typeof BlogSlugRoute
   '/ilan/$id': typeof IlanIdRoute
   '/istanbul/$ilce': typeof IstanbulIlceRoute
+  '/rehber/evcil-hayvan-bakimi-fiyatlari': typeof RehberEvcilHayvanBakimiFiyatlariRoute
   '/uye/$id': typeof UyeIdRoute
   '/blog/': typeof BlogIndexRoute
   '/istanbul/': typeof IstanbulIndexRoute
@@ -424,6 +432,7 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof BlogSlugRoute
   '/ilan/$id': typeof IlanIdRoute
   '/istanbul/$ilce': typeof IstanbulIlceRoute
+  '/rehber/evcil-hayvan-bakimi-fiyatlari': typeof RehberEvcilHayvanBakimiFiyatlariRoute
   '/uye/$id': typeof UyeIdRoute
   '/blog': typeof BlogIndexRoute
   '/istanbul': typeof IstanbulIndexRoute
@@ -480,6 +489,7 @@ export interface FileRoutesById {
   '/blog/$slug': typeof BlogSlugRoute
   '/ilan/$id': typeof IlanIdRoute
   '/istanbul/$ilce': typeof IstanbulIlceRoute
+  '/rehber/evcil-hayvan-bakimi-fiyatlari': typeof RehberEvcilHayvanBakimiFiyatlariRoute
   '/uye/$id': typeof UyeIdRoute
   '/blog/': typeof BlogIndexRoute
   '/istanbul/': typeof IstanbulIndexRoute
@@ -536,6 +546,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/ilan/$id'
     | '/istanbul/$ilce'
+    | '/rehber/evcil-hayvan-bakimi-fiyatlari'
     | '/uye/$id'
     | '/blog/'
     | '/istanbul/'
@@ -588,6 +599,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/ilan/$id'
     | '/istanbul/$ilce'
+    | '/rehber/evcil-hayvan-bakimi-fiyatlari'
     | '/uye/$id'
     | '/blog'
     | '/istanbul'
@@ -643,6 +655,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/ilan/$id'
     | '/istanbul/$ilce'
+    | '/rehber/evcil-hayvan-bakimi-fiyatlari'
     | '/uye/$id'
     | '/blog/'
     | '/istanbul/'
@@ -692,6 +705,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   IlanIdRoute: typeof IlanIdRoute
   IstanbulIlceRoute: typeof IstanbulIlceRoute
+  RehberEvcilHayvanBakimiFiyatlariRoute: typeof RehberEvcilHayvanBakimiFiyatlariRoute
   UyeIdRoute: typeof UyeIdRoute
   IstanbulIndexRoute: typeof IstanbulIndexRoute
 }
@@ -829,6 +843,13 @@ declare module '@tanstack/react-router' {
       path: '/uye/$id'
       fullPath: '/uye/$id'
       preLoaderRoute: typeof UyeIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rehber/evcil-hayvan-bakimi-fiyatlari': {
+      id: '/rehber/evcil-hayvan-bakimi-fiyatlari'
+      path: '/rehber/evcil-hayvan-bakimi-fiyatlari'
+      fullPath: '/rehber/evcil-hayvan-bakimi-fiyatlari'
+      preLoaderRoute: typeof RehberEvcilHayvanBakimiFiyatlariRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/istanbul/$ilce': {
@@ -1184,6 +1205,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   IlanIdRoute: IlanIdRoute,
   IstanbulIlceRoute: IstanbulIlceRoute,
+  RehberEvcilHayvanBakimiFiyatlariRoute: RehberEvcilHayvanBakimiFiyatlariRoute,
   UyeIdRoute: UyeIdRoute,
   IstanbulIndexRoute: IstanbulIndexRoute,
 }

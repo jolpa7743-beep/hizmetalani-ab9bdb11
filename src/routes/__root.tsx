@@ -95,8 +95,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: ({ loaderData }) => {
     const s = loaderData?.settings;
     const title = s?.site_name
-      ? `${s.site_name} — Bakıcı, Temizlik ve Ev Hizmetleri İlanları`
-      : "hizmetalanı.com — Bakıcı, Temizlik ve Evcil Hayvan Geçici Konaklama İlanları";
+      ? `${s.site_name} — Bakıcı & Temizlik İlanları`
+      : "hizmetalanı.com — Bakıcı, Temizlik & Evcil Hayvan İlanları";
     const description = s?.site_description
       ?? "Türkiye'nin ev ve bakım hizmetleri ilan platformu. Bakıcı, ev/ofis/bina temizliği ve evcil hayvan geçici konaklama ilanları — ücretsiz yayınla, güvenle iletişime geç.";
     const keywords = s?.site_keywords ?? "bakıcı ilanı, temizlikçi ilanı, ev temizliği, ofis temizliği, evcil hayvan bakıcısı";
@@ -141,8 +141,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       children: JSON.stringify({
         "@context": "https://schema.org",
         "@graph": [
-          { "@type": "Organization", name: s?.site_name ?? "hizmetalanı.com", description, email: s?.contact_email ?? undefined, telephone: s?.contact_phone ?? undefined },
-          { "@type": "WebSite", name: s?.site_name ?? "hizmetalanı.com", potentialAction: { "@type": "SearchAction", target: "/?q={search_term_string}", "query-input": "required name=search_term_string" } },
+          { "@type": "Organization", name: s?.site_name ?? "hizmetalanı.com", url: "https://hizmetalani.com", description, email: s?.contact_email ?? undefined, telephone: s?.contact_phone ?? undefined },
+          { "@type": "WebSite", name: s?.site_name ?? "hizmetalanı.com", url: "https://hizmetalani.com", potentialAction: { "@type": "SearchAction", target: "https://hizmetalani.com/?q={search_term_string}", "query-input": "required name=search_term_string" } },
         ],
       }),
     });

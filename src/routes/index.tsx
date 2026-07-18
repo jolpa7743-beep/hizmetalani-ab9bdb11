@@ -60,8 +60,10 @@ export const Route = createFileRoute("/")({
   component: HomePage,
   head: () => ({
     meta: [
-      { title: "hizmetalanı.com — Bakıcı, Temizlik ve Evcil Hayvan Geçici Yuva İlanları" },
+      { title: "hizmetalanı.com — Bakıcı, Temizlik & Evcil Hayvan İlanları" },
+      { property: "og:url", content: "https://hizmetalani.com/" },
     ],
+    links: [{ rel: "canonical", href: "https://hizmetalani.com/" }],
   }),
 });
 
@@ -151,6 +153,9 @@ function HomePage() {
 
   return (
     <div className="bg-hero-grid">
+      <h1 className="sr-only">
+        hizmetalanı.com — Bakıcı, Ev/Ofis Temizliği ve Evcil Hayvan Bakımı İlanları
+      </h1>
       <div className="mx-auto max-w-7xl px-4 sm:px-6"><AdSlot slot="header" /></div>
       {/* Sahibinden tarzı üst arama çubuğu */}
       <div className="border-b border-border bg-surface/70 backdrop-blur">
@@ -265,7 +270,8 @@ function HomePage() {
             </div>
 
             {/* İlan ızgarası — yatay kartlar */}
-            <section aria-label="İlanlar" className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            <section aria-labelledby="ilanlar-heading" className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              <h2 id="ilanlar-heading" className="sr-only">İlanlar</h2>
               {isLoading && Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="h-40 rounded-xl border border-border bg-card animate-pulse" />
               ))}

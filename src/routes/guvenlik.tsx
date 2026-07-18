@@ -1,9 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ShieldCheck } from "lucide-react";
 
+const DESC =
+  "hizmetalanı.com güvenlik ipuçları: dolandırıcılıktan korunma, güvenli buluşma, ödeme uyarıları ve şüpheli ilan bildirimleri için pratik rehber.";
+
 export const Route = createFileRoute("/guvenlik")({
   component: Page,
-  head: () => ({ meta: [{ title: "Güvenlik İpuçları — hizmetalanı.com" }] }),
+  head: () => ({
+    meta: [
+      { title: "Güvenlik İpuçları — hizmetalanı.com" },
+      { name: "description", content: DESC },
+      { property: "og:title", content: "Güvenlik İpuçları — hizmetalanı.com" },
+      { property: "og:description", content: DESC },
+      { property: "og:url", content: "https://hizmetalani.com/guvenlik" },
+    ],
+    links: [{ rel: "canonical", href: "https://hizmetalani.com/guvenlik" }],
+  }),
 });
 
 function Page() {

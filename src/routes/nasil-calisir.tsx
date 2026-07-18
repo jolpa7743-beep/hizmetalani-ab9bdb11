@@ -1,9 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ShieldCheck, Users, MessageSquare, Sparkles } from "lucide-react";
 
+const DESC =
+  "hizmetalanı.com nasıl çalışır: ücretsiz üyelik, ilan yayınlama, güvenli mesajlaşma ve anlaşma adımları — 4 adımda hizmet arayan ile vereni buluşturuyoruz.";
+
 export const Route = createFileRoute("/nasil-calisir")({
   component: Page,
-  head: () => ({ meta: [{ title: "Nasıl Çalışır — hizmetalanı.com" }] }),
+  head: () => ({
+    meta: [
+      { title: "Nasıl Çalışır — hizmetalanı.com" },
+      { name: "description", content: DESC },
+      { property: "og:title", content: "Nasıl Çalışır — hizmetalanı.com" },
+      { property: "og:description", content: DESC },
+      { property: "og:url", content: "https://hizmetalani.com/nasil-calisir" },
+    ],
+    links: [{ rel: "canonical", href: "https://hizmetalani.com/nasil-calisir" }],
+  }),
 });
 
 function Page() {

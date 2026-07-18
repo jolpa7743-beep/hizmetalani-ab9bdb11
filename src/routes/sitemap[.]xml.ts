@@ -1,11 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
-import { CATEGORIES } from "@/lib/categories";
-import { ILLER } from "@/lib/turkiye";
 import { ISTANBUL_ILCELERI } from "@/lib/istanbul-ilceler";
 
-const BASE_URL = "";
+const BASE_URL = "https://hizmetalani.com";
 
 const STATIC_ROUTES = [
   { path: "/", changefreq: "daily", priority: "1.0" },
@@ -15,6 +13,7 @@ const STATIC_ROUTES = [
   { path: "/iletisim", changefreq: "monthly", priority: "0.6" },
   { path: "/nasil-calisir", changefreq: "monthly", priority: "0.6" },
   { path: "/guvenlik", changefreq: "monthly", priority: "0.6" },
+  { path: "/auth", changefreq: "monthly", priority: "0.4" },
   { path: "/gizlilik", changefreq: "monthly", priority: "0.4" },
   { path: "/kullanim-kosullari", changefreq: "monthly", priority: "0.4" },
   { path: "/kvkk", changefreq: "monthly", priority: "0.4" },
@@ -61,18 +60,6 @@ export const Route = createFileRoute("/sitemap.xml")({
         // Blog yazıları
         for (const p of posts) {
           entries.push({ path: `/blog/${p.slug}`, lastmod: p.updated_at ?? undefined, changefreq: "weekly", priority: "0.8" });
-        }
-        // Kategori sayfaları
-        for (const c of CATEGORIES) {
-          entries.push({ path: `/kategori/${c.slug}`, changefreq: "daily", priority: "0.8" });
-          // İl + kategori uzun kuyruk
-          for (const il of ILLER) {
-            entries.push({
-              path: `/kategori/${c.slug}/${encodeURIComponent(il.toLocaleLowerCase("tr").replace(/\s+/g, "-"))}`,
-              changefreq: "weekly",
-              priority: "0.6",
-            });
-          }
         }
         // İlanlar
         for (const l of listings) {
