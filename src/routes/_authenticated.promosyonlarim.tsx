@@ -20,7 +20,7 @@ type PromoRow = {
   created_at: string;
   listing_id: string;
   promotion_packages: { name: string; kind: string } | null;
-  listings: { title: string } | null;
+  listings: { title: string; slug: string | null } | null;
   payments: Array<{ status: string; method: string; reference: string }>;
 };
 
