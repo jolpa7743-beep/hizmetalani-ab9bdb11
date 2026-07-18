@@ -63,6 +63,8 @@ import { Route as AuthenticatedAdminDuyurularRouteImport } from './routes/_authe
 import { Route as AuthenticatedAdminDosyalarRouteImport } from './routes/_authenticated.admin.dosyalar'
 import { Route as AuthenticatedAdminBlogRouteImport } from './routes/_authenticated.admin.blog'
 import { Route as AuthenticatedAdminBildirimlerRouteImport } from './routes/_authenticated.admin.bildirimler'
+import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
+import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -353,6 +355,16 @@ const AuthenticatedAdminBildirimlerRoute =
     path: '/bildirimler',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const LovableEmailAuthWebhookRoute = LovableEmailAuthWebhookRouteImport.update({
+  id: '/lovable/email/auth/webhook',
+  path: '/lovable/email/auth/webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
+  id: '/lovable/email/auth/preview',
+  path: '/lovable/email/auth/preview',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -408,6 +420,8 @@ export interface FileRoutesByFullPath {
   '/mesajlar/$id': typeof AuthenticatedMesajlarIdRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/mesajlar/': typeof AuthenticatedMesajlarIndexRoute
+  '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
+  '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -461,6 +475,8 @@ export interface FileRoutesByTo {
   '/mesajlar/$id': typeof AuthenticatedMesajlarIdRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/mesajlar': typeof AuthenticatedMesajlarIndexRoute
+  '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
+  '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -518,6 +534,8 @@ export interface FileRoutesById {
   '/_authenticated/mesajlar/$id': typeof AuthenticatedMesajlarIdRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/mesajlar/': typeof AuthenticatedMesajlarIndexRoute
+  '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
+  '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -575,6 +593,8 @@ export interface FileRouteTypes {
     | '/mesajlar/$id'
     | '/admin/'
     | '/mesajlar/'
+    | '/lovable/email/auth/preview'
+    | '/lovable/email/auth/webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -628,6 +648,8 @@ export interface FileRouteTypes {
     | '/mesajlar/$id'
     | '/admin'
     | '/mesajlar'
+    | '/lovable/email/auth/preview'
+    | '/lovable/email/auth/webhook'
   id:
     | '__root__'
     | '/'
@@ -684,6 +706,8 @@ export interface FileRouteTypes {
     | '/_authenticated/mesajlar/$id'
     | '/_authenticated/admin/'
     | '/_authenticated/mesajlar/'
+    | '/lovable/email/auth/preview'
+    | '/lovable/email/auth/webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -708,6 +732,8 @@ export interface RootRouteChildren {
   RehberEvcilHayvanBakimiFiyatlariRoute: typeof RehberEvcilHayvanBakimiFiyatlariRoute
   UyeIdRoute: typeof UyeIdRoute
   IstanbulIndexRoute: typeof IstanbulIndexRoute
+  LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
+  LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1090,6 +1116,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminBildirimlerRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/lovable/email/auth/webhook': {
+      id: '/lovable/email/auth/webhook'
+      path: '/lovable/email/auth/webhook'
+      fullPath: '/lovable/email/auth/webhook'
+      preLoaderRoute: typeof LovableEmailAuthWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lovable/email/auth/preview': {
+      id: '/lovable/email/auth/preview'
+      path: '/lovable/email/auth/preview'
+      fullPath: '/lovable/email/auth/preview'
+      preLoaderRoute: typeof LovableEmailAuthPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -1208,6 +1248,8 @@ const rootRouteChildren: RootRouteChildren = {
   RehberEvcilHayvanBakimiFiyatlariRoute: RehberEvcilHayvanBakimiFiyatlariRoute,
   UyeIdRoute: UyeIdRoute,
   IstanbulIndexRoute: IstanbulIndexRoute,
+  LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
+  LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
