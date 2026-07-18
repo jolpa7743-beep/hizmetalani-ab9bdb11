@@ -62,10 +62,10 @@ export const Route = createFileRoute("/sitemap.xml")({
         for (const p of posts) {
           entries.push({ path: `/blog/${p.slug}`, lastmod: p.updated_at ?? undefined, changefreq: "weekly", priority: "0.8" });
         }
-        // İlanlar
+        // İlanlar — SEO dostu slug'lı URL
         for (const l of listings) {
           entries.push({
-            path: `/ilan/${l.id}`,
+            path: `/ilan/${listingSlug(l.title, l.id)}`,
             lastmod: l.updated_at ?? undefined,
             changefreq: "weekly",
             priority: "0.7",
