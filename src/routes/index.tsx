@@ -60,7 +60,10 @@ export const Route = createFileRoute("/")({
   component: HomePage,
   head: () => ({
     meta: [
-      { title: "hizmetalanı.com — Bakıcı, Temizlik & Evcil Hayvan İlanları" },
+      { title: "Bakıcı, Temizlik ve Evde Bakım İlanları | hizmetalanı.com" },
+      { name: "description", content: "Türkiye'nin ev hizmetleri ilan platformu. Çocuk, yaşlı ve hasta bakıcısı; ev, ofis ve bina temizliği; evcil hayvan bakımı ilanlarını ücretsiz yayınla, doğrulanmış üyelerle güvenle iletişime geç." },
+      { property: "og:title", content: "Bakıcı, Temizlik ve Evde Bakım İlanları | hizmetalanı.com" },
+      { property: "og:description", content: "Bakıcı, temizlik ve evcil hayvan bakımı ilanlarını Türkiye genelinde ücretsiz yayınla; doğrulanmış üyelerle güvenle anlaş." },
       { property: "og:url", content: "https://hizmetalani.com/" },
     ],
     links: [{ rel: "canonical", href: "https://hizmetalani.com/" }],
@@ -154,8 +157,11 @@ function HomePage() {
   return (
     <div className="bg-hero-grid">
       <h1 className="sr-only">
-        hizmetalanı.com — Bakıcı, Ev/Ofis Temizliği ve Evcil Hayvan Bakımı İlanları
+        Bakıcı, Temizlik ve Evcil Hayvan Bakımı İlanları — Türkiye'nin Ev Hizmetleri Platformu
       </h1>
+      <p className="sr-only">
+        Çocuk bakıcısı, yaşlı ve hasta bakıcısı, ev/ofis/bina temizliği, evcil hayvan bakımı ve daha fazlası için İstanbul, Ankara, İzmir başta olmak üzere Türkiye genelinde ücretsiz ilan yayınlayın; doğrulanmış üyelerle güvenle iletişime geçin.
+      </p>
       <div className="mx-auto max-w-7xl px-4 sm:px-6"><AdSlot slot="header" /></div>
       {/* Sahibinden tarzı üst arama çubuğu */}
       <div className="border-b border-border bg-surface/70 backdrop-blur">
