@@ -26,7 +26,7 @@ export function BrandLogo({ className = "", priority = false }: BrandLogoProps) 
           hizmetalanı<span className="text-brand-accent">.com</span>
         </div>
         <div className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
-          İş & Hizmet İlanları
+          Güvenilir Hizmet Platformu
         </div>
       </div>
     </div>
