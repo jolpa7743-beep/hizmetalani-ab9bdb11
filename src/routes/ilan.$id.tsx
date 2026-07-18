@@ -84,7 +84,7 @@ export const Route = createFileRoute("/ilan/$id")({
       160,
     );
     const ogTitle = truncate(`${l.title} — ${loc}`, 60);
-    const path = `/ilan/${params.id}`;
+    const path = `/ilan/${listingSlug(l.title, l.id)}`;
     // JSON-LD (JobPosting) — Google Jobs uyumu
     const jsonLd = {
       "@context": "https://schema.org",
