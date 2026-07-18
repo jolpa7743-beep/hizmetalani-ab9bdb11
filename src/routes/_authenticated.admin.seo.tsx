@@ -101,6 +101,23 @@ function AdminSEO() {
             </div>
             <p className="text-xs text-muted-foreground">Slot ID'leri AdSense &gt; Reklamlar &gt; Reklam birimleri sayfasından alınır. Sadece rakamdan oluşur. Bir slotu boş bırakırsanız o konumdaki reklam gizlenir.</p>
           </div>
+
+          <div className="pt-4 border-t space-y-4">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <Label htmlFor="ad-ph" className="text-base">"Buraya Reklam Verebilirsiniz" Yer Tutucusu</Label>
+                <p className="text-xs text-muted-foreground mt-1">AdSense veya sponsor reklamı yoksa boş kalan tüm slotlarda tıklanabilir bir "reklam verin" alanı gösterilir.</p>
+              </div>
+              <Switch id="ad-ph" checked={form.ad_placeholder_enabled ?? false} onCheckedChange={(v) => set("ad_placeholder_enabled", v)} />
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div><Label>Başlık</Label><Input value={form.ad_placeholder_title ?? ""} onChange={(e) => set("ad_placeholder_title", e.target.value)} placeholder="Buraya Reklam Verebilirsiniz" /></div>
+              <div><Label>Yönlendirme bağlantısı</Label><Input value={form.ad_placeholder_url ?? ""} onChange={(e) => set("ad_placeholder_url", e.target.value)} placeholder="/iletisim veya https://..." /></div>
+            </div>
+            <div><Label>Alt metin</Label><Textarea rows={2} value={form.ad_placeholder_subtitle ?? ""} onChange={(e) => set("ad_placeholder_subtitle", e.target.value)} placeholder="Markanızı binlerce ziyaretçiye ulaştırın." /></div>
+          </div>
+        </CardContent>
+      </Card>
         </CardContent>
       </Card>
 
