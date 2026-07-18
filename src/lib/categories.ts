@@ -51,8 +51,8 @@ export const CATEGORY_BY_SLUG = Object.fromEntries(CATEGORIES.map((c) => [c.slug
 >;
 
 export const TYPE_LABEL: Record<ListingType, string> = {
-  offering: "İş Veren",
-  seeking: "İş Arayan",
+  offering: "Hizmet Sunuyorum",
+  seeking: "Hizmet Arıyorum",
 };
 
 export const PRICE_TYPE_LABEL: Record<string, string> = {
