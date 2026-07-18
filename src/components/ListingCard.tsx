@@ -5,7 +5,9 @@ import { listingSlug } from "@/lib/slug";
 
 export type ListingRow = {
   id: string;
+  slug?: string | null;
   user_id?: string;
+
   title: string;
   type: ListingType;
   category: CategoryKey;
