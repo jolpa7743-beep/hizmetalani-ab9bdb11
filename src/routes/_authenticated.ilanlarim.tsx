@@ -17,7 +17,7 @@ export const Route = createFileRoute("/_authenticated/ilanlarim")({
 });
 
 type MyListing = {
-  id: string; title: string; category: CategoryKey; type: ListingType;
+  id: string; slug: string; title: string; category: CategoryKey; type: ListingType;
   city: string; district: string | null; price: number | null; price_type: string;
   status: "active" | "paused" | "closed"; view_count: number; created_at: string;
   is_featured?: boolean; is_urgent?: boolean; is_showcase?: boolean;
