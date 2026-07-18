@@ -417,7 +417,7 @@ function FilterPanel({
           <div className="mt-1.5 grid grid-cols-3 gap-1 rounded-md border border-border p-1 bg-surface-muted">
             {(["all", "offering", "seeking"] as const).map((t) => {
               const active = (search.tip ?? "all") === t;
-              const label = t === "all" ? "Tümü" : t === "offering" ? "Veriyor" : "Arıyor";
+              const label = t === "all" ? "Tümü" : t === "offering" ? "Hizmet Sunuyorum" : "Hizmet Arıyorum";
               return (
                 <button
                   key={t}
