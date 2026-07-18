@@ -108,7 +108,7 @@ function ChatPage() {
         <div className="flex-1 min-w-0">
           <div className="font-semibold truncate">{other?.full_name ?? "Kullanıcı"}</div>
           {conv?.listings && (
-            <Link to="/ilan/$id" params={{ id: conv.listings.id }} className="text-xs text-brand hover:underline truncate block">
+            <Link to="/ilan/$id" params={{ id: listingSlug(conv.listings.title, conv.listings.id, (conv.listings as { slug?: string | null }).slug) }} className="text-xs text-brand hover:underline truncate block">
               {conv.listings.title}
             </Link>
           )}
