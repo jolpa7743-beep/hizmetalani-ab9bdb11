@@ -5,19 +5,19 @@ export const Route = createFileRoute("/hakkimizda")({
   component: AboutPage,
   head: () => ({
     meta: [
-      { title: "Hakkımızda — hizmetalanı.com | Türkiye'nin Ev ve Bakım Hizmetleri Platformu" },
+      { title: "Hakkımızda — hizmetalanı.com" },
       {
         name: "description",
         content:
-          "hizmetalanı.com; bakıcı, ev/ofis/bina temizliği ve evcil hayvan geçici konaklama alanında hizmet arayan ile hizmet vereni güvenle buluşturan Türkiye merkezli ilan platformudur. Misyonumuz, vizyonumuz ve değerlerimiz.",
+          "hizmetalanı.com; bakıcı, ev/ofis temizliği ve evcil hayvan geçici konaklama alanında hizmet arayan ile vereni güvenle buluşturan Türkiye merkezli ilan platformudur.",
       },
       { name: "keywords", content: "hizmetalanı hakkında, hizmet ilan platformu, bakıcı ilanı, temizlik ilanı, evcil hayvan bakımı, güvenilir hizmet, Türkiye hizmet pazarı" },
       { property: "og:title", content: "Hakkımızda — hizmetalanı.com" },
       { property: "og:description", content: "Türkiye'nin ev ve bakım hizmetleri için güvenilir ilan platformu. Doğrulama, şeffaf iletişim ve kullanıcı odaklı deneyim." },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "/hakkimizda" },
+      { property: "og:url", content: "https://hizmetalani.com/hakkimizda" },
     ],
-    links: [{ rel: "canonical", href: "/hakkimizda" }],
+    links: [{ rel: "canonical", href: "https://hizmetalani.com/hakkimizda" }],
     scripts: [
       {
         type: "application/ld+json",
