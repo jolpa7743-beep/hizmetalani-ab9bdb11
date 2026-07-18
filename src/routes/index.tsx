@@ -270,7 +270,8 @@ function HomePage() {
             </div>
 
             {/* İlan ızgarası — yatay kartlar */}
-            <section aria-label="İlanlar" className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            <section aria-labelledby="ilanlar-heading" className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              <h2 id="ilanlar-heading" className="sr-only">İlanlar</h2>
               {isLoading && Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="h-40 rounded-xl border border-border bg-card animate-pulse" />
               ))}
