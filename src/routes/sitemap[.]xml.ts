@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import { ISTANBUL_ILCELERI } from "@/lib/istanbul-ilceler";
+import { listingSlug } from "@/lib/slug";
 
 const BASE_URL = "https://hizmetalani.com";
 
