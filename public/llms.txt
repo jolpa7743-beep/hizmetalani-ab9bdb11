@@ -1,0 +1,22 @@
+# hizmetalanı.com
+
+> Türkiye'nin bakıcı, ev/ofis temizliği ve evcil hayvan geçici konaklama ilan platformu. Hizmet arayan ile vereni ücretsiz, güvenli ve şeffaf biçimde buluşturur.
+
+hizmetalanı.com; ilan yayınlama, doğrulanmış üye profilleri, mesajlaşma, puanlama/yorum ve şehir/ilçe bazlı arama sunar. Aşağıdaki bağlantılar sitenin ana içerik yüzeyleridir.
+
+## Pages
+- [Ana sayfa](/): Aktif ilanların listesi, kategori ve şehir filtreleri.
+- [Hakkımızda](/hakkimizda): Platformun misyonu, değerleri ve çalışma yaklaşımı.
+- [Nasıl Çalışır](/nasil-calisir): İlan verme, iletişim ve anlaşma adımları.
+- [Güvenlik İpuçları](/guvenlik): Güvenli hizmet alma ve verme rehberi.
+- [İletişim](/iletisim): Destek ve iş birliği için iletişim bilgileri.
+
+## Blog
+- [Blog](/blog): SEO odaklı hizmet rehberleri, fiyat karşılaştırmaları ve şehir/ilçe bazlı içerikler.
+- [İstanbul Rehberi](/istanbul): İstanbul ilçelerinde hizmet alma rehberleri.
+
+## Optional
+- [Gizlilik Politikası](/gizlilik)
+- [Kullanım Koşulları](/kullanim-kosullari)
+- [KVKK](/kvkk)
+- [Çerez Politikası](/cerez-politikasi)
