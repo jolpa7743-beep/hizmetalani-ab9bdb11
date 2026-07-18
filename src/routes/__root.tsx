@@ -141,8 +141,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       children: JSON.stringify({
         "@context": "https://schema.org",
         "@graph": [
-          { "@type": "Organization", name: s?.site_name ?? "hizmetalanı.com", description, email: s?.contact_email ?? undefined, telephone: s?.contact_phone ?? undefined },
-          { "@type": "WebSite", name: s?.site_name ?? "hizmetalanı.com", potentialAction: { "@type": "SearchAction", target: "/?q={search_term_string}", "query-input": "required name=search_term_string" } },
+          { "@type": "Organization", name: s?.site_name ?? "hizmetalanı.com", url: "https://hizmetalani.com", description, email: s?.contact_email ?? undefined, telephone: s?.contact_phone ?? undefined },
+          { "@type": "WebSite", name: s?.site_name ?? "hizmetalanı.com", url: "https://hizmetalani.com", potentialAction: { "@type": "SearchAction", target: "https://hizmetalani.com/?q={search_term_string}", "query-input": "required name=search_term_string" } },
         ],
       }),
     });
