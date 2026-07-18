@@ -118,8 +118,6 @@ function AdminSEO() {
           </div>
         </CardContent>
       </Card>
-        </CardContent>
-      </Card>
 
       <Card>
         <CardHeader><CardTitle className="flex items-center gap-2"><ShieldCheck className="size-4" /> robots.txt</CardTitle></CardHeader>
