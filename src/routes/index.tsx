@@ -60,8 +60,10 @@ export const Route = createFileRoute("/")({
   component: HomePage,
   head: () => ({
     meta: [
-      { title: "hizmetalanı.com — Bakıcı, Temizlik ve Evcil Hayvan Geçici Yuva İlanları" },
+      { title: "hizmetalanı.com — Bakıcı, Temizlik & Evcil Hayvan İlanları" },
+      { property: "og:url", content: "https://hizmetalani.com/" },
     ],
+    links: [{ rel: "canonical", href: "https://hizmetalani.com/" }],
   }),
 });
 
