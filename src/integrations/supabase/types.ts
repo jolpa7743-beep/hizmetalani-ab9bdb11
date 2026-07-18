@@ -423,7 +423,7 @@ export type Database = {
           salary_min?: number | null
           salary_period?: string | null
           showcase_until?: string | null
-          slug: string
+          slug?: string
           status?: Database["public"]["Enums"]["listing_status"]
           title: string
           type: Database["public"]["Enums"]["listing_type"]
