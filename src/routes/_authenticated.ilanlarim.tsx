@@ -8,6 +8,8 @@ import { CATEGORY_MAP, formatPrice, type CategoryKey, type ListingType } from "@
 import { Eye, Pencil, Trash2, Plus, Sparkles, Flame } from "lucide-react";
 import { toast } from "sonner";
 import { PromoteDialog } from "@/components/PromoteDialog";
+import { listingSlug } from "@/lib/slug";
+
 
 export const Route = createFileRoute("/_authenticated/ilanlarim")({
   component: MyListings,
