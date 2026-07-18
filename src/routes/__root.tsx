@@ -95,8 +95,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: ({ loaderData }) => {
     const s = loaderData?.settings;
     const title = s?.site_name
-      ? `${s.site_name} — Bakıcı, Temizlik ve Ev Hizmetleri İlanları`
-      : "hizmetalanı.com — Bakıcı, Temizlik ve Evcil Hayvan Geçici Konaklama İlanları";
+      ? `${s.site_name} — Bakıcı & Temizlik İlanları`
+      : "hizmetalanı.com — Bakıcı, Temizlik & Evcil Hayvan İlanları";
     const description = s?.site_description
       ?? "Türkiye'nin ev ve bakım hizmetleri ilan platformu. Bakıcı, ev/ofis/bina temizliği ve evcil hayvan geçici konaklama ilanları — ücretsiz yayınla, güvenle iletişime geç.";
     const keywords = s?.site_keywords ?? "bakıcı ilanı, temizlikçi ilanı, ev temizliği, ofis temizliği, evcil hayvan bakıcısı";
