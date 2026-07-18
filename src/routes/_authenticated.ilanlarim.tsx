@@ -31,7 +31,7 @@ function MyListings() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("listings")
-        .select("id,title,category,type,city,district,price,price_type,status,view_count,created_at,is_featured,is_urgent,is_showcase")
+        .select("id,slug,title,category,type,city,district,price,price_type,status,view_count,created_at,is_featured,is_urgent,is_showcase")
         .eq("user_id", user!.id)
         .order("created_at", { ascending: false });
       if (error) throw error;
