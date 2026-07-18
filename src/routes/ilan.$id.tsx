@@ -75,12 +75,12 @@ export const Route = createFileRoute("/ilan/$id")({
     const catLabel = CATEGORY_MAP[l.category]?.label ?? "";
     const typeLabel = TYPE_LABEL[l.type];
     const priceStr = formatPrice(l.price, l.price_type);
-    const title = truncate(`${l.title} — ${loc} | ${catLabel} | hizmetalanı.com`, 65);
+    const title = truncate(`${l.title} — ${loc} | ${catLabel} | hizmetalanı.com`, 60);
     const description = truncate(
       `${typeLabel} · ${catLabel} · ${loc}${priceStr ? " · " + priceStr : ""} — ${l.description}`,
       160,
     );
-    const ogTitle = truncate(`${l.title} — ${loc}`, 65);
+    const ogTitle = truncate(`${l.title} — ${loc}`, 60);
     const path = `/ilan/${params.id}`;
     // JSON-LD (JobPosting) — Google Jobs uyumu
     const jsonLd = {
