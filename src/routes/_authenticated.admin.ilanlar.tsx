@@ -9,6 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Eye, Trash2, Search, Pause, Play, X } from "lucide-react";
 import { toast } from "sonner";
 import { CATEGORY_MAP, TYPE_LABEL, formatPrice } from "@/lib/categories";
+import { listingSlug } from "@/lib/slug";
+
 
 export const Route = createFileRoute("/_authenticated/admin/ilanlar")({
   component: AdminListings,
