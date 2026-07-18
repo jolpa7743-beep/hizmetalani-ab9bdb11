@@ -45,15 +45,20 @@ const profileQueryOptions = (id: string) => ({
 export const Route = createFileRoute("/uye/$id")({
   component: MemberProfile,
   loader: ({ params, context }) => context.queryClient.ensureQueryData(profileQueryOptions(params.id)),
-  head: ({ loaderData }) => {
+  head: ({ loaderData, params }) => {
     const name = loaderData?.profile?.full_name ?? "Üye";
+    const loc = [loaderData?.profile?.city, loaderData?.profile?.district].filter(Boolean).join(" / ");
+    const desc = `${name} adlı üyenin ilanları, değerlendirmeleri ve puanları${loc ? ` — ${loc}` : ""}. hizmetalanı.com üye profili.`;
     return {
       meta: [
         { title: `${name} — Üye Profili | hizmetalanı.com` },
-        { name: "description", content: `${name} adlı üyenin ilanları, değerlendirmeleri ve puanları.` },
+        { name: "description", content: desc },
         { property: "og:title", content: `${name} — Üye Profili` },
+        { property: "og:description", content: desc },
         { property: "og:type", content: "profile" },
+        { property: "og:url", content: `https://hizmetalani.com/uye/${params.id}` },
       ],
+      links: [{ rel: "canonical", href: `https://hizmetalani.com/uye/${params.id}` }],
     };
   },
 });
