@@ -243,9 +243,11 @@ function ListingDetail() {
   });
   const badgeVisibility: BadgeVisibility = (settings?.trust_badge_visibility as BadgeVisibility | undefined) ?? "all";
 
+  const listingUuid = data?.listing?.id ?? extractListingId(id);
   useEffect(() => {
-    supabase.rpc("increment_listing_view", { _id: id }).then(() => {});
-  }, [id]);
+    if (!listingUuid) return;
+    supabase.rpc("increment_listing_view", { _id: listingUuid }).then(() => {});
+  }, [listingUuid]);
 
   const contactSeller = async () => {
     if (!user) {
