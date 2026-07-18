@@ -62,7 +62,7 @@ function MyPromotions() {
                 <Badge variant="outline">{r.promotion_packages?.name ?? "—"}</Badge>
                 {pay && <span className="text-xs font-mono text-muted-foreground">{pay.reference}</span>}
               </div>
-              <Link to="/ilan/$id" params={{ id: r.listing_id }} className="font-semibold hover:text-brand block truncate">
+              <Link to="/ilan/$id" params={{ id: listingSlug(r.listings?.title, r.listing_id, r.listings?.slug) }} className="font-semibold hover:text-brand block truncate">
                 {r.listings?.title ?? "—"}
               </Link>
               <div className="text-xs text-muted-foreground mt-1">
