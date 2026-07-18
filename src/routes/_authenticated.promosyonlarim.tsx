@@ -4,6 +4,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, Clock, CheckCircle2, XCircle } from "lucide-react";
 import { getMyPromotions } from "@/lib/promotions.functions";
+import { listingSlug } from "@/lib/slug";
+
 
 export const Route = createFileRoute("/_authenticated/promosyonlarim")({
   component: MyPromotions,
