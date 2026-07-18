@@ -830,6 +830,10 @@ export type Database = {
       }
       site_settings: {
         Row: {
+          ad_placeholder_enabled: boolean
+          ad_placeholder_subtitle: string
+          ad_placeholder_title: string
+          ad_placeholder_url: string
           adsense_enabled: boolean
           adsense_publisher_id: string | null
           adsense_slot_footer: string | null
@@ -857,6 +861,10 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          ad_placeholder_enabled?: boolean
+          ad_placeholder_subtitle?: string
+          ad_placeholder_title?: string
+          ad_placeholder_url?: string
           adsense_enabled?: boolean
           adsense_publisher_id?: string | null
           adsense_slot_footer?: string | null
@@ -884,6 +892,10 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          ad_placeholder_enabled?: boolean
+          ad_placeholder_subtitle?: string
+          ad_placeholder_title?: string
+          ad_placeholder_url?: string
           adsense_enabled?: boolean
           adsense_publisher_id?: string | null
           adsense_slot_footer?: string | null
