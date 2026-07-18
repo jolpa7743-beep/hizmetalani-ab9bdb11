@@ -1,11 +1,10 @@
 // SEO-dostu URL slug yardımcıları.
-// İlan URL'leri "başlık-slug-<uuid>" biçiminde tutulur; eski salt-UUID
-// bağlantıları da geriye dönük çalışır (UUID sondan çıkarılır).
+// İlan URL'leri artık salt "başlık-slug" biçiminde tutulur (DB'de benzersiz `slug` sütunu).
+// Eski salt-UUID bağlantıları geriye dönük çalışır: yükleyici hem slug hem UUID kabul eder.
 
-const UUID_RE = /([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i;
-const BARE_UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-/** Türkçe karakterleri koruyarak SEO-uyumlu bir slug üretir. */
+/** Türkçe karakterleri normalize edip ASCII-slug üretir. */
 export function toSlug(input: string): string {
   if (!input) return "";
   const map: Record<string, string> = {
@@ -27,16 +26,24 @@ export function toSlug(input: string): string {
     .replace(/-+$/g, "");
 }
 
-/** URL param'ından ilan UUID'sini çıkarır. */
-export function extractListingId(slugParam: string): string | null {
-  if (!slugParam) return null;
-  if (BARE_UUID_RE.test(slugParam)) return slugParam.toLowerCase();
-  const m = slugParam.match(UUID_RE);
-  return m ? m[1].toLowerCase() : null;
+/** URL param bir UUID mi? */
+export function isUuid(v: string | null | undefined): boolean {
+  return !!v && UUID_RE.test(v);
 }
 
-/** İlan URL segmenti üretir. */
-export function listingSlug(title: string | null | undefined, id: string): string {
+/** URL param'ından ilan UUID'sini çıkarır (varsa). */
+export function extractListingId(slugParam: string): string | null {
+  if (!slugParam) return null;
+  return isUuid(slugParam) ? slugParam.toLowerCase() : null;
+}
+
+/** İlan URL segmenti üretir — DB slug'ı varsa onu, yoksa başlıktan üretilmişini, son çare UUID. */
+export function listingSlug(
+  title: string | null | undefined,
+  id: string,
+  slug?: string | null,
+): string {
+  if (slug && slug.trim()) return slug;
   const s = toSlug(title ?? "");
-  return s ? `${s}-${id}` : id;
+  return s || id;
 }
