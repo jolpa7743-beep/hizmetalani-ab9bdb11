@@ -60,10 +60,10 @@ export const Route = createFileRoute("/")({
   component: HomePage,
   head: () => ({
     meta: [
-      { title: "Bakıcı, Temizlik ve Evde Bakım İlanları | hizmetalanı.com" },
-      { name: "description", content: "Türkiye'nin ev hizmetleri ilan platformu. Çocuk, yaşlı ve hasta bakıcısı; ev, ofis ve bina temizliği; evcil hayvan bakımı ilanlarını ücretsiz yayınla, doğrulanmış üyelerle güvenle iletişime geç." },
-      { property: "og:title", content: "Bakıcı, Temizlik ve Evde Bakım İlanları | hizmetalanı.com" },
-      { property: "og:description", content: "Bakıcı, temizlik ve evcil hayvan bakımı ilanlarını Türkiye genelinde ücretsiz yayınla; doğrulanmış üyelerle güvenle anlaş." },
+      { title: "hizmetalanı.com — Türkiye'nin Güvenilir Hizmet İlan Platformu" },
+      { name: "description", content: "Bakıcı, temizlik, tadilat, nakliye ve evde bakım hizmetlerini doğrulanmış üyelerle güvenle bulun. Komisyonsuz, ücretsiz, 81 ilde aktif Türkiye'nin lider hizmet ilan platformu." },
+      { property: "og:title", content: "hizmetalanı.com — Türkiye'nin Güvenilir Hizmet İlan Platformu" },
+      { property: "og:description", content: "Doğrulanmış üyeler, komisyonsuz iletişim ve 81 ilde hizmet: Türkiye'nin güvenilir hizmet ilan platformu." },
       { property: "og:url", content: "https://hizmetalani.com/" },
     ],
     links: [{ rel: "canonical", href: "https://hizmetalani.com/" }],
