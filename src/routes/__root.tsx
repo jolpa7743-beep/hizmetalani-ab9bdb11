@@ -95,11 +95,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: ({ loaderData }) => {
     const s = loaderData?.settings;
     const title = s?.site_name
-      ? `${s.site_name} | Bakıcı, Temizlik ve Evde Bakım İlanları`
-      : "hizmetalanı.com | Türkiye'nin Ev Hizmetleri İlan Platformu";
+      ? `${s.site_name} — Türkiye'nin Güvenilir Hizmet İlan Platformu`
+      : "hizmetalanı.com — Türkiye'nin Güvenilir Hizmet İlan Platformu";
     const description = s?.site_description
-      ?? "Bakıcı, ev ve ofis temizliği, evcil hayvan bakımı, yaşlı ve hasta bakımı ilanları tek platformda. Türkiye genelinde doğrulanmış üyelerle güvenli, komisyonsuz ve ücretsiz hizmet ilanı yayınlayın.";
-    const keywords = s?.site_keywords ?? "bakıcı ilanları, çocuk bakıcısı, yaşlı bakıcısı, hasta bakıcısı, ev temizliği, ofis temizliği, bina temizliği, evcil hayvan bakıcısı, pet otel, İstanbul temizlik, Ankara bakıcı, İzmir temizlik, hizmet ilanı, evde bakım, temizlik şirketi";
+      ?? "Bakıcı, temizlik, tadilat, nakliye ve evde bakım gibi profesyonel hizmet ilanlarını doğrulanmış üyelerle güvenle bulun. Komisyonsuz, ücretsiz ve 81 ile hizmet veren Türkiye'nin lider hizmet ilan platformu.";
+    const keywords = s?.site_keywords ?? "hizmet ilanları, bakıcı ilanları, çocuk bakıcısı, yaşlı bakıcısı, hasta bakıcısı, ev temizliği, ofis temizliği, tadilat, nakliye, evcil hayvan bakıcısı, doğrulanmış hizmet, güvenilir usta, İstanbul hizmet ilanı, Ankara hizmet, İzmir hizmet, evde bakım";
     const ogImage = s?.og_image_url || ogDefault;
 
     const meta: Array<Record<string, string>> = [
