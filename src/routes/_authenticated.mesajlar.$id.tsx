@@ -35,7 +35,7 @@ function ChatPage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("conversations")
-        .select("id, listing_id, user1_id, user2_id, listings(id, title)")
+        .select("id, listing_id, user1_id, user2_id, listings(id, title, slug)")
         .eq("id", id)
         .maybeSingle();
       if (error) throw error;
