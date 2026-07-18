@@ -31,29 +31,34 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useQueryClient } from "@tanstack/react-query";
-import { extractListingId, listingSlug } from "@/lib/slug";
+import { extractListingId, isUuid, listingSlug } from "@/lib/slug";
 
 // Loader ile ilan verisini önden çekip head() içinde title/description/OG üretiyoruz.
 const listingQueryOptions = (slugParam: string) => ({
-  queryKey: ["listing", extractListingId(slugParam) ?? slugParam],
+  queryKey: ["listing", slugParam],
   queryFn: async () => {
-    const id = extractListingId(slugParam);
-    if (!id) return null;
-    const { data: listing, error } = await supabase
-      .from("listings")
-      .select("id,user_id,title,description,type,category,city,district,price,price_type,created_at,view_count,work_type,available_days,off_days,available_hours,salary_min,salary_max,salary_period,experience_years,education_level,requirements,benefits,is_remote,is_urgent,is_featured,is_showcase,boost_score,promoted_until")
-      .eq("id", id)
-      .maybeSingle();
-    if (error) throw error;
+    if (!slugParam) return null;
+    const cols = "id,user_id,title,slug,description,type,category,city,district,price,price_type,created_at,view_count,work_type,available_days,off_days,available_hours,salary_min,salary_max,salary_period,experience_years,education_level,requirements,benefits,is_remote,is_urgent,is_featured,is_showcase,boost_score,promoted_until";
+    let listing: Listing | null = null;
+    if (isUuid(slugParam)) {
+      const { data, error } = await supabase.from("listings").select(cols).eq("id", slugParam).maybeSingle();
+      if (error) throw error;
+      listing = (data as unknown as Listing) ?? null;
+    } else {
+      const { data, error } = await supabase.from("listings").select(cols).eq("slug", slugParam).maybeSingle();
+      if (error) throw error;
+      listing = (data as unknown as Listing) ?? null;
+    }
     if (!listing) return null;
     const { data: profile } = await supabase
       .from("profiles_public" as never)
       .select("full_name,avatar_url,is_verified,trust_level,city,district,created_at")
       .eq("id", listing.user_id)
       .maybeSingle();
-    return { listing: listing as unknown as Listing, profile: (profile ?? null) as Profile | null };
+    return { listing, profile: (profile ?? null) as Profile | null };
   },
 });
+
 
 function truncate(s: string, n: number) {
   const clean = s.replace(/\s+/g, " ").trim();
