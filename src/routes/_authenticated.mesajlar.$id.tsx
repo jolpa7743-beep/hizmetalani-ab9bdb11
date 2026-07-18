@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Send } from "lucide-react";
 import { toast } from "sonner";
+import { listingSlug } from "@/lib/slug";
+
 
 export const Route = createFileRoute("/_authenticated/mesajlar/$id")({
   component: ChatPage,
