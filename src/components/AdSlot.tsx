@@ -128,9 +128,45 @@ export function AdSlot({ slot, className = "", format = "auto", layout }: Props)
     );
   }
 
-  if (!enabled || !publisher || !slotId) return null;
-
+  const showAdSense = enabled && publisher && slotId;
   const minH = slotMinHeight(slot, isMobile);
+
+  if (!showAdSense) {
+    // Placeholder: "Buraya reklam verebilirsiniz"
+    if (!s?.ad_placeholder_enabled) return null;
+    const href = s?.ad_placeholder_url || "/iletisim";
+    const title = s?.ad_placeholder_title || "Buraya Reklam Verebilirsiniz";
+    const subtitle = s?.ad_placeholder_subtitle || "Markanızı binlerce ziyaretçiye ulaştırın.";
+    return (
+      <aside
+        aria-label="Reklam alanı — kiralık"
+        className={`ad-slot my-6 flex justify-center ${className}`}
+        data-slot={slot}
+        data-placeholder="1"
+      >
+        <a
+          href={href}
+          className="group relative flex w-full max-w-4xl items-center justify-center rounded-lg border-2 border-dashed border-brand/30 bg-gradient-to-br from-brand/5 via-transparent to-brand-accent/5 px-6 py-6 text-center transition-all hover:border-brand/60 hover:bg-brand/5"
+          style={{ minHeight: minH }}
+        >
+          <div>
+            <div className="text-[11px] font-semibold uppercase tracking-widest text-brand-accent">
+              Reklam Alanı
+            </div>
+            <div className="mt-1 text-base sm:text-lg font-bold text-foreground">
+              {title}
+            </div>
+            <div className="mt-1 text-xs sm:text-sm text-muted-foreground max-w-md mx-auto">
+              {subtitle}
+            </div>
+            <div className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-brand group-hover:underline">
+              İletişime geç →
+            </div>
+          </div>
+        </a>
+      </aside>
+    );
+  }
 
   return (
     <aside

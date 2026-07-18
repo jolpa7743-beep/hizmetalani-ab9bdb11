@@ -26,6 +26,10 @@ export type SiteSettings = {
   password_reset_otp_enabled: boolean;
   badge_email_otp_enabled: boolean;
   google_login_enabled: boolean;
+  ad_placeholder_enabled: boolean;
+  ad_placeholder_url: string;
+  ad_placeholder_title: string;
+  ad_placeholder_subtitle: string;
   updated_at: string;
 };
 
