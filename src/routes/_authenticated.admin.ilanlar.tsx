@@ -134,7 +134,7 @@ function AdminListings() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex justify-end gap-1">
-                      <Link to="/ilan/$id" params={{ id: l.id }}>
+                      <Link to="/ilan/$id" params={{ id: listingSlug(l.title, l.id, (l as { slug?: string | null }).slug) }}>
                         <Button size="sm" variant="outline"><Eye className="size-4" /></Button>
                       </Link>
                       {l.status === "active" ? (
