@@ -225,13 +225,14 @@ function NewListing() {
         is_remote: form.is_remote,
         is_urgent: form.is_urgent,
       })
-      .select("id")
+      .select("id,slug")
       .single();
     setSaving(false);
 
     if (error) return toast.error("İlan oluşturulamadı: " + error.message);
     toast.success("İlanınız yayınlandı!");
-    navigate({ to: "/ilan/$id", params: { id: data.id } });
+    navigate({ to: "/ilan/$id", params: { id: (data as { id: string; slug: string }).slug ?? data.id } });
+
   };
 
   return (
