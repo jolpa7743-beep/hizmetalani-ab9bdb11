@@ -150,6 +150,8 @@ export const Route = createFileRoute("/ilan/$id")({
 type Listing = {
   id: string;
   user_id: string;
+  slug: string;
+
   title: string;
   description: string;
   type: ListingType;
