@@ -89,7 +89,7 @@ export const Route = createFileRoute("/ilan/$id")({
       160,
     );
     const ogTitle = truncate(`${l.title} — ${loc}`, 60);
-    const path = `https://hizmetalani.com/ilan/${listingSlug(l.title, l.id)}`;
+    const path = `https://hizmetalani.com/ilan/${listingSlug(l.title, l.id, l.slug)}`;
     // JSON-LD (JobPosting) — Google Jobs uyumu
     const jsonLd = {
       "@context": "https://schema.org",
