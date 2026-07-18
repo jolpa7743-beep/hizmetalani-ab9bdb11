@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import { ISTANBUL_ILCELERI } from "@/lib/istanbul-ilceler";
+import { listingSlug } from "@/lib/slug";
 
 const BASE_URL = "https://hizmetalani.com";
 
@@ -28,11 +29,11 @@ export const Route = createFileRoute("/sitemap.xml")({
           auth: { persistSession: false, autoRefreshToken: false },
         });
 
-        let listings: Array<{ id: string; updated_at: string | null }> = [];
+        let listings: Array<{ id: string; title: string | null; updated_at: string | null }> = [];
         try {
           const { data } = await supabase
             .from("listings")
-            .select("id, updated_at")
+            .select("id, title, updated_at")
             .eq("status", "active")
             .order("updated_at", { ascending: false })
             .limit(5000);
@@ -61,10 +62,10 @@ export const Route = createFileRoute("/sitemap.xml")({
         for (const p of posts) {
           entries.push({ path: `/blog/${p.slug}`, lastmod: p.updated_at ?? undefined, changefreq: "weekly", priority: "0.8" });
         }
-        // İlanlar
+        // İlanlar — SEO dostu slug'lı URL
         for (const l of listings) {
           entries.push({
-            path: `/ilan/${l.id}`,
+            path: `/ilan/${listingSlug(l.title, l.id)}`,
             lastmod: l.updated_at ?? undefined,
             changefreq: "weekly",
             priority: "0.7",

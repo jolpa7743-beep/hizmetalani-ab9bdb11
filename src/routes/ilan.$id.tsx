@@ -31,11 +31,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useQueryClient } from "@tanstack/react-query";
+import { extractListingId, listingSlug } from "@/lib/slug";
 
 // Loader ile ilan verisini önden çekip head() içinde title/description/OG üretiyoruz.
-const listingQueryOptions = (id: string) => ({
-  queryKey: ["listing", id],
+const listingQueryOptions = (slugParam: string) => ({
+  queryKey: ["listing", extractListingId(slugParam) ?? slugParam],
   queryFn: async () => {
+    const id = extractListingId(slugParam);
+    if (!id) return null;
     const { data: listing, error } = await supabase
       .from("listings")
       .select("id,user_id,title,description,type,category,city,district,price,price_type,created_at,view_count,work_type,available_days,off_days,available_hours,salary_min,salary_max,salary_period,experience_years,education_level,requirements,benefits,is_remote,is_urgent,is_featured,is_showcase,boost_score,promoted_until")
@@ -60,7 +63,7 @@ function truncate(s: string, n: number) {
 export const Route = createFileRoute("/ilan/$id")({
   component: ListingDetail,
   loader: ({ params, context }) => context.queryClient.ensureQueryData(listingQueryOptions(params.id)),
-  head: ({ params, loaderData }) => {
+  head: ({ loaderData }) => {
     const l = loaderData?.listing;
     const p = loaderData?.profile;
     if (!l) {
@@ -81,7 +84,7 @@ export const Route = createFileRoute("/ilan/$id")({
       160,
     );
     const ogTitle = truncate(`${l.title} — ${loc}`, 60);
-    const path = `/ilan/${params.id}`;
+    const path = `https://hizmetalani.com/ilan/${listingSlug(l.title, l.id)}`;
     // JSON-LD (JobPosting) — Google Jobs uyumu
     const jsonLd = {
       "@context": "https://schema.org",
@@ -240,9 +243,11 @@ function ListingDetail() {
   });
   const badgeVisibility: BadgeVisibility = (settings?.trust_badge_visibility as BadgeVisibility | undefined) ?? "all";
 
+  const listingUuid = data?.listing?.id ?? extractListingId(id);
   useEffect(() => {
-    supabase.rpc("increment_listing_view", { _id: id }).then(() => {});
-  }, [id]);
+    if (!listingUuid) return;
+    supabase.rpc("increment_listing_view", { _id: listingUuid }).then(() => {});
+  }, [listingUuid]);
 
   const contactSeller = async () => {
     if (!user) {
