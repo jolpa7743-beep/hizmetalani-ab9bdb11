@@ -29,16 +29,17 @@ export const Route = createFileRoute("/sitemap.xml")({
           auth: { persistSession: false, autoRefreshToken: false },
         });
 
-        let listings: Array<{ id: string; title: string | null; updated_at: string | null }> = [];
+        let listings: Array<{ id: string; slug: string | null; title: string | null; updated_at: string | null }> = [];
         try {
           const { data } = await supabase
             .from("listings")
-            .select("id, title, updated_at")
+            .select("id, slug, title, updated_at")
             .eq("status", "active")
             .order("updated_at", { ascending: false })
             .limit(5000);
           listings = (data ?? []) as typeof listings;
         } catch {}
+
 
         let posts: Array<{ slug: string; updated_at: string | null }> = [];
         try {
@@ -65,7 +66,7 @@ export const Route = createFileRoute("/sitemap.xml")({
         // İlanlar — SEO dostu slug'lı URL
         for (const l of listings) {
           entries.push({
-            path: `/ilan/${listingSlug(l.title, l.id)}`,
+            path: `/ilan/${listingSlug(l.title, l.id, l.slug)}`,
             lastmod: l.updated_at ?? undefined,
             changefreq: "weekly",
             priority: "0.7",

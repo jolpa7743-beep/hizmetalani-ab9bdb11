@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Send } from "lucide-react";
 import { toast } from "sonner";
+import { listingSlug } from "@/lib/slug";
+
 
 export const Route = createFileRoute("/_authenticated/mesajlar/$id")({
   component: ChatPage,
@@ -33,7 +35,7 @@ function ChatPage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("conversations")
-        .select("id, listing_id, user1_id, user2_id, listings(id, title)")
+        .select("id, listing_id, user1_id, user2_id, listings(id, title, slug)")
         .eq("id", id)
         .maybeSingle();
       if (error) throw error;
@@ -106,7 +108,7 @@ function ChatPage() {
         <div className="flex-1 min-w-0">
           <div className="font-semibold truncate">{other?.full_name ?? "Kullanıcı"}</div>
           {conv?.listings && (
-            <Link to="/ilan/$id" params={{ id: conv.listings.id }} className="text-xs text-brand hover:underline truncate block">
+            <Link to="/ilan/$id" params={{ id: listingSlug(conv.listings.title, conv.listings.id, (conv.listings as { slug?: string | null }).slug) }} className="text-xs text-brand hover:underline truncate block">
               {conv.listings.title}
             </Link>
           )}

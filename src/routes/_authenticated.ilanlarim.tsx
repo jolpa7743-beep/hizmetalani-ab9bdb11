@@ -8,6 +8,8 @@ import { CATEGORY_MAP, formatPrice, type CategoryKey, type ListingType } from "@
 import { Eye, Pencil, Trash2, Plus, Sparkles, Flame } from "lucide-react";
 import { toast } from "sonner";
 import { PromoteDialog } from "@/components/PromoteDialog";
+import { listingSlug } from "@/lib/slug";
+
 
 export const Route = createFileRoute("/_authenticated/ilanlarim")({
   component: MyListings,
@@ -15,7 +17,7 @@ export const Route = createFileRoute("/_authenticated/ilanlarim")({
 });
 
 type MyListing = {
-  id: string; title: string; category: CategoryKey; type: ListingType;
+  id: string; slug: string; title: string; category: CategoryKey; type: ListingType;
   city: string; district: string | null; price: number | null; price_type: string;
   status: "active" | "paused" | "closed"; view_count: number; created_at: string;
   is_featured?: boolean; is_urgent?: boolean; is_showcase?: boolean;
@@ -31,7 +33,7 @@ function MyListings() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("listings")
-        .select("id,title,category,type,city,district,price,price_type,status,view_count,created_at,is_featured,is_urgent,is_showcase")
+        .select("id,slug,title,category,type,city,district,price,price_type,status,view_count,created_at,is_featured,is_urgent,is_showcase")
         .eq("user_id", user!.id)
         .order("created_at", { ascending: false });
       if (error) throw error;
@@ -101,7 +103,7 @@ function MyListings() {
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Link to="/ilan/$id" params={{ id: l.id }}>
+              <Link to="/ilan/$id" params={{ id: listingSlug(l.title, l.id, l.slug) }}>
                 <Button variant="outline" size="sm"><Eye className="size-4" /></Button>
               </Link>
               {l.status === "active" && <PromoteDialog listingId={l.id} listingTitle={l.title} />}

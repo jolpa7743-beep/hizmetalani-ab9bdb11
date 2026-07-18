@@ -154,7 +154,7 @@ export const getMyPromotions = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("listing_promotions" as never)
-      .select("*, promotion_packages(name, kind), listings(title), payments(status, method, reference)")
+      .select("*, promotion_packages(name, kind), listings(title, slug), payments(status, method, reference)")
       .eq("user_id", context.userId)
       .order("created_at", { ascending: false });
     if (error) throw new Error(error.message);

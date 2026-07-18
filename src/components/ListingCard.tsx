@@ -5,7 +5,9 @@ import { listingSlug } from "@/lib/slug";
 
 export type ListingRow = {
   id: string;
+  slug?: string | null;
   user_id?: string;
+
   title: string;
   type: ListingType;
   category: CategoryKey;
@@ -42,7 +44,7 @@ export function ListingCard({
   return (
     <Link
       to="/ilan/$id"
-      params={{ id: listingSlug(item.title, item.id) }}
+      params={{ id: listingSlug(item.title, item.id, item.slug) }}
       aria-label={`${item.title} — ${item.city}${item.district ? ` / ${item.district}` : ""}`}
       className="group flex flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-[var(--shadow-elevated)] focus-visible:-translate-y-0.5"
     >

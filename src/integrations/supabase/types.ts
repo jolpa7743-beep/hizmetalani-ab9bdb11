@@ -383,6 +383,7 @@ export type Database = {
           salary_min: number | null
           salary_period: string | null
           showcase_until: string | null
+          slug: string
           status: Database["public"]["Enums"]["listing_status"]
           title: string
           type: Database["public"]["Enums"]["listing_type"]
@@ -422,6 +423,7 @@ export type Database = {
           salary_min?: number | null
           salary_period?: string | null
           showcase_until?: string | null
+          slug?: string
           status?: Database["public"]["Enums"]["listing_status"]
           title: string
           type: Database["public"]["Enums"]["listing_type"]
@@ -461,6 +463,7 @@ export type Database = {
           salary_min?: number | null
           salary_period?: string | null
           showcase_until?: string | null
+          slug?: string
           status?: Database["public"]["Enums"]["listing_status"]
           title?: string
           type?: Database["public"]["Enums"]["listing_type"]
@@ -1276,6 +1279,7 @@ export type Database = {
           user_id: string
         }[]
       }
+      slugify_tr: { Args: { input: string }; Returns: string }
       track_ad_event: {
         Args: { _ad_id: string; _event: string }
         Returns: undefined

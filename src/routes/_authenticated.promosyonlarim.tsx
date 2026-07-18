@@ -4,6 +4,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, Clock, CheckCircle2, XCircle } from "lucide-react";
 import { getMyPromotions } from "@/lib/promotions.functions";
+import { listingSlug } from "@/lib/slug";
+
 
 export const Route = createFileRoute("/_authenticated/promosyonlarim")({
   component: MyPromotions,
@@ -18,7 +20,7 @@ type PromoRow = {
   created_at: string;
   listing_id: string;
   promotion_packages: { name: string; kind: string } | null;
-  listings: { title: string } | null;
+  listings: { title: string; slug: string | null } | null;
   payments: Array<{ status: string; method: string; reference: string }>;
 };
 
@@ -60,7 +62,7 @@ function MyPromotions() {
                 <Badge variant="outline">{r.promotion_packages?.name ?? "—"}</Badge>
                 {pay && <span className="text-xs font-mono text-muted-foreground">{pay.reference}</span>}
               </div>
-              <Link to="/ilan/$id" params={{ id: r.listing_id }} className="font-semibold hover:text-brand block truncate">
+              <Link to="/ilan/$id" params={{ id: listingSlug(r.listings?.title, r.listing_id, r.listings?.slug) }} className="font-semibold hover:text-brand block truncate">
                 {r.listings?.title ?? "—"}
               </Link>
               <div className="text-xs text-muted-foreground mt-1">

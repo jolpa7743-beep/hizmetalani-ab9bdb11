@@ -86,7 +86,7 @@ function HomePage() {
     queryFn: async () => {
       let query = supabase
         .from("listings")
-        .select("id, user_id, title, type, category, city, district, price, price_type, created_at, description, view_count, is_featured, is_showcase, is_urgent, boost_score", { count: "exact" })
+        .select("id, slug, user_id, title, type, category, city, district, price, price_type, created_at, description, view_count, is_featured, is_showcase, is_urgent, boost_score", { count: "exact" })
         .eq("status", "active");
 
       if (search.kategori) query = query.eq("category", search.kategori as CategoryKey);
