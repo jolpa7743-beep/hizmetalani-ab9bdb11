@@ -137,35 +137,37 @@ export function AdSlot({ slot, className = "", format = "auto", layout }: Props)
     const href = s?.ad_placeholder_url || "/iletisim";
     const title = s?.ad_placeholder_title || "Buraya Reklam Verebilirsiniz";
     const subtitle = s?.ad_placeholder_subtitle || "Markanızı binlerce ziyaretçiye ulaştırın.";
+    const phMinH = isMobile ? 70 : 90;
     return (
       <aside
         aria-label="Reklam alanı — kiralık"
-        className={`ad-slot my-6 flex justify-center ${className}`}
+        className={`ad-slot my-3 flex justify-center ${className}`}
         data-slot={slot}
         data-placeholder="1"
       >
         <a
           href={href}
-          className="group relative flex w-full max-w-4xl items-center justify-center rounded-lg border-2 border-dashed border-brand/30 bg-gradient-to-br from-brand/5 via-transparent to-brand-accent/5 px-6 py-6 text-center transition-all hover:border-brand/60 hover:bg-brand/5"
-          style={{ minHeight: minH }}
+          className="group relative flex w-full max-w-4xl items-center justify-center gap-3 rounded-md border border-dashed border-brand/30 bg-gradient-to-br from-brand/5 via-transparent to-brand-accent/5 px-4 py-2 text-center transition-all hover:border-brand/60 hover:bg-brand/5"
+          style={{ minHeight: phMinH }}
         >
-          <div>
-            <div className="text-[11px] font-semibold uppercase tracking-widest text-brand-accent">
+          <div className="flex flex-col sm:flex-row items-center gap-x-3 gap-y-0.5">
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-brand-accent">
               Reklam Alanı
-            </div>
-            <div className="mt-1 text-base sm:text-lg font-bold text-foreground">
+            </span>
+            <span className="text-sm font-bold text-foreground">
               {title}
-            </div>
-            <div className="mt-1 text-xs sm:text-sm text-muted-foreground max-w-md mx-auto">
+            </span>
+            <span className="hidden sm:inline text-xs text-muted-foreground truncate max-w-xs">
               {subtitle}
-            </div>
-            <div className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-brand group-hover:underline">
+            </span>
+            <span className="text-xs font-semibold text-brand group-hover:underline whitespace-nowrap">
               İletişime geç →
-            </div>
+            </span>
           </div>
         </a>
       </aside>
     );
+
   }
 
   return (
