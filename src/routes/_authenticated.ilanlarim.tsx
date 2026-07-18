@@ -103,7 +103,7 @@ function MyListings() {
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Link to="/ilan/$id" params={{ id: l.id }}>
+              <Link to="/ilan/$id" params={{ id: listingSlug(l.title, l.id, l.slug) }}>
                 <Button variant="outline" size="sm"><Eye className="size-4" /></Button>
               </Link>
               {l.status === "active" && <PromoteDialog listingId={l.id} listingTitle={l.title} />}
