@@ -24,7 +24,7 @@ import { AdSlot } from "@/components/AdSlot";
 import { StarRow } from "@/components/UserReviews";
 import { getUserReviews } from "@/lib/reviews.functions";
 import { getSiteSettings } from "@/lib/settings.functions";
-import { shouldShowBadge, trustBadgeMeta, type BadgeVisibility } from "@/lib/trust";
+import { trustBadgesFor, type BadgeVisibility } from "@/lib/trust";
 import { PromoteDialog } from "@/components/PromoteDialog";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -489,14 +489,19 @@ function ListingDetail() {
             </div>
             {(() => {
               const lvl = profile?.trust_level ?? (profile?.is_verified ? 1 : 0);
-              if (!shouldShowBadge(lvl, badgeVisibility)) return null;
-              const meta = trustBadgeMeta(lvl);
+              const badges = trustBadgesFor(lvl, badgeVisibility);
+              if (badges.length === 0) return null;
               return (
-                <div className={`mt-3 inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md ${meta.className}`}>
-                  <meta.icon className="size-3.5" /> {meta.label}
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {badges.map((b) => (
+                    <div key={b.level} className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md ${b.className}`}>
+                      <b.icon className="size-3.5" /> {b.label}
+                    </div>
+                  ))}
                 </div>
               );
             })()}
+
             {profile?.created_at && (
               <div className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
                 <CalendarDays className="size-3.5" />

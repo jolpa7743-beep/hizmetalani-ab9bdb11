@@ -18,7 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { Loader2, ShieldCheck, ListChecks, Star, LifeBuoy, Shield, User as UserIcon, MailCheck } from "lucide-react";
 import { StarRow } from "@/components/UserReviews";
 import { getMyReviews } from "@/lib/reviews.functions";
-import { trustBadgeMeta } from "@/lib/trust";
+import { trustBadgesFor } from "@/lib/trust";
 import { requestProfileVerification, confirmProfileVerification } from "@/lib/verification.functions";
 
 const schema = z.object({
@@ -129,20 +129,21 @@ function PersonalInfoCard() {
 
   if (loading) return <p className="text-sm text-muted-foreground">Yükleniyor...</p>;
 
-  const meta = trustBadgeMeta(trustLevel);
+  const badges = trustBadgesFor(trustLevel, "all");
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex flex-wrap items-center gap-2">
           Kişisel Bilgiler
-          {trustLevel > 0 && (
-            <span className={`inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md ${meta.className}`}>
-              <meta.icon className="size-3.5" /> {meta.label}
+          {badges.map((b) => (
+            <span key={b.level} className={`inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md ${b.className}`}>
+              <b.icon className="size-3.5" /> {b.label}
             </span>
-          )}
+          ))}
         </CardTitle>
       </CardHeader>
+
       <CardContent>
         <form onSubmit={onSubmit} className="space-y-4">
           <div>
