@@ -17,6 +17,7 @@ import { Route as KvkkRouteImport } from './routes/kvkk'
 import { Route as KullanimKosullariRouteImport } from './routes/kullanim-kosullari'
 import { Route as IletisimRouteImport } from './routes/iletisim'
 import { Route as HakkimizdaRouteImport } from './routes/hakkimizda'
+import { Route as HaftaninFirsatlariRouteImport } from './routes/haftanin-firsatlari'
 import { Route as GuvenlikRouteImport } from './routes/guvenlik'
 import { Route as GizlilikRouteImport } from './routes/gizlilik'
 import { Route as CerezPolitikasiRouteImport } from './routes/cerez-politikasi'
@@ -104,6 +105,11 @@ const IletisimRoute = IletisimRouteImport.update({
 const HakkimizdaRoute = HakkimizdaRouteImport.update({
   id: '/hakkimizda',
   path: '/hakkimizda',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HaftaninFirsatlariRoute = HaftaninFirsatlariRouteImport.update({
+  id: '/haftanin-firsatlari',
+  path: '/haftanin-firsatlari',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GuvenlikRoute = GuvenlikRouteImport.update({
@@ -374,6 +380,7 @@ export interface FileRoutesByFullPath {
   '/cerez-politikasi': typeof CerezPolitikasiRoute
   '/gizlilik': typeof GizlilikRoute
   '/guvenlik': typeof GuvenlikRoute
+  '/haftanin-firsatlari': typeof HaftaninFirsatlariRoute
   '/hakkimizda': typeof HakkimizdaRoute
   '/iletisim': typeof IletisimRoute
   '/kullanim-kosullari': typeof KullanimKosullariRoute
@@ -430,6 +437,7 @@ export interface FileRoutesByTo {
   '/cerez-politikasi': typeof CerezPolitikasiRoute
   '/gizlilik': typeof GizlilikRoute
   '/guvenlik': typeof GuvenlikRoute
+  '/haftanin-firsatlari': typeof HaftaninFirsatlariRoute
   '/hakkimizda': typeof HakkimizdaRoute
   '/iletisim': typeof IletisimRoute
   '/kullanim-kosullari': typeof KullanimKosullariRoute
@@ -488,6 +496,7 @@ export interface FileRoutesById {
   '/cerez-politikasi': typeof CerezPolitikasiRoute
   '/gizlilik': typeof GizlilikRoute
   '/guvenlik': typeof GuvenlikRoute
+  '/haftanin-firsatlari': typeof HaftaninFirsatlariRoute
   '/hakkimizda': typeof HakkimizdaRoute
   '/iletisim': typeof IletisimRoute
   '/kullanim-kosullari': typeof KullanimKosullariRoute
@@ -547,6 +556,7 @@ export interface FileRouteTypes {
     | '/cerez-politikasi'
     | '/gizlilik'
     | '/guvenlik'
+    | '/haftanin-firsatlari'
     | '/hakkimizda'
     | '/iletisim'
     | '/kullanim-kosullari'
@@ -603,6 +613,7 @@ export interface FileRouteTypes {
     | '/cerez-politikasi'
     | '/gizlilik'
     | '/guvenlik'
+    | '/haftanin-firsatlari'
     | '/hakkimizda'
     | '/iletisim'
     | '/kullanim-kosullari'
@@ -660,6 +671,7 @@ export interface FileRouteTypes {
     | '/cerez-politikasi'
     | '/gizlilik'
     | '/guvenlik'
+    | '/haftanin-firsatlari'
     | '/hakkimizda'
     | '/iletisim'
     | '/kullanim-kosullari'
@@ -719,6 +731,7 @@ export interface RootRouteChildren {
   CerezPolitikasiRoute: typeof CerezPolitikasiRoute
   GizlilikRoute: typeof GizlilikRoute
   GuvenlikRoute: typeof GuvenlikRoute
+  HaftaninFirsatlariRoute: typeof HaftaninFirsatlariRoute
   HakkimizdaRoute: typeof HakkimizdaRoute
   IletisimRoute: typeof IletisimRoute
   KullanimKosullariRoute: typeof KullanimKosullariRoute
@@ -792,6 +805,13 @@ declare module '@tanstack/react-router' {
       path: '/hakkimizda'
       fullPath: '/hakkimizda'
       preLoaderRoute: typeof HakkimizdaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/haftanin-firsatlari': {
+      id: '/haftanin-firsatlari'
+      path: '/haftanin-firsatlari'
+      fullPath: '/haftanin-firsatlari'
+      preLoaderRoute: typeof HaftaninFirsatlariRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/guvenlik': {
@@ -1235,6 +1255,7 @@ const rootRouteChildren: RootRouteChildren = {
   CerezPolitikasiRoute: CerezPolitikasiRoute,
   GizlilikRoute: GizlilikRoute,
   GuvenlikRoute: GuvenlikRoute,
+  HaftaninFirsatlariRoute: HaftaninFirsatlariRoute,
   HakkimizdaRoute: HakkimizdaRoute,
   IletisimRoute: IletisimRoute,
   KullanimKosullariRoute: KullanimKosullariRoute,
