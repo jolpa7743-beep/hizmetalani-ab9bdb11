@@ -251,6 +251,47 @@ function ListingDetail() {
   });
   const badgeVisibility: BadgeVisibility = (settings?.trust_badge_visibility as BadgeVisibility | undefined) ?? "all";
 
+  const currentId = data?.listing?.id;
+  const currentCategory = data?.listing?.category;
+  const currentCity = data?.listing?.city;
+  const currentType = data?.listing?.type;
+  const { data: similar } = useQuery({
+    queryKey: ["similar-listings", currentId, currentCategory, currentCity, currentType],
+    enabled: !!currentId && !!currentCategory,
+    queryFn: async () => {
+      const cols = "id,slug,user_id,title,type,category,city,district,price,price_type,created_at,description,view_count,is_featured,is_showcase,is_urgent,boost_score";
+      // Aynı şehir + kategori öncelikli
+      const { data: sameCity } = await supabase
+        .from("listings")
+        .select(cols)
+        .eq("status", "active")
+        .eq("category", currentCategory!)
+        .eq("city", currentCity!)
+        .neq("id", currentId!)
+        .order("is_featured", { ascending: false })
+        .order("boost_score", { ascending: false })
+        .order("created_at", { ascending: false })
+        .limit(6);
+      let rows = (sameCity ?? []) as ListingRow[];
+      if (rows.length < 6) {
+        const { data: fallback } = await supabase
+          .from("listings")
+          .select(cols)
+          .eq("status", "active")
+          .eq("category", currentCategory!)
+          .neq("id", currentId!)
+          .order("is_featured", { ascending: false })
+          .order("boost_score", { ascending: false })
+          .order("created_at", { ascending: false })
+          .limit(6 - rows.length + rows.length);
+        const existing = new Set(rows.map((r) => r.id));
+        const extra = ((fallback ?? []) as ListingRow[]).filter((r) => !existing.has(r.id));
+        rows = [...rows, ...extra].slice(0, 6);
+      }
+      return rows;
+    },
+  });
+
   const listingUuid = data?.listing?.id ?? extractListingId(id);
   useEffect(() => {
     if (!listingUuid) return;
