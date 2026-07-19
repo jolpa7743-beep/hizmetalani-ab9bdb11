@@ -8,10 +8,10 @@ const GATEWAY = "https://connector-gateway.lovable.dev/google_search_console";
 
 // ---------------- helpers ----------------
 
-type Ctx = { supabase: { rpc: (fn: string, args: Record<string, unknown>) => Promise<{ data: unknown; error: unknown }>; from: (t: string) => unknown }; userId: string };
+type Ctx = { supabase: { rpc: (fn: string, args: Record<string, unknown>) => Promise<{ data: unknown; error: unknown }> }; userId: string };
 
 async function assertAdmin(context: unknown) {
-  const c = context as Ctx;
+  const c = context as unknown as Ctx;
   const { data, error } = await c.supabase.rpc("has_role", { _user_id: c.userId, _role: "admin" });
   if (error || !data) throw new Error("Forbidden");
 }
