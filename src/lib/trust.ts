@@ -19,12 +19,13 @@ export function shouldShowBadge(level: number, visibility: BadgeVisibility): boo
 
 export function trustBadgeMeta(level: number) {
   switch (level) {
-    case 3: return { label: "Kurumsal", icon: Building2, className: "bg-blue-600 text-white" };
-    case 2: return { label: "Güvenilir Üye", icon: Award, className: "bg-emerald-600 text-white" };
-    case 1: return { label: "Doğrulanmış", icon: ShieldCheck, className: "bg-brand text-brand-foreground" };
-    default: return { label: "", icon: BadgeCheck, className: "" };
+    case 3: return { label: "Kurumsal", icon: Building2, className: "bg-blue-600 text-white badge-animated", iconClassName: "badge-icon-anim" };
+    case 2: return { label: "Güvenilir Üye", icon: Award, className: "bg-emerald-600 text-white badge-animated", iconClassName: "badge-icon-anim" };
+    case 1: return { label: "Doğrulanmış", icon: ShieldCheck, className: "bg-brand text-brand-foreground badge-animated", iconClassName: "badge-icon-anim" };
+    default: return { label: "", icon: BadgeCheck, className: "", iconClassName: "" };
   }
 }
+
 
 /** Return all badges the user has earned up to and including their level. */
 export function trustBadgesFor(level: number, visibility: BadgeVisibility) {

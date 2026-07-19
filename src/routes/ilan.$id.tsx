@@ -495,7 +495,7 @@ function ListingDetail() {
                 <div className="mt-3 flex flex-wrap gap-1.5">
                   {badges.map((b) => (
                     <div key={b.level} className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md ${b.className}`}>
-                      <b.icon className="size-3.5" /> {b.label}
+                      <b.icon className={`size-3.5 ${b.iconClassName ?? ""}`} /> {b.label}
                     </div>
                   ))}
                 </div>
