@@ -117,14 +117,20 @@ function MemberProfile() {
                 Üyelik: {new Date(p.created_at).toLocaleDateString("tr-TR", { year: "numeric", month: "long" })}
               </span>
             </div>
-            {shouldShowBadge(lvl, badgeVisibility) && (() => {
-              const meta = trustBadgeMeta(lvl);
+            {(() => {
+              const badges = trustBadgesFor(lvl, badgeVisibility);
+              if (badges.length === 0) return null;
               return (
-                <div className={`mt-2 inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md ${meta.className}`}>
-                  <meta.icon className="size-3.5" /> {meta.label}
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {badges.map((b) => (
+                    <div key={b.level} className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md ${b.className}`}>
+                      <b.icon className="size-3.5" /> {b.label}
+                    </div>
+                  ))}
                 </div>
               );
             })()}
+
             {p.bio && <p className="mt-3 text-sm whitespace-pre-wrap text-foreground/90">{p.bio}</p>}
           </div>
         </div>
