@@ -77,6 +77,7 @@ export function AppHeader() {
                   <Plus className="size-4 mr-1" aria-hidden /> Ücretsiz İlan Ver
                 </Link>
               </Button>
+              <NotificationBell />
               <Button variant="ghost" size="icon" asChild aria-label="Mesajlar" className="min-h-11 min-w-11">
                 <Link to="/mesajlar"><MessageSquare className="size-5" aria-hidden /></Link>
               </Button>
