@@ -30,6 +30,39 @@ export const Route = createFileRoute("/rehber/evcil-hayvan-bakimi-fiyatlari")({
           publisher: { "@type": "Organization", name: "hizmetalanı.com", url: "https://hizmetalani.com" },
         }),
       },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: [
+            {
+              "@type": "Question",
+              name: "Evcil hayvan bakıcısı fiyatları ne kadar?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Türkiye'de evcil hayvan bakıcısı fiyatları 2026 itibarıyla şehir, süre ve hayvan türüne göre değişir. Gündüz ziyaretleri ortalama 250–500 TL/gün, gece konaklamalı bakım 500–900 TL/gece, haftalık uzun süreli pet sitter hizmetleri ise 3.500–6.000 TL aralığındadır.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "Fiyatı belirleyen faktörler nelerdir?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Şehir ve ilçe (İstanbul, Ankara, İzmir'de %20–40 daha yüksek), hayvan türü (köpek genellikle kediden pahalı), süre (uzun anlaşmalarda günlük ücret düşer) ve ek hizmetler (ilaç verme, veteriner takibi, tımar) fiyatı belirler.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "Güvenilir bir pet sitter nasıl seçilir?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Profildeki puanlama ve yorumları okuyun (en az 5 gerçek değerlendirme), doğrulanmış üye rozetine bakın, kısa bir tanışma seansı yapın, yazılı anlaşma imzalayın ve ödemeyi hizmet öncesi %100 peşin göndermeyin.",
+              },
+            },
+          ],
+        }),
+      },
     ],
   }),
 });

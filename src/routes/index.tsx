@@ -61,9 +61,9 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "HizmetAlanı — Türkiye'nin Güvenilir Hizmet İlan Platformu" },
-      { name: "description", content: "Bakıcı, temizlik, tadilat, nakliye ve evde bakım hizmetlerini doğrulanmış üyelerle güvenle bulun. Komisyonsuz, ücretsiz, 81 ilde aktif Türkiye'nin lider hizmet ilan platformu." },
+      { name: "description", content: "Bakıcı, temizlik, tadilat ve nakliye hizmetlerini doğrulanmış üyelerle güvenle bulun. Komisyonsuz, ücretsiz, 81 ilde aktif ilan platformu." },
       { property: "og:title", content: "HizmetAlanı — Türkiye'nin Güvenilir Hizmet İlan Platformu" },
-      { property: "og:description", content: "Bakıcı, temizlik, tadilat, nakliye ve evde bakım hizmetlerini doğrulanmış üyelerle güvenle bulun. Komisyonsuz, ücretsiz, 81 ilde aktif Türkiye'nin lider hizmet ilan platformu." },
+      { property: "og:description", content: "Bakıcı, temizlik, tadilat ve nakliye hizmetlerini doğrulanmış üyelerle güvenle bulun. Komisyonsuz, ücretsiz, 81 ilde aktif ilan platformu." },
       { property: "og:url", content: "https://hizmetalani.com/" },
     ],
     links: [{ rel: "canonical", href: "https://hizmetalani.com/" }],

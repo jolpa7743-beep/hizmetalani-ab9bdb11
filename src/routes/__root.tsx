@@ -98,7 +98,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       ? `${s.site_name} — Türkiye'nin Güvenilir Hizmet İlan Platformu`
       : "hizmetalanı.com — Türkiye'nin Güvenilir Hizmet İlan Platformu";
     const description = s?.site_description
-      ?? "Bakıcı, temizlik, tadilat, nakliye ve evde bakım gibi profesyonel hizmet ilanlarını doğrulanmış üyelerle güvenle bulun. Komisyonsuz, ücretsiz ve 81 ile hizmet veren Türkiye'nin lider hizmet ilan platformu.";
+      ?? "Bakıcı, temizlik, tadilat ve nakliye ilanlarını doğrulanmış üyelerle güvenle bulun. Komisyonsuz, ücretsiz, 81 ilde aktif hizmet ilan platformu.";
     const keywords = s?.site_keywords ?? "hizmet ilanları, bakıcı ilanları, çocuk bakıcısı, yaşlı bakıcısı, hasta bakıcısı, ev temizliği, ofis temizliği, tadilat, nakliye, evcil hayvan bakıcısı, doğrulanmış hizmet, güvenilir usta, İstanbul hizmet ilanı, Ankara hizmet, İzmir hizmet, evde bakım";
     const ogImage = s?.og_image_url || ogDefault;
 
