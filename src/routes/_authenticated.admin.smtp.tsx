@@ -72,7 +72,7 @@ function AdminSmtp() {
         <h1 className="text-2xl font-bold flex items-center gap-2"><Mail className="size-5" /> SMTP Ayarları</h1>
         <p className="text-sm text-muted-foreground mt-1">
           Kendi hosting sağlayıcınızın SMTP sunucusu üzerinden uygulama içi e-posta göndermek için kullanılır.
-          Kayıt onayı ve şifre sıfırlama gibi kimlik doğrulama e-postaları buradan geçmez; onlar Lovable altyapısı üzerinden gönderilir.
+          Kayıt onayı ve şifre sıfırlama gibi kimlik doğrulama e-postaları buradan geçmez; onlar platform e-posta altyapısı üzerinden gönderilir.
         </p>
       </header>
 
