@@ -146,8 +146,8 @@ export function AppHeader() {
           <Link to="/nasil-calisir" className="block rounded-md px-3 py-3 text-base font-medium hover:bg-muted" onClick={() => setMobileOpen(false)}>
             Nasıl Çalışır?
           </Link>
-          <Link to="/istanbul" className="block rounded-md px-3 py-3 text-base font-medium hover:bg-muted" onClick={() => setMobileOpen(false)}>
-            İstanbul
+          <Link to="/haftanin-firsatlari" className="block rounded-md px-3 py-3 text-base font-medium hover:bg-muted" onClick={() => setMobileOpen(false)}>
+            <span className="inline-flex items-center gap-1"><Flame className="size-4 text-red-500" /> Haftanın Fırsatları</span>
           </Link>
           <Link to="/blog" className="block rounded-md px-3 py-3 text-base font-medium hover:bg-muted" onClick={() => setMobileOpen(false)}>
             Blog
