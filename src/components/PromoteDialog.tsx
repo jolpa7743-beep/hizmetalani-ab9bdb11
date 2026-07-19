@@ -175,8 +175,11 @@ export function PromoteDialog({ listingId, listingTitle }: { listingId: string; 
         setTotalAmount(total);
         setStep("bank");
       } else {
-        toast.info("Shopier ödeme entegrasyonu yakında aktif olacak. Şimdilik havale/EFT'yi kullanabilirsiniz.");
-        setStep("method");
+        // Shopier: kullanıcı birden fazla paket seçmişse ilk ödeme için yönlendirilir,
+        // diğerleri pending kalır (kullanıcı ilanlarım sayfasından tek tek ödeyebilir).
+        const first = results[0];
+        if (!first) throw new Error("Ödeme oluşturulamadı");
+        window.location.href = `/api/public/shopier/redirect?paymentId=${encodeURIComponent(first.payment_id)}`;
       }
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Bir hata oluştu");
