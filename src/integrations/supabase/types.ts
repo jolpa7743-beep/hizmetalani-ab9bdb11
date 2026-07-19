@@ -677,10 +677,12 @@ export type Database = {
           created_at: string
           description: string | null
           duration_hours: number
+          family: string | null
           id: string
           is_active: boolean
           kind: string
           name: string
+          original_price_try: number | null
           price_try: number
           sort_order: number
           updated_at: string
@@ -690,10 +692,12 @@ export type Database = {
           created_at?: string
           description?: string | null
           duration_hours: number
+          family?: string | null
           id?: string
           is_active?: boolean
           kind: string
           name: string
+          original_price_try?: number | null
           price_try: number
           sort_order?: number
           updated_at?: string
@@ -703,10 +707,12 @@ export type Database = {
           created_at?: string
           description?: string | null
           duration_hours?: number
+          family?: string | null
           id?: string
           is_active?: boolean
           kind?: string
           name?: string
+          original_price_try?: number | null
           price_try?: number
           sort_order?: number
           updated_at?: string
