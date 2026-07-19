@@ -7,12 +7,22 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 export type PromotionKind = "featured" | "showcase" | "urgent" | "top";
 
+export type PromotionFamily =
+  | "search_showcase"
+  | "weekly_deal"
+  | "home_showcase"
+  | "chat_showcase"
+  | "market_showcase"
+  | "boost";
+
 export type PromotionPackage = {
   id: string;
   name: string;
   kind: PromotionKind;
+  family: PromotionFamily | null;
   duration_hours: number;
   price_try: number;
+  original_price_try: number | null;
   boost_score: number;
   description: string | null;
   is_active: boolean;
