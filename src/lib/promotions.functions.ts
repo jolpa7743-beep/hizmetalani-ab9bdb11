@@ -279,6 +279,9 @@ export type ShopierSettings = {
   id: number;
   is_enabled: boolean;
   test_mode: boolean;
+  api_key: string | null;
+  api_secret: string | null;
+  website_index: number | null;
   personal_access_token: string | null;
   callback_url: string | null;
 };
@@ -310,6 +313,27 @@ export const adminSaveShopierSettings = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+// Public: PromoteDialog için Shopier'ın aktif ve yapılandırılmış olup olmadığını sorgular.
+export const getShopierPublicStatus = createServerFn({ method: "GET" }).handler(async () => {
+  const { createClient } = await import("@supabase/supabase-js");
+  const key = process.env.SUPABASE_PUBLISHABLE_KEY!;
+  const sb = createClient(process.env.SUPABASE_URL!, key, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  type Row = { is_enabled: boolean; api_key: string | null; api_secret: string | null };
+  let row: Row | null = null;
+  const r = await sb.from("shopier_settings").select("is_enabled, api_key, api_secret").eq("id", 1).maybeSingle();
+  if (r.data) row = r.data as unknown as Row;
+  if (!row) {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const r2 = await supabaseAdmin.from("shopier_settings" as never)
+      .select("is_enabled, api_key, api_secret").eq("id", 1).maybeSingle();
+    row = (r2.data ?? null) as unknown as Row | null;
+  }
+  const enabled = !!row && !!row.is_enabled && !!row.api_key && !!row.api_secret;
+  return { enabled };
+});
 
 // ============================================================
 // SPONSOR ADS

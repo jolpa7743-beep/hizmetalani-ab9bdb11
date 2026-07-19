@@ -68,6 +68,8 @@ import { Route as AuthenticatedAdminBlogRouteImport } from './routes/_authentica
 import { Route as AuthenticatedAdminBildirimlerRouteImport } from './routes/_authenticated.admin.bildirimler'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
+import { Route as ApiPublicShopierRedirectRouteImport } from './routes/api/public/shopier.redirect'
+import { Route as ApiPublicShopierCallbackRouteImport } from './routes/api/public/shopier.callback'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -384,6 +386,18 @@ const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
   path: '/lovable/email/auth/preview',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicShopierRedirectRoute =
+  ApiPublicShopierRedirectRouteImport.update({
+    id: '/api/public/shopier/redirect',
+    path: '/api/public/shopier/redirect',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicShopierCallbackRoute =
+  ApiPublicShopierCallbackRouteImport.update({
+    id: '/api/public/shopier/callback',
+    path: '/api/public/shopier/callback',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -442,6 +456,8 @@ export interface FileRoutesByFullPath {
   '/mesajlar/$id': typeof AuthenticatedMesajlarIdRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/mesajlar/': typeof AuthenticatedMesajlarIndexRoute
+  '/api/public/shopier/callback': typeof ApiPublicShopierCallbackRoute
+  '/api/public/shopier/redirect': typeof ApiPublicShopierRedirectRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
 }
@@ -500,6 +516,8 @@ export interface FileRoutesByTo {
   '/mesajlar/$id': typeof AuthenticatedMesajlarIdRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/mesajlar': typeof AuthenticatedMesajlarIndexRoute
+  '/api/public/shopier/callback': typeof ApiPublicShopierCallbackRoute
+  '/api/public/shopier/redirect': typeof ApiPublicShopierRedirectRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
 }
@@ -562,6 +580,8 @@ export interface FileRoutesById {
   '/_authenticated/mesajlar/$id': typeof AuthenticatedMesajlarIdRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/mesajlar/': typeof AuthenticatedMesajlarIndexRoute
+  '/api/public/shopier/callback': typeof ApiPublicShopierCallbackRoute
+  '/api/public/shopier/redirect': typeof ApiPublicShopierRedirectRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
 }
@@ -624,6 +644,8 @@ export interface FileRouteTypes {
     | '/mesajlar/$id'
     | '/admin/'
     | '/mesajlar/'
+    | '/api/public/shopier/callback'
+    | '/api/public/shopier/redirect'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
   fileRoutesByTo: FileRoutesByTo
@@ -682,6 +704,8 @@ export interface FileRouteTypes {
     | '/mesajlar/$id'
     | '/admin'
     | '/mesajlar'
+    | '/api/public/shopier/callback'
+    | '/api/public/shopier/redirect'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
   id:
@@ -743,6 +767,8 @@ export interface FileRouteTypes {
     | '/_authenticated/mesajlar/$id'
     | '/_authenticated/admin/'
     | '/_authenticated/mesajlar/'
+    | '/api/public/shopier/callback'
+    | '/api/public/shopier/redirect'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
   fileRoutesById: FileRoutesById
@@ -771,6 +797,8 @@ export interface RootRouteChildren {
   RehberEvcilHayvanBakimiFiyatlariRoute: typeof RehberEvcilHayvanBakimiFiyatlariRoute
   UyeIdRoute: typeof UyeIdRoute
   IstanbulIndexRoute: typeof IstanbulIndexRoute
+  ApiPublicShopierCallbackRoute: typeof ApiPublicShopierCallbackRoute
+  ApiPublicShopierRedirectRoute: typeof ApiPublicShopierRedirectRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
 }
@@ -1190,6 +1218,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LovableEmailAuthPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/shopier/redirect': {
+      id: '/api/public/shopier/redirect'
+      path: '/api/public/shopier/redirect'
+      fullPath: '/api/public/shopier/redirect'
+      preLoaderRoute: typeof ApiPublicShopierRedirectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/shopier/callback': {
+      id: '/api/public/shopier/callback'
+      path: '/api/public/shopier/callback'
+      fullPath: '/api/public/shopier/callback'
+      preLoaderRoute: typeof ApiPublicShopierCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -1312,6 +1354,8 @@ const rootRouteChildren: RootRouteChildren = {
   RehberEvcilHayvanBakimiFiyatlariRoute: RehberEvcilHayvanBakimiFiyatlariRoute,
   UyeIdRoute: UyeIdRoute,
   IstanbulIndexRoute: IstanbulIndexRoute,
+  ApiPublicShopierCallbackRoute: ApiPublicShopierCallbackRoute,
+  ApiPublicShopierRedirectRoute: ApiPublicShopierRedirectRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
 }

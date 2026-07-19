@@ -15,6 +15,7 @@ import {
   getActivePackages,
   createPromotionOrder,
   getActiveBankAccounts,
+  getShopierPublicStatus,
   type PromotionPackage,
   type PromotionFamily,
 } from "@/lib/promotions.functions";
@@ -109,6 +110,15 @@ export function PromoteDialog({ listingId, listingTitle }: { listingId: string; 
   const fetchPkgs = useServerFn(getActivePackages);
   const fetchBanks = useServerFn(getActiveBankAccounts);
   const createOrder = useServerFn(createPromotionOrder);
+  const fetchShopierStatus = useServerFn(getShopierPublicStatus);
+
+  const { data: shopierStatus } = useQuery({
+    queryKey: ["shopier-public-status"],
+    queryFn: () => fetchShopierStatus(),
+    enabled: open && step === "method",
+    staleTime: 60_000,
+  });
+  const shopierEnabled = !!shopierStatus?.enabled;
 
   const { data: packages } = useQuery({
     queryKey: ["promo-packages"],
@@ -175,8 +185,11 @@ export function PromoteDialog({ listingId, listingTitle }: { listingId: string; 
         setTotalAmount(total);
         setStep("bank");
       } else {
-        toast.info("Shopier ödeme entegrasyonu yakında aktif olacak. Şimdilik havale/EFT'yi kullanabilirsiniz.");
-        setStep("method");
+        // Shopier: kullanıcı birden fazla paket seçmişse ilk ödeme için yönlendirilir,
+        // diğerleri pending kalır (kullanıcı ilanlarım sayfasından tek tek ödeyebilir).
+        const first = results[0];
+        if (!first) throw new Error("Ödeme oluşturulamadı");
+        window.location.href = `/api/public/shopier/redirect?paymentId=${encodeURIComponent(first.payment_id)}`;
       }
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Bir hata oluştu");
@@ -329,12 +342,15 @@ export function PromoteDialog({ listingId, listingTitle }: { listingId: string; 
             <div className="grid gap-2 sm:grid-cols-2">
               <button
                 onClick={() => handleMethod("shopier")}
-                disabled={loading}
-                className="rounded-lg border-2 border-border p-4 text-left hover:border-brand/40 transition-all"
+                disabled={loading || !shopierEnabled}
+                className="rounded-lg border-2 border-border p-4 text-left hover:border-brand/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                title={shopierEnabled ? "Shopier ile öde" : "Shopier şu an kullanılamıyor"}
               >
                 <CreditCard className="size-6 text-brand mb-2" />
                 <div className="font-semibold text-sm">Kredi Kartı (Shopier)</div>
-                <p className="text-xs text-muted-foreground mt-1">Anında aktifleşir</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {shopierEnabled ? "Anında aktifleşir" : "Yönetici tarafından kapalı"}
+                </p>
               </button>
               <button
                 onClick={() => handleMethod("bank_transfer")}
