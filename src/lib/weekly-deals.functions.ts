@@ -37,22 +37,16 @@ export const getWeeklyDeals = createServerFn({ method: "GET" }).handler(async ()
     },
   });
 
-  // Aktif weekly_deal promosyonu olan ilanlar
-  const { data: promos, error: pErr } = await sb
-    .from("listing_promotions")
-    .select("listing_id, ends_at, promotion_packages!inner(family)")
-    .eq("status", "active")
-    .eq("promotion_packages.family", "weekly_deal");
+  // Aktif weekly_deal promosyon id/bitiş listesi (SECURITY DEFINER RPC ile anon erişimi)
+  const { data: promos, error: pErr } = await sb.rpc("public_weekly_deal_listings");
   if (pErr) throw new Error(pErr.message);
 
-  const ids = Array.from(new Set((promos ?? []).map((p) => (p as { listing_id: string }).listing_id)));
+  const rows = (promos ?? []) as Array<{ listing_id: string; ends_at: string | null }>;
+  const ids = Array.from(new Set(rows.map((p) => p.listing_id)));
   if (ids.length === 0) return [] as WeeklyDealListing[];
 
   const endsMap = new Map<string, string | null>();
-  for (const p of promos ?? []) {
-    const row = p as { listing_id: string; ends_at: string | null };
-    endsMap.set(row.listing_id, row.ends_at);
-  }
+  for (const p of rows) endsMap.set(p.listing_id, p.ends_at);
 
   const { data: listings, error: lErr } = await sb
     .from("listings")
