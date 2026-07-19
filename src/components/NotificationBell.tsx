@@ -114,7 +114,7 @@ export function NotificationBell() {
                 key={n.id}
                 onClick={() => {
                   handleClickItem(n);
-                  if (n.link) navigate({ to: n.link });
+                  if (n.link) navigate({ to: n.link as never });
                 }}
                 className="block w-full text-left"
               >
