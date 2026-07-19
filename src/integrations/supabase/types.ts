@@ -1348,6 +1348,7 @@ export type Database = {
           listing_id: string
         }[]
       }
+      set_my_email_verified: { Args: never; Returns: undefined }
       slugify_tr: { Args: { input: string }; Returns: string }
       track_ad_event: {
         Args: { _ad_id: string; _event: string }

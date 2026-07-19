@@ -15,10 +15,11 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, ShieldCheck, ListChecks, Star, LifeBuoy, Shield, User as UserIcon } from "lucide-react";
+import { Loader2, ShieldCheck, ListChecks, Star, LifeBuoy, Shield, User as UserIcon, MailCheck } from "lucide-react";
 import { StarRow } from "@/components/UserReviews";
 import { getMyReviews } from "@/lib/reviews.functions";
 import { trustBadgeMeta } from "@/lib/trust";
+import { requestProfileVerification, confirmProfileVerification } from "@/lib/verification.functions";
 
 const schema = z.object({
   full_name: z.string().trim().min(2, "Ad soyad en az 2 karakter").max(80),
@@ -181,8 +182,97 @@ function PersonalInfoCard() {
             Kaydet
           </Button>
         </form>
+
+        <div className="mt-6 pt-6 border-t">
+          <VerificationBlock trustLevel={trustLevel} onVerified={() => setTrustLevel((l) => Math.max(l, 1))} />
+        </div>
       </CardContent>
     </Card>
+  );
+}
+
+function VerificationBlock({ trustLevel, onVerified }: { trustLevel: number; onVerified: () => void }) {
+  const { user } = useAuth();
+  const requestFn = useServerFn(requestProfileVerification);
+  const confirmFn = useServerFn(confirmProfileVerification);
+  const [stage, setStage] = useState<"idle" | "sent">("idle");
+  const [code, setCode] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const alreadyVerified = trustLevel >= 1;
+
+  async function onSend() {
+    setBusy(true);
+    try {
+      const res = await requestFn();
+      if (!res.ok) {
+        toast.error("E-posta gönderilemedi. Lütfen destek ile iletişime geçin.");
+        return;
+      }
+      toast.success(`Doğrulama kodu ${user?.email} adresine gönderildi.`);
+      setStage("sent");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Hata");
+    } finally { setBusy(false); }
+  }
+  async function onConfirm() {
+    setBusy(true);
+    try {
+      await confirmFn({ data: { code: code.trim() } });
+      toast.success("Profiliniz doğrulandı — Doğrulanmış rozeti eklendi.");
+      setCode("");
+      setStage("idle");
+      onVerified();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Hata");
+    } finally { setBusy(false); }
+  }
+
+  if (alreadyVerified) {
+    return (
+      <div className="flex items-center gap-2 text-sm text-emerald-700">
+        <ShieldCheck className="size-5" />
+        <span>Profiliniz e-posta ile doğrulandı ve <strong>Doğrulanmış</strong> rozetine sahiptir.</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-start gap-3">
+        <MailCheck className="size-5 text-brand mt-0.5" />
+        <div>
+          <div className="font-medium">Profil Doğrulama</div>
+          <p className="text-sm text-muted-foreground">
+            E-posta adresinize gönderilen 6 haneli kodla profilinizi doğrulayın. Onay sonrası otomatik olarak
+            <strong> Doğrulanmış</strong> rozetini alırsınız.
+          </p>
+        </div>
+      </div>
+      {stage === "idle" ? (
+        <Button type="button" onClick={onSend} disabled={busy} className="bg-brand hover:bg-brand/90">
+          {busy && <Loader2 className="size-4 mr-2 animate-spin" />}
+          Doğrulama Kodu Gönder
+        </Button>
+      ) : (
+        <div className="flex flex-wrap items-center gap-2">
+          <Input
+            value={code}
+            onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+            placeholder="6 haneli kod"
+            className="max-w-[160px] tracking-widest text-center font-mono"
+            inputMode="numeric"
+          />
+          <Button type="button" onClick={onConfirm} disabled={busy || code.length !== 6} className="bg-brand hover:bg-brand/90">
+            {busy && <Loader2 className="size-4 mr-2 animate-spin" />}
+            Doğrula
+          </Button>
+          <Button type="button" variant="ghost" size="sm" onClick={onSend} disabled={busy}>
+            Kodu yeniden gönder
+          </Button>
+        </div>
+      )}
+    </div>
   );
 }
 
