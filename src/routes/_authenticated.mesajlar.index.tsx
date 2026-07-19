@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { UserAvatar } from "@/components/UserAvatar";
 import { MessageSquare } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/mesajlar/")({
@@ -70,11 +70,7 @@ function Conversations() {
               params={{ id: c.id }}
               className="flex items-center gap-3 p-3 rounded-lg border border-border bg-surface hover:border-brand/40 hover:bg-muted transition-colors"
             >
-              <Avatar>
-                <AvatarFallback className="bg-brand text-brand-foreground">
-                  {(otherName ?? "?").slice(0, 1).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+              <UserAvatar seed={otherId} name={otherName} />
               <div className="flex-1 min-w-0">
                 <div className="font-medium truncate">{otherName}</div>
                 <div className="text-xs text-muted-foreground truncate">

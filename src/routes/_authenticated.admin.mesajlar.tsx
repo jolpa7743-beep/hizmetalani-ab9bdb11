@@ -6,7 +6,7 @@ import { MessageSquare, Search, ArrowLeft, User as UserIcon } from "lucide-react
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { UserAvatar } from "@/components/UserAvatar";
 import { cn } from "@/lib/utils";
 import { adminListConversations, adminGetConversation } from "@/lib/admin.functions";
 
@@ -89,12 +89,18 @@ function AdminMessages() {
                   <Card className="hover:border-brand/50 hover:bg-muted/30 transition-colors">
                     <CardContent className="p-3 flex items-start gap-3">
                       <div className="flex -space-x-2">
-                        <Avatar className="size-9 border-2 border-background">
-                          <AvatarFallback className="bg-brand/80 text-white text-xs">{initials(c.user1.name)}</AvatarFallback>
-                        </Avatar>
-                        <Avatar className="size-9 border-2 border-background">
-                          <AvatarFallback className="bg-slate-500 text-white text-xs">{initials(c.user2.name)}</AvatarFallback>
-                        </Avatar>
+                        <UserAvatar
+                          seed={c.user1.id}
+                          name={c.user1.name}
+                          className="size-9 border-2 border-background"
+                          fallbackClassName="text-xs"
+                        />
+                        <UserAvatar
+                          seed={c.user2.id}
+                          name={c.user2.name}
+                          className="size-9 border-2 border-background"
+                          fallbackClassName="text-xs"
+                        />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
