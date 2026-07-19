@@ -25,3 +25,13 @@ export function trustBadgeMeta(level: number) {
     default: return { label: "", icon: BadgeCheck, className: "" };
   }
 }
+
+/** Return all badges the user has earned up to and including their level. */
+export function trustBadgesFor(level: number, visibility: BadgeVisibility) {
+  if (visibility === "hidden" || level < 1) return [];
+  const min = visibility === "verified_only" ? 2 : 1;
+  const badges = [];
+  for (let l = min; l <= level; l++) badges.push({ level: l, ...trustBadgeMeta(l) });
+  return badges;
+}
+
