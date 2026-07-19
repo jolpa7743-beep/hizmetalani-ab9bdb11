@@ -847,6 +847,7 @@ export type Database = {
           callback_url: string | null
           id: number
           is_enabled: boolean
+          personal_access_token: string | null
           test_mode: boolean
           updated_at: string
           website_index: number | null
@@ -857,6 +858,7 @@ export type Database = {
           callback_url?: string | null
           id?: number
           is_enabled?: boolean
+          personal_access_token?: string | null
           test_mode?: boolean
           updated_at?: string
           website_index?: number | null
@@ -867,6 +869,7 @@ export type Database = {
           callback_url?: string | null
           id?: number
           is_enabled?: boolean
+          personal_access_token?: string | null
           test_mode?: boolean
           updated_at?: string
           website_index?: number | null

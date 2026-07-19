@@ -279,11 +279,10 @@ export type ShopierSettings = {
   id: number;
   is_enabled: boolean;
   test_mode: boolean;
-  api_key: string | null;
-  api_secret: string | null;
-  website_index: number | null;
+  personal_access_token: string | null;
   callback_url: string | null;
 };
+
 
 export const adminGetShopierSettings = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
