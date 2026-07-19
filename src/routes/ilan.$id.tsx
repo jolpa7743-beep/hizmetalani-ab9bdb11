@@ -21,6 +21,7 @@ import {
 import { MapPin, Clock, ShieldCheck, MessageSquare, ArrowLeft, Eye, Tag, Building2, User as UserIcon, ShieldAlert, CalendarDays, BadgeCheck, Sparkles, Flame, Star as StarIcon, Pencil, Rocket } from "lucide-react";
 import { toast } from "sonner";
 import { AdSlot } from "@/components/AdSlot";
+import { ListingCard, type ListingRow } from "@/components/ListingCard";
 import { StarRow } from "@/components/UserReviews";
 import { getUserReviews } from "@/lib/reviews.functions";
 import { getSiteSettings } from "@/lib/settings.functions";
@@ -249,6 +250,47 @@ function ListingDetail() {
     enabled: !!ownerId,
   });
   const badgeVisibility: BadgeVisibility = (settings?.trust_badge_visibility as BadgeVisibility | undefined) ?? "all";
+
+  const currentId = data?.listing?.id;
+  const currentCategory = data?.listing?.category;
+  const currentCity = data?.listing?.city;
+  const currentType = data?.listing?.type;
+  const { data: similar } = useQuery({
+    queryKey: ["similar-listings", currentId, currentCategory, currentCity, currentType],
+    enabled: !!currentId && !!currentCategory,
+    queryFn: async () => {
+      const cols = "id,slug,user_id,title,type,category,city,district,price,price_type,created_at,description,view_count,is_featured,is_showcase,is_urgent,boost_score";
+      // Aynı şehir + kategori öncelikli
+      const { data: sameCity } = await supabase
+        .from("listings")
+        .select(cols)
+        .eq("status", "active")
+        .eq("category", currentCategory!)
+        .eq("city", currentCity!)
+        .neq("id", currentId!)
+        .order("is_featured", { ascending: false })
+        .order("boost_score", { ascending: false })
+        .order("created_at", { ascending: false })
+        .limit(6);
+      let rows = (sameCity ?? []) as ListingRow[];
+      if (rows.length < 6) {
+        const { data: fallback } = await supabase
+          .from("listings")
+          .select(cols)
+          .eq("status", "active")
+          .eq("category", currentCategory!)
+          .neq("id", currentId!)
+          .order("is_featured", { ascending: false })
+          .order("boost_score", { ascending: false })
+          .order("created_at", { ascending: false })
+          .limit(6 - rows.length + rows.length);
+        const existing = new Set(rows.map((r) => r.id));
+        const extra = ((fallback ?? []) as ListingRow[]).filter((r) => !existing.has(r.id));
+        rows = [...rows, ...extra].slice(0, 6);
+      }
+      return rows;
+    },
+  });
 
   const listingUuid = data?.listing?.id ?? extractListingId(id);
   useEffect(() => {
@@ -558,6 +600,28 @@ function ListingDetail() {
       </div>
 
       <AdSlot slot="in_article" layout="in-article" format="fluid" className="mt-8" />
+
+      {similar && similar.length > 0 && (
+        <section className="mt-10" aria-labelledby="similar-listings-heading">
+          <div className="flex items-end justify-between mb-4">
+            <h2 id="similar-listings-heading" className="text-xl font-bold">
+              Benzer İlanlar
+            </h2>
+            <Link
+              to="/"
+              search={{ category: listing.category, city: listing.city } as never}
+              className="text-sm text-brand hover:underline"
+            >
+              Tümünü gör →
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {similar.map((item) => (
+              <ListingCard key={item.id} item={item} />
+            ))}
+          </div>
+        </section>
+      )}
 
 
 
