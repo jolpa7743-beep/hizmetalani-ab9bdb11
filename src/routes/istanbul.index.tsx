@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ISTANBUL_ILCELERI } from "@/lib/istanbul-ilceler";
 import { MapPin } from "lucide-react";
 
-const BASE = "https://hizmetalani.lovable.app";
+const BASE = "https://hizmetalani.com";
 const URL = `${BASE}/istanbul`;
 
 export const Route = createFileRoute("/istanbul/")({

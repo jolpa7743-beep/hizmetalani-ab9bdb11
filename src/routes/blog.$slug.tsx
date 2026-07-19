@@ -4,7 +4,7 @@ import { getPublishedPost } from "@/lib/blog.functions";
 import { renderMarkdown } from "@/lib/markdown";
 import { Calendar, Eye, ArrowLeft } from "lucide-react";
 
-const BASE = "https://hizmetalani.lovable.app";
+const BASE = "https://hizmetalani.com";
 
 const postQuery = (slug: string) =>
   queryOptions({
