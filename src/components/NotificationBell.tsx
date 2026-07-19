@@ -109,12 +109,15 @@ export function NotificationBell() {
                 {!n.is_read && <span className="mt-1.5 size-2 rounded-full bg-brand shrink-0" />}
               </div>
             );
-            return n.link ? (
-              <Link key={n.id} to={n.link} onClick={() => handleClickItem(n)} className="block">
-                {body}
-              </Link>
-            ) : (
-              <button key={n.id} onClick={() => handleClickItem(n)} className="block w-full text-left">
+            return (
+              <button
+                key={n.id}
+                onClick={() => {
+                  handleClickItem(n);
+                  if (n.link) navigate({ to: n.link });
+                }}
+                className="block w-full text-left"
+              >
                 {body}
               </button>
             );
