@@ -601,6 +601,28 @@ function ListingDetail() {
 
       <AdSlot slot="in_article" layout="in-article" format="fluid" className="mt-8" />
 
+      {similar && similar.length > 0 && (
+        <section className="mt-10" aria-labelledby="similar-listings-heading">
+          <div className="flex items-end justify-between mb-4">
+            <h2 id="similar-listings-heading" className="text-xl font-bold">
+              Benzer İlanlar
+            </h2>
+            <Link
+              to="/"
+              search={{ category: listing.category, city: listing.city } as never}
+              className="text-sm text-brand hover:underline"
+            >
+              Tümünü gör →
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {similar.map((item) => (
+              <ListingCard key={item.id} item={item} />
+            ))}
+          </div>
+        </section>
+      )}
+
 
 
 
