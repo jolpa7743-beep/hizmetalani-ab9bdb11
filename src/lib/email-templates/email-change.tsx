@@ -34,7 +34,7 @@ export const EmailChangeEmail = ({
     <Body style={main}>
       <Container style={container}>
         <Section style={brandBar}>
-          <Text style={brandText}>hizmetalanı.com</Text>
+          <Text style={brandText}>Hizmet Alanı</Text>
         </Section>
         <Heading style={h1}>E-posta değişikliğini onaylayın</Heading>
         <Text style={text}>
