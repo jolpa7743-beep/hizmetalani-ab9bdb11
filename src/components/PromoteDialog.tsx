@@ -110,6 +110,15 @@ export function PromoteDialog({ listingId, listingTitle }: { listingId: string; 
   const fetchPkgs = useServerFn(getActivePackages);
   const fetchBanks = useServerFn(getActiveBankAccounts);
   const createOrder = useServerFn(createPromotionOrder);
+  const fetchShopierStatus = useServerFn(getShopierPublicStatus);
+
+  const { data: shopierStatus } = useQuery({
+    queryKey: ["shopier-public-status"],
+    queryFn: () => fetchShopierStatus(),
+    enabled: open && step === "method",
+    staleTime: 60_000,
+  });
+  const shopierEnabled = !!shopierStatus?.enabled;
 
   const { data: packages } = useQuery({
     queryKey: ["promo-packages"],
