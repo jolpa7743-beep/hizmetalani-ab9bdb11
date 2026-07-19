@@ -342,12 +342,15 @@ export function PromoteDialog({ listingId, listingTitle }: { listingId: string; 
             <div className="grid gap-2 sm:grid-cols-2">
               <button
                 onClick={() => handleMethod("shopier")}
-                disabled={loading}
-                className="rounded-lg border-2 border-border p-4 text-left hover:border-brand/40 transition-all"
+                disabled={loading || !shopierEnabled}
+                className="rounded-lg border-2 border-border p-4 text-left hover:border-brand/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                title={shopierEnabled ? "Shopier ile öde" : "Shopier şu an kullanılamıyor"}
               >
                 <CreditCard className="size-6 text-brand mb-2" />
                 <div className="font-semibold text-sm">Kredi Kartı (Shopier)</div>
-                <p className="text-xs text-muted-foreground mt-1">Anında aktifleşir</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {shopierEnabled ? "Anında aktifleşir" : "Yönetici tarafından kapalı"}
+                </p>
               </button>
               <button
                 onClick={() => handleMethod("bank_transfer")}
