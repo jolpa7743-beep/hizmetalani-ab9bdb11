@@ -15,10 +15,11 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, ShieldCheck, ListChecks, Star, LifeBuoy, Shield, User as UserIcon } from "lucide-react";
+import { Loader2, ShieldCheck, ListChecks, Star, LifeBuoy, Shield, User as UserIcon, MailCheck } from "lucide-react";
 import { StarRow } from "@/components/UserReviews";
 import { getMyReviews } from "@/lib/reviews.functions";
 import { trustBadgeMeta } from "@/lib/trust";
+import { requestProfileVerification, confirmProfileVerification } from "@/lib/verification.functions";
 
 const schema = z.object({
   full_name: z.string().trim().min(2, "Ad soyad en az 2 karakter").max(80),
