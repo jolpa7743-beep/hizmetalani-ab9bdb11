@@ -34,7 +34,7 @@ const handler = createAuthEmailHandler({
         }),
     },
     invite: {
-      subject: 'hizmetalanı.com platformuna davet edildiniz',
+      subject: 'Hizmet Alanı platformuna davet edildiniz',
       render: (data) =>
         React.createElement(InviteEmail, {
           siteName: SITE_NAME,
