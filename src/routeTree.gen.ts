@@ -30,6 +30,7 @@ import { Route as IstanbulIndexRouteImport } from './routes/istanbul.index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as UyeIdRouteImport } from './routes/uye.$id'
 import { Route as RehberEvcilHayvanBakimiFiyatlariRouteImport } from './routes/rehber.evcil-hayvan-bakimi-fiyatlari'
+import { Route as RehberBakiciUcretleriRouteImport } from './routes/rehber.bakici-ucretleri'
 import { Route as IstanbulIlceRouteImport } from './routes/istanbul.$ilce'
 import { Route as IlanIdRouteImport } from './routes/ilan.$id'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
@@ -172,6 +173,11 @@ const RehberEvcilHayvanBakimiFiyatlariRoute =
     path: '/rehber/evcil-hayvan-bakimi-fiyatlari',
     getParentRoute: () => rootRouteImport,
   } as any)
+const RehberBakiciUcretleriRoute = RehberBakiciUcretleriRouteImport.update({
+  id: '/rehber/bakici-ucretleri',
+  path: '/rehber/bakici-ucretleri',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IstanbulIlceRoute = IstanbulIlceRouteImport.update({
   id: '/istanbul/$ilce',
   path: '/istanbul/$ilce',
@@ -398,6 +404,7 @@ export interface FileRoutesByFullPath {
   '/blog/$slug': typeof BlogSlugRoute
   '/ilan/$id': typeof IlanIdRoute
   '/istanbul/$ilce': typeof IstanbulIlceRoute
+  '/rehber/bakici-ucretleri': typeof RehberBakiciUcretleriRoute
   '/rehber/evcil-hayvan-bakimi-fiyatlari': typeof RehberEvcilHayvanBakimiFiyatlariRoute
   '/uye/$id': typeof UyeIdRoute
   '/blog/': typeof BlogIndexRoute
@@ -454,6 +461,7 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof BlogSlugRoute
   '/ilan/$id': typeof IlanIdRoute
   '/istanbul/$ilce': typeof IstanbulIlceRoute
+  '/rehber/bakici-ucretleri': typeof RehberBakiciUcretleriRoute
   '/rehber/evcil-hayvan-bakimi-fiyatlari': typeof RehberEvcilHayvanBakimiFiyatlariRoute
   '/uye/$id': typeof UyeIdRoute
   '/blog': typeof BlogIndexRoute
@@ -514,6 +522,7 @@ export interface FileRoutesById {
   '/blog/$slug': typeof BlogSlugRoute
   '/ilan/$id': typeof IlanIdRoute
   '/istanbul/$ilce': typeof IstanbulIlceRoute
+  '/rehber/bakici-ucretleri': typeof RehberBakiciUcretleriRoute
   '/rehber/evcil-hayvan-bakimi-fiyatlari': typeof RehberEvcilHayvanBakimiFiyatlariRoute
   '/uye/$id': typeof UyeIdRoute
   '/blog/': typeof BlogIndexRoute
@@ -574,6 +583,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/ilan/$id'
     | '/istanbul/$ilce'
+    | '/rehber/bakici-ucretleri'
     | '/rehber/evcil-hayvan-bakimi-fiyatlari'
     | '/uye/$id'
     | '/blog/'
@@ -630,6 +640,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/ilan/$id'
     | '/istanbul/$ilce'
+    | '/rehber/bakici-ucretleri'
     | '/rehber/evcil-hayvan-bakimi-fiyatlari'
     | '/uye/$id'
     | '/blog'
@@ -689,6 +700,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/ilan/$id'
     | '/istanbul/$ilce'
+    | '/rehber/bakici-ucretleri'
     | '/rehber/evcil-hayvan-bakimi-fiyatlari'
     | '/uye/$id'
     | '/blog/'
@@ -742,6 +754,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   IlanIdRoute: typeof IlanIdRoute
   IstanbulIlceRoute: typeof IstanbulIlceRoute
+  RehberBakiciUcretleriRoute: typeof RehberBakiciUcretleriRoute
   RehberEvcilHayvanBakimiFiyatlariRoute: typeof RehberEvcilHayvanBakimiFiyatlariRoute
   UyeIdRoute: typeof UyeIdRoute
   IstanbulIndexRoute: typeof IstanbulIndexRoute
@@ -896,6 +909,13 @@ declare module '@tanstack/react-router' {
       path: '/rehber/evcil-hayvan-bakimi-fiyatlari'
       fullPath: '/rehber/evcil-hayvan-bakimi-fiyatlari'
       preLoaderRoute: typeof RehberEvcilHayvanBakimiFiyatlariRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rehber/bakici-ucretleri': {
+      id: '/rehber/bakici-ucretleri'
+      path: '/rehber/bakici-ucretleri'
+      fullPath: '/rehber/bakici-ucretleri'
+      preLoaderRoute: typeof RehberBakiciUcretleriRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/istanbul/$ilce': {
@@ -1266,6 +1286,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   IlanIdRoute: IlanIdRoute,
   IstanbulIlceRoute: IstanbulIlceRoute,
+  RehberBakiciUcretleriRoute: RehberBakiciUcretleriRoute,
   RehberEvcilHayvanBakimiFiyatlariRoute: RehberEvcilHayvanBakimiFiyatlariRoute,
   UyeIdRoute: UyeIdRoute,
   IstanbulIndexRoute: IstanbulIndexRoute,
