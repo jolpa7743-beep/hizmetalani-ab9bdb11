@@ -145,7 +145,7 @@ function AdminSEO() {
         <CardContent className="space-y-4">
           <p className="text-xs text-muted-foreground">
             Her akışta 6 haneli kod, kullanıcının e-posta adresine sistem tarafından gönderilir. Kayıt ve şifre sıfırlama e-postaları
-            Lovable altyapısı üzerinden yollanır. Rozet için markalı e-posta gönderimi kendi domaininiz eklendiğinde aktifleşir.
+            platform e-posta altyapısı üzerinden yollanır. Rozet için markalı e-posta gönderimi kendi domaininiz eklendiğinde aktifleşir.
           </p>
           <div className="flex items-center justify-between gap-3">
             <div>
@@ -187,8 +187,8 @@ function AdminSEO() {
               <Label htmlFor="google-login" className="text-sm">Google ile Giriş</Label>
               <p className="text-xs text-muted-foreground mt-1">
                 Kapatırsanız giriş / üye ol ekranındaki "Google ile devam et" düğmesi gizlenir.
-                Google OAuth kimlik bilgileri (Client ID / Secret) Lovable Cloud tarafından otomatik yönetilir;
-                kendi Google Cloud hesabınızı kullanmak isterseniz Backend panelinden ayarlayabilirsiniz.
+                Google OAuth kimlik bilgileri (Client ID / Secret) sistem tarafından otomatik yönetilir;
+                kendi Google Cloud hesabınızı kullanmak isterseniz yönetim panelinden ayarlayabilirsiniz.
               </p>
             </div>
             <Switch id="google-login" checked={form.google_login_enabled ?? true} onCheckedChange={(v) => set("google_login_enabled", v)} />
