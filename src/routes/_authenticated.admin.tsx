@@ -102,6 +102,7 @@ function AdminLayout() {
       key: "settings", label: "Ayarlar", icon: Settings,
       items: [
         { to: "/admin/seo", label: "SEO & Reklam", icon: Search },
+        { to: "/admin/index-durumu", label: "Google İndex", icon: Globe },
         { to: "/admin/smtp", label: "SMTP / E-posta", icon: Mail },
         { to: "/admin/veri", label: "Veritabanı", icon: Database },
         { to: "/admin/dosyalar", label: "Dosya Yöneticisi", icon: HardDrive },
