@@ -1,7 +1,8 @@
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { LogOut, MessageSquare, Plus, User as UserIcon, Menu, X, LayoutList, Shield, LifeBuoy } from "lucide-react";
+import { LogOut, MessageSquare, Plus, User as UserIcon, Menu, X, LayoutList, Shield, LifeBuoy, Flame } from "lucide-react";
 import { BrandLogo } from "./BrandLogo";
+import { NotificationBell } from "./NotificationBell";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { useIsAdmin } from "@/hooks/use-is-admin";
