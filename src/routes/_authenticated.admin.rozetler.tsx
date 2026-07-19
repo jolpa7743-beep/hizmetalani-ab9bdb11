@@ -65,7 +65,7 @@ function BadgeSettings() {
             return (
               <div key={t.level} className="flex items-center gap-3 border rounded-lg p-3">
                 <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md ${meta.className}`}>
-                  <meta.icon className="size-3.5" /> {meta.label}
+                  <meta.icon className={`size-3.5 ${meta.iconClassName ?? ""}`} /> {meta.label}
                 </span>
                 <span className="text-xs text-muted-foreground">Seviye {t.level}</span>
               </div>

@@ -138,7 +138,7 @@ function PersonalInfoCard() {
           Kişisel Bilgiler
           {badges.map((b) => (
             <span key={b.level} className={`inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md ${b.className}`}>
-              <b.icon className="size-3.5" /> {b.label}
+              <b.icon className={`size-3.5 ${b.iconClassName ?? ""}`} /> {b.label}
             </span>
           ))}
         </CardTitle>

@@ -149,7 +149,7 @@ function AdminUsers() {
                           const meta = trustBadgeMeta(u.trust_level);
                           return (
                             <Badge className={`${meta.className} gap-1`}>
-                              <meta.icon className="size-3" /> {meta.label}
+                              <meta.icon className={`size-3 ${meta.iconClassName ?? ""}`} /> {meta.label}
                             </Badge>
                           );
                         })()}
