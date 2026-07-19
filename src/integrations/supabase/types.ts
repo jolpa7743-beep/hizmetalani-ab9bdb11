@@ -1338,6 +1338,13 @@ export type Database = {
       }
       mark_notifications_read: { Args: { _ids?: string[] }; Returns: number }
       notifications_unread_count: { Args: never; Returns: number }
+      public_weekly_deal_listings: {
+        Args: never
+        Returns: {
+          ends_at: string
+          listing_id: string
+        }[]
+      }
       slugify_tr: { Args: { input: string }; Returns: string }
       track_ad_event: {
         Args: { _ad_id: string; _event: string }
