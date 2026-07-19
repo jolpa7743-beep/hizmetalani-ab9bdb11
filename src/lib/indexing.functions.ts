@@ -56,7 +56,7 @@ export const listSiteUrls = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     await assertAdmin(context as never);
-    const supabase = (context as Ctx).supabase as unknown as {
+    const supabase = (context as { supabase: unknown }).supabase as {
       from: (t: string) => {
         select: (c: string) => {
           eq: (k: string, v: unknown) => Promise<{ data: Array<{ slug: string | null; title: string | null }> | null }>;
