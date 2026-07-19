@@ -26,7 +26,7 @@ export const RecoveryEmail = ({ siteName, confirmationUrl }: RecoveryEmailProps)
     <Body style={main}>
       <Container style={container}>
         <Section style={brandBar}>
-          <Text style={brandText}>hizmetalanı.com</Text>
+          <Text style={brandText}>Hizmet Alanı</Text>
         </Section>
         <Heading style={h1}>Şifrenizi sıfırlayın</Heading>
         <Text style={text}>

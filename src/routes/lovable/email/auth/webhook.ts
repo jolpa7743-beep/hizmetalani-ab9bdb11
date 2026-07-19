@@ -9,7 +9,7 @@ import { EmailChangeEmail } from '@/lib/email-templates/email-change'
 import { ReauthenticationEmail } from '@/lib/email-templates/reauthentication'
 
 // Configuration
-const SITE_NAME = "hizmetalani"
+const SITE_NAME = "Hizmet Alanı"
 const SENDER_DOMAIN = "notify.hizmetalani.com"
 const ROOT_DOMAIN = "hizmetalani.com"
 const FROM_DOMAIN = "hizmetalani.com"
@@ -34,7 +34,7 @@ const handler = createAuthEmailHandler({
         }),
     },
     invite: {
-      subject: 'hizmetalanı.com platformuna davet edildiniz',
+      subject: 'Hizmet Alanı platformuna davet edildiniz',
       render: (data) =>
         React.createElement(InviteEmail, {
           siteName: SITE_NAME,

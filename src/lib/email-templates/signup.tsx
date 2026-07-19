@@ -33,7 +33,7 @@ export const SignupEmail = ({
     <Body style={main}>
       <Container style={container}>
         <Section style={brandBar}>
-          <Text style={brandText}>hizmetalanı.com</Text>
+          <Text style={brandText}>Hizmet Alanı</Text>
         </Section>
         <Heading style={h1}>Aramıza hoş geldiniz</Heading>
         <Text style={text}>

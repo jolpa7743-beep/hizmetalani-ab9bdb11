@@ -23,7 +23,7 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
     <Body style={main}>
       <Container style={container}>
         <Section style={brandBar}>
-          <Text style={brandText}>hizmetalanı.com</Text>
+          <Text style={brandText}>Hizmet Alanı</Text>
         </Section>
         <Heading style={h1}>Kimliğinizi doğrulayın</Heading>
         <Text style={text}>
@@ -38,7 +38,7 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
           Bu kod kısa süre içinde geçerliliğini yitirecektir. Bu talebi siz
           yapmadıysanız, bu e-postayı güvenle görmezden gelebilirsiniz.
         </Text>
-        <Text style={footerBrand}>© hizmetalanı.com — Türkiye'nin Güvenilir Hizmet İlan Platformu</Text>
+        <Text style={footerBrand}>© Hizmet Alanı — Türkiye'nin Güvenilir Hizmet İlan Platformu</Text>
       </Container>
     </Body>
   </Html>

@@ -27,7 +27,7 @@ export const InviteEmail = ({ siteName, siteUrl, confirmationUrl }: InviteEmailP
     <Body style={main}>
       <Container style={container}>
         <Section style={brandBar}>
-          <Text style={brandText}>hizmetalanı.com</Text>
+          <Text style={brandText}>Hizmet Alanı</Text>
         </Section>
         <Heading style={h1}>Aramıza katılın</Heading>
         <Text style={text}>
