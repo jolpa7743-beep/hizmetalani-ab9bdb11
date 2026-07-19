@@ -72,11 +72,6 @@ function WeeklyDealsPage() {
           </div>
         )}
 
-        {!isLoading && (data?.length ?? 0) > 0 && !data!.some((d) => d.weekly_ends_at) && (
-          <div className="mb-4 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-            Bu hafta henüz Haftanın Fırsatı dopingi alınmadı. Bunun yerine sizin için öne çıkan seçkin ilanları listeliyoruz.
-          </div>
-        )}
 
 
         {!isLoading && (data?.length ?? 0) > 0 && (
