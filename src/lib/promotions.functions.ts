@@ -321,17 +321,17 @@ export const getShopierPublicStatus = createServerFn({ method: "GET" }).handler(
   const sb = createClient(process.env.SUPABASE_URL!, key, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
-  // Publishable ile SELECT policy'si olmayabilir; admin ile de deneyelim.
-  let row: { is_enabled: boolean; api_key: string | null; api_secret: string | null } | null = null;
+  type Row = { is_enabled: boolean; api_key: string | null; api_secret: string | null };
+  let row: Row | null = null;
   const r = await sb.from("shopier_settings").select("is_enabled, api_key, api_secret").eq("id", 1).maybeSingle();
-  if (r.data) row = r.data as typeof row;
+  if (r.data) row = r.data as unknown as Row;
   if (!row) {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const r2 = await supabaseAdmin.from("shopier_settings" as never)
       .select("is_enabled, api_key, api_secret").eq("id", 1).maybeSingle();
-    row = (r2.data ?? null) as typeof row;
+    row = (r2.data ?? null) as unknown as Row | null;
   }
-  const enabled = !!row?.is_enabled && !!row?.api_key && !!row?.api_secret;
+  const enabled = !!row && !!row.is_enabled && !!row.api_key && !!row.api_secret;
   return { enabled };
 });
 
