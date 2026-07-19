@@ -1,0 +1,1 @@
+ALTER TABLE public.shopier_settings ADD COLUMN IF NOT EXISTS personal_access_token text;
