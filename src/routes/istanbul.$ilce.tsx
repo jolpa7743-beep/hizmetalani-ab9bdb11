@@ -3,7 +3,7 @@ import { ISTANBUL_ILCELERI, getIlce } from "@/lib/istanbul-ilceler";
 import { CATEGORIES } from "@/lib/categories";
 import { Home as _Home, MapPin, ArrowRight, CheckCircle2 } from "lucide-react";
 
-const BASE = "https://hizmetalani.lovable.app";
+const BASE = "https://hizmetalani.com";
 
 export const Route = createFileRoute("/istanbul/$ilce")({
   loader: ({ params }) => {

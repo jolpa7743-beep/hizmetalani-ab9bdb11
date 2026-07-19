@@ -3,7 +3,7 @@ import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { listPublishedPosts, type BlogListItem } from "@/lib/blog.functions";
 import { Calendar, Eye, ArrowRight } from "lucide-react";
 
-const CANONICAL = "https://hizmetalani.lovable.app/blog";
+const CANONICAL = "https://hizmetalani.com/blog";
 
 const postsQuery = queryOptions({
   queryKey: ["blog-published"],
