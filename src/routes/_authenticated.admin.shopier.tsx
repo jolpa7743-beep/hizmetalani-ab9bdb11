@@ -39,7 +39,7 @@ function ShopierAdmin() {
         <CreditCard className="size-6 text-brand" />
         <h1 className="text-2xl font-bold">Shopier Ödeme Ayarları</h1>
       </div>
-      <p className="text-sm text-muted-foreground">Shopier hesap bilgilerinizi girin. API anahtarı ve gizli anahtar Shopier panelinizden alınır.</p>
+      <p className="text-sm text-muted-foreground">Shopier panelinizden aldığınız <strong>Kişisel Erişim Anahtarı</strong>'nı girin. Tek bir token yeterlidir; ayrıca API Key veya Secret gerekmez.</p>
 
       <div className="bg-card border rounded-lg p-4 space-y-4">
         <div className="flex items-center justify-between">
@@ -50,16 +50,24 @@ function ShopierAdmin() {
           <div><Label>Test Modu</Label><p className="text-xs text-muted-foreground">Gerçek ödeme alınmaz, sadece test</p></div>
           <Switch checked={!!form.test_mode} onCheckedChange={(v) => setForm({ ...form, test_mode: v })} />
         </div>
-        <div><Label>API Key</Label><Input value={form.api_key ?? ""} onChange={(e) => setForm({ ...form, api_key: e.target.value })} placeholder="Shopier API Anahtarı" /></div>
-        <div><Label>API Secret</Label><Input type="password" value={form.api_secret ?? ""} onChange={(e) => setForm({ ...form, api_secret: e.target.value })} placeholder="Shopier Gizli Anahtar" /></div>
-        <div><Label>Website Index</Label><Input type="number" value={form.website_index ?? ""} onChange={(e) => setForm({ ...form, website_index: e.target.value ? Number(e.target.value) : null })} /></div>
+        <div>
+          <Label>Kişisel Erişim Anahtarı</Label>
+          <Input
+            type="password"
+            value={form.personal_access_token ?? ""}
+            onChange={(e) => setForm({ ...form, personal_access_token: e.target.value })}
+            placeholder="Shopier Kişisel Erişim Anahtarı (Personal Access Token)"
+          />
+          <p className="text-xs text-muted-foreground mt-1">Shopier &rarr; Ayarlar &rarr; Geliştirici / Kişisel Erişim Anahtarı bölümünden alabilirsiniz.</p>
+        </div>
         <div><Label>Callback URL</Label><Input value={form.callback_url ?? ""} onChange={(e) => setForm({ ...form, callback_url: e.target.value })} placeholder="https://hizmetalani.com/api/public/shopier/callback" /></div>
         <div className="flex justify-end"><Button onClick={submit}>Kaydet</Button></div>
       </div>
 
       <div className="text-xs text-muted-foreground bg-muted/50 p-3 rounded-lg">
-        <strong>Not:</strong> Shopier ödeme akışı, callback URL'i üzerinden webhook ile onaylanır. Kullanıcı ödemeyi tamamladığında Shopier bize otomatik bildirim gönderir ve ilgili promosyon aktif edilir.
+        <strong>Not:</strong> Ödeme çağrıları, girdiğiniz Kişisel Erişim Anahtarı ile <code>Authorization: Bearer</code> başlığı üzerinden yapılır. Anahtar yalnızca sunucu tarafında okunur, hiçbir zaman tarayıcıya gönderilmez.
       </div>
+
     </div>
   );
 }
