@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Sparkles, CreditCard, Landmark, Copy, Check, Loader2, Rocket, Flame, Star as StarIcon } from "lucide-react";
+import {
+  Sparkles, CreditCard, Landmark, Copy, Check, Loader2, Rocket, Flame,
+  Search, CalendarClock, MessageSquare, Store, TrendingUp,
+} from "lucide-react";
 import { toast } from "sonner";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
@@ -12,20 +15,92 @@ import {
   getActivePackages,
   createPromotionOrder,
   getActiveBankAccounts,
-  type PromotionKind,
+  type PromotionPackage,
+  type PromotionFamily,
 } from "@/lib/promotions.functions";
 
-const KIND_META: Record<PromotionKind, { label: string; icon: typeof Rocket; color: string }> = {
-  featured: { label: "Vitrin", icon: Sparkles, color: "bg-amber-500" },
-  showcase: { label: "Öne Çıkan", icon: StarIcon, color: "bg-brand" },
-  urgent: { label: "Acil", icon: Flame, color: "bg-red-500" },
-  top: { label: "Üst Sıra", icon: Rocket, color: "bg-purple-500" },
+type FamilyMeta = {
+  label: string;
+  title: string;
+  description: string;
+  icon: typeof Rocket;
+  gradient: string; // tailwind bg gradient utility
+  accent: string;   // border/glow color
+  tag?: string;     // like "Yeni Doping" / "En Çok Tercih"
+  tagClass?: string;
 };
+
+const FAMILY_META: Record<PromotionFamily, FamilyMeta> = {
+  search_showcase: {
+    label: "Arama Vitrin İlanı",
+    title: "Arama Vitrin İlanı",
+    description: 'İlanınızı "Arama" kutusunda en üstte sergileyebilirsiniz. Arama vitrini sayesinde ilanınız, normal ilanlara göre %70 daha fazla görüntülenme alacaktır.',
+    icon: Search,
+    gradient: "from-fuchsia-950/80 to-purple-900/60",
+    accent: "border-fuchsia-500/40",
+    tag: "Yeni Doping",
+    tagClass: "bg-pink-600 text-white",
+  },
+  weekly_deal: {
+    label: "Haftanın Fırsatı İlanı",
+    title: "Haftanın Fırsatı İlanı",
+    description: "Haftanın Fırsatı doping paketiyle ilanınız, Haftanın Fırsatları sayfasında listelenir. Satın alınan dopingler, aynı haftanın sonunda (Pazartesi 00:00) aktif hale gelir.",
+    icon: CalendarClock,
+    gradient: "from-purple-950/80 to-indigo-900/60",
+    accent: "border-purple-500/40",
+    tag: "Yeni Doping",
+    tagClass: "bg-pink-600 text-white",
+  },
+  home_showcase: {
+    label: "Vitrin İlanı",
+    title: "Vitrin İlanı",
+    description: "Vitrin dopingi ile ilanınız ana sayfa vitrininde en üstte sergilenir. Yeni bir vitrin dopingi satın alınmasında süre üzerine eklenecektir.",
+    icon: Rocket,
+    gradient: "from-slate-900/80 to-cyan-950/60",
+    accent: "border-cyan-500/40",
+    tag: "En Çok Tercih Edilen",
+    tagClass: "bg-red-600 text-white",
+  },
+  chat_showcase: {
+    label: "Sohbet & Bildirim Vitrin İlanı",
+    title: "Sohbet & Bildirim Vitrin İlanı",
+    description: "Sohbet & Bildirim vitrini sayesinde ilanınız mesajlarım ve bildirimlerim sayfasının altında listelenecek ve %75'e yakın oranda daha fazla görüntülenme alacaktır.",
+    icon: MessageSquare,
+    gradient: "from-emerald-950/80 to-teal-900/60",
+    accent: "border-emerald-500/40",
+  },
+  market_showcase: {
+    label: "Pazar Vitrini",
+    title: "Pazar Vitrini",
+    description: 'Bu dopingi satın alarak ilanınızı "İlan Pazarı" sayfasında en üstte sergileyebilirsiniz. Pazar vitrini sayesinde %70 daha fazla görüntülenme.',
+    icon: Store,
+    gradient: "from-indigo-950/80 to-blue-900/60",
+    accent: "border-indigo-500/40",
+  },
+  boost: {
+    label: "İlanını Öne Çıkar",
+    title: "İlanını Öne Çıkar",
+    description: "Öne çıkarılan ilanlar diğer ilanlardan daha fazla ilgi çekmektedir ve %80 oranında daha hızlı satılmaktadır. Organik sıralamanız korunur; başlık kalınlığı, arkaplan rengi vs. özel stiller uygulanır.",
+    icon: TrendingUp,
+    gradient: "from-amber-950/80 to-orange-900/60",
+    accent: "border-amber-500/40",
+  },
+};
+
+const FAMILY_ORDER: PromotionFamily[] = [
+  "search_showcase", "weekly_deal", "home_showcase", "chat_showcase", "market_showcase", "boost",
+];
+
+function formatDuration(hours: number) {
+  const days = Math.round(hours / 24);
+  return `${days} gün`;
+}
 
 export function PromoteDialog({ listingId, listingTitle }: { listingId: string; listingTitle: string }) {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<"pick" | "method" | "bank">("pick");
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  // per-family selected package id (only one duration per family)
+  const [selectedByFamily, setSelectedByFamily] = useState<Record<string, string>>({});
   const [ref, setRef] = useState<string | null>(null);
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [copied, setCopied] = useState(false);
@@ -41,7 +116,22 @@ export function PromoteDialog({ listingId, listingTitle }: { listingId: string; 
     enabled: open,
   });
 
-  const selectedPackages = (packages ?? []).filter((p) => selectedIds.includes(p.id));
+  const grouped = useMemo(() => {
+    const map: Partial<Record<PromotionFamily, PromotionPackage[]>> = {};
+    for (const p of packages ?? []) {
+      const fam = (p.family ?? "boost") as PromotionFamily;
+      (map[fam] ||= []).push(p);
+    }
+    for (const fam of Object.keys(map)) {
+      map[fam as PromotionFamily]!.sort((a, b) => a.duration_hours - b.duration_hours);
+    }
+    return map;
+  }, [packages]);
+
+  const selectedPackages = useMemo(
+    () => (packages ?? []).filter((p) => Object.values(selectedByFamily).includes(p.id)),
+    [packages, selectedByFamily],
+  );
   const total = selectedPackages.reduce((s, p) => s + Number(p.price_try), 0);
 
   const { data: banks } = useQuery({
@@ -52,14 +142,25 @@ export function PromoteDialog({ listingId, listingTitle }: { listingId: string; 
 
   const reset = () => {
     setStep("pick");
-    setSelectedIds([]);
+    setSelectedByFamily({});
     setRef(null);
     setCopied(false);
     setTotalAmount(0);
   };
 
-  const toggle = (id: string) => {
-    setSelectedIds((prev) => prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]);
+  const toggleDuration = (family: PromotionFamily, pkgId: string) => {
+    setSelectedByFamily((prev) => {
+      const next = { ...prev };
+      if (next[family] === pkgId) delete next[family];
+      else next[family] = pkgId;
+      return next;
+    });
+  };
+
+  const clearFamily = (family: PromotionFamily) => {
+    setSelectedByFamily((prev) => {
+      const n = { ...prev }; delete n[family]; return n;
+    });
   };
 
   const handleMethod = async (method: "shopier" | "bank_transfer") => {
@@ -98,53 +199,107 @@ export function PromoteDialog({ listingId, listingTitle }: { listingId: string; 
           <Sparkles className="size-4 mr-1" /> Öne Çıkar
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>İlanı Öne Çıkar</DialogTitle>
+      <DialogContent className="max-w-3xl max-h-[88vh] overflow-y-auto p-0">
+        <DialogHeader className="p-5 pb-3 border-b">
+          <DialogTitle className="flex items-center gap-2"><Flame className="size-5 text-amber-500" /> İlanı Öne Çıkar / Doping Al</DialogTitle>
           <p className="text-sm text-muted-foreground truncate">{listingTitle}</p>
         </DialogHeader>
 
         {step === "pick" && (
-          <div className="space-y-3">
-            <p className="text-sm text-muted-foreground">Birden fazla paket seçebilirsiniz — hepsi birlikte aktifleşir.</p>
-            <div className="grid gap-2 sm:grid-cols-2">
-              {(packages ?? []).map((p) => {
-                const meta = KIND_META[p.kind];
-                const Icon = meta.icon;
-                const isSel = selectedIds.includes(p.id);
-                return (
-                  <button
-                    key={p.id}
-                    onClick={() => toggle(p.id)}
-                    className={`text-left rounded-lg border-2 p-3 transition-all ${isSel ? "border-brand bg-brand/5 ring-2 ring-brand/20" : "border-border hover:border-brand/30"}`}
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className={`inline-flex size-6 items-center justify-center rounded ${meta.color} text-white`}>
-                        <Icon className="size-3.5" />
-                      </span>
-                      <Badge variant="secondary" className="text-[10px]">{meta.label}</Badge>
-                      {isSel && <Check className="size-4 text-brand ml-auto" />}
+          <div className="p-4 space-y-4">
+            <p className="text-xs text-muted-foreground">
+              Her paketten <strong>bir süre</strong> seçin. Birden fazla farklı doping alabilirsiniz — hepsi birlikte aktifleşir.
+            </p>
+
+            {FAMILY_ORDER.map((fam) => {
+              const meta = FAMILY_META[fam];
+              const list = grouped[fam] ?? [];
+              if (list.length === 0) return null;
+              const Icon = meta.icon;
+              const selectedId = selectedByFamily[fam];
+
+              return (
+                <div
+                  key={fam}
+                  className={`relative rounded-xl border ${meta.accent} bg-gradient-to-br ${meta.gradient} text-white p-4 shadow-sm`}
+                >
+                  {meta.tag && (
+                    <div className={`absolute -top-2 left-4 rounded-md px-2 py-0.5 text-[10px] font-semibold shadow ${meta.tagClass}`}>
+                      {meta.tag}
                     </div>
-                    <div className="font-semibold text-sm">{p.name}</div>
-                    {p.description && <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{p.description}</p>}
-                    <div className="mt-2 text-lg font-bold text-brand tabular-nums">{p.price_try.toLocaleString("tr-TR")} ₺</div>
-                    <div className="text-[11px] text-muted-foreground">{p.duration_hours} saat</div>
-                  </button>
-                );
-              })}
-            </div>
+                  )}
+                  <div className="flex items-start gap-3">
+                    <div className="shrink-0 size-12 rounded-xl bg-white/10 flex items-center justify-center ring-1 ring-white/10">
+                      <Icon className="size-6 text-white/90" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-semibold">{meta.title}</div>
+                      <p className="text-xs text-white/70 mt-0.5 leading-relaxed">{meta.description}</p>
+
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        <button
+                          onClick={() => clearFamily(fam)}
+                          className={`inline-flex items-center gap-1 rounded-md px-3 py-1.5 text-xs font-medium border transition-colors ${
+                            selectedId
+                              ? "border-white/20 bg-white/5 text-white/70 hover:bg-white/10"
+                              : "border-emerald-400/60 bg-emerald-500/20 text-emerald-100"
+                          }`}
+                        >
+                          {!selectedId && <Check className="size-3.5" />}
+                          {fam === "boost" || fam === "search_showcase" || fam === "weekly_deal"
+                            ? "Öne çıkartmak istemiyorum"
+                            : "Vitrin ilanı istemiyorum"}
+                        </button>
+
+                        {list.map((p) => {
+                          const active = selectedId === p.id;
+                          const hasDiscount = p.original_price_try && Number(p.original_price_try) > Number(p.price_try);
+                          return (
+                            <button
+                              key={p.id}
+                              onClick={() => toggleDuration(fam, p.id)}
+                              className={`rounded-md px-3 py-1.5 text-xs font-medium border transition-all ${
+                                active
+                                  ? "border-brand bg-brand text-white ring-2 ring-brand/40"
+                                  : "border-white/20 bg-white/5 text-white hover:bg-white/10"
+                              }`}
+                            >
+                              <span className="opacity-90">{formatDuration(p.duration_hours)}</span>{" "}
+                              <span className="opacity-70">(</span>
+                              {hasDiscount && (
+                                <span className="line-through opacity-50 mr-1">
+                                  {Number(p.original_price_try).toLocaleString("tr-TR")}₺
+                                </span>
+                              )}
+                              <span className="font-semibold">
+                                {Number(p.price_try).toLocaleString("tr-TR", { minimumFractionDigits: 2 })}₺
+                              </span>
+                              <span className="opacity-70">)</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+
             {(packages?.length ?? 0) === 0 && (
               <p className="text-sm text-muted-foreground text-center py-6">Henüz aktif paket yok.</p>
             )}
-            {selectedPackages.length > 0 && (
-              <div className="rounded-lg bg-brand/5 border border-brand/20 p-3 flex items-center justify-between">
-                <div className="text-sm">
-                  <span className="font-medium">{selectedPackages.length} paket seçildi</span>
-                </div>
-                <div className="text-lg font-bold text-brand tabular-nums">{total.toLocaleString("tr-TR")} ₺</div>
+
+            <div className="sticky bottom-0 -mx-4 mt-4 border-t bg-background/95 backdrop-blur px-4 py-3 flex items-center justify-between">
+              <div className="text-sm">
+                {selectedPackages.length > 0 ? (
+                  <>
+                    <span className="text-muted-foreground">{selectedPackages.length} paket seçildi · </span>
+                    <span className="font-bold text-brand text-base tabular-nums">{total.toLocaleString("tr-TR", { minimumFractionDigits: 2 })} ₺</span>
+                  </>
+                ) : (
+                  <span className="text-muted-foreground">Bir veya daha fazla paket seçin</span>
+                )}
               </div>
-            )}
-            <div className="flex justify-end pt-2">
               <Button
                 disabled={selectedPackages.length === 0}
                 onClick={() => setStep("method")}
@@ -157,17 +312,17 @@ export function PromoteDialog({ listingId, listingTitle }: { listingId: string; 
         )}
 
         {step === "method" && selectedPackages.length > 0 && (
-          <div className="space-y-3">
+          <div className="p-5 space-y-3">
             <div className="rounded-lg bg-muted/50 p-3 text-sm space-y-1">
               {selectedPackages.map((p) => (
                 <div key={p.id} className="flex justify-between">
-                  <span>{p.name} <span className="text-muted-foreground">({p.duration_hours} sa)</span></span>
-                  <span className="tabular-nums">{p.price_try.toLocaleString("tr-TR")} ₺</span>
+                  <span>{p.name}</span>
+                  <span className="tabular-nums">{Number(p.price_try).toLocaleString("tr-TR", { minimumFractionDigits: 2 })} ₺</span>
                 </div>
               ))}
               <div className="flex justify-between border-t pt-1 mt-1 font-bold">
                 <span>Toplam</span>
-                <span className="text-brand tabular-nums">{total.toLocaleString("tr-TR")} ₺</span>
+                <span className="text-brand tabular-nums">{total.toLocaleString("tr-TR", { minimumFractionDigits: 2 })} ₺</span>
               </div>
             </div>
             <p className="text-sm text-muted-foreground">Ödeme yöntemini seçin:</p>
@@ -199,10 +354,10 @@ export function PromoteDialog({ listingId, listingTitle }: { listingId: string; 
         )}
 
         {step === "bank" && ref && (
-          <div className="space-y-4">
+          <div className="p-5 space-y-4">
             <div className="rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-900">
               <div className="font-semibold mb-1">Ödemenizi tamamlayın</div>
-              <p>Aşağıdaki hesaplardan birine <strong>{totalAmount.toLocaleString("tr-TR")} ₺</strong> tutarını gönderin. Açıklama kısmına referans kod(lar)ını yazmayı unutmayın.</p>
+              <p>Aşağıdaki hesaplardan birine <strong>{totalAmount.toLocaleString("tr-TR", { minimumFractionDigits: 2 })} ₺</strong> tutarını gönderin. Açıklama kısmına referans kod(lar)ını yazmayı unutmayın.</p>
             </div>
 
             <div className="rounded-lg border p-3 flex items-center justify-between bg-brand/5">

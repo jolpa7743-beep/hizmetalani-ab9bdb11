@@ -67,7 +67,7 @@ function PackagesAdmin() {
                 <div><Label>Ad</Label><Input value={editing.name ?? ""} onChange={(e) => setEditing({ ...editing, name: e.target.value })} /></div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <Label>Tür</Label>
+                    <Label>Tür (kind)</Label>
                     <Select value={editing.kind} onValueChange={(v) => setEditing({ ...editing, kind: v as never })}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
@@ -78,8 +78,23 @@ function PackagesAdmin() {
                       </SelectContent>
                     </Select>
                   </div>
+                  <div>
+                    <Label>Aile (family)</Label>
+                    <Select value={editing.family ?? undefined} onValueChange={(v) => setEditing({ ...editing, family: v as never })}>
+                      <SelectTrigger><SelectValue placeholder="Seç" /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="search_showcase">Arama Vitrin</SelectItem>
+                        <SelectItem value="weekly_deal">Haftanın Fırsatı</SelectItem>
+                        <SelectItem value="home_showcase">Vitrin İlanı</SelectItem>
+                        <SelectItem value="chat_showcase">Sohbet & Bildirim Vitrin</SelectItem>
+                        <SelectItem value="market_showcase">Pazar Vitrini</SelectItem>
+                        <SelectItem value="boost">İlanını Öne Çıkar</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                   <div><Label>Süre (saat)</Label><Input type="number" value={editing.duration_hours ?? 24} onChange={(e) => setEditing({ ...editing, duration_hours: Number(e.target.value) })} /></div>
                   <div><Label>Fiyat (₺)</Label><Input type="number" step="0.01" value={editing.price_try ?? 0} onChange={(e) => setEditing({ ...editing, price_try: Number(e.target.value) })} /></div>
+                  <div><Label>İndirim Öncesi Fiyat (₺)</Label><Input type="number" step="0.01" value={editing.original_price_try ?? ""} onChange={(e) => setEditing({ ...editing, original_price_try: e.target.value ? Number(e.target.value) : null })} /></div>
                   <div><Label>Boost Puanı</Label><Input type="number" value={editing.boost_score ?? 100} onChange={(e) => setEditing({ ...editing, boost_score: Number(e.target.value) })} /></div>
                   <div><Label>Sıra</Label><Input type="number" value={editing.sort_order ?? 0} onChange={(e) => setEditing({ ...editing, sort_order: Number(e.target.value) })} /></div>
                   <div className="flex items-end gap-2"><input type="checkbox" id="pkg-active" checked={!!editing.is_active} onChange={(e) => setEditing({ ...editing, is_active: e.target.checked })} /><Label htmlFor="pkg-active">Aktif</Label></div>
