@@ -18,7 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { Loader2, ShieldCheck, ListChecks, Star, LifeBuoy, Shield, User as UserIcon, MailCheck } from "lucide-react";
 import { StarRow } from "@/components/UserReviews";
 import { getMyReviews } from "@/lib/reviews.functions";
-import { trustBadgeMeta } from "@/lib/trust";
+import { trustBadgesFor } from "@/lib/trust";
 import { requestProfileVerification, confirmProfileVerification } from "@/lib/verification.functions";
 
 const schema = z.object({
