@@ -51,7 +51,9 @@ export function AppHeader() {
             İlanlar
           </Link>
           <Link to="/nasil-calisir" className={navLink}>Nasıl Çalışır?</Link>
-          <Link to="/istanbul" className={navLink}>İstanbul</Link>
+          <Link to="/haftanin-firsatlari" className={navLink}>
+            <span className="inline-flex items-center gap-1"><Flame className="size-3.5 text-red-500" /> Haftanın Fırsatları</span>
+          </Link>
           <Link to="/blog" className={navLink}>Blog</Link>
           <Link to="/guvenlik" className={navLink}>Güvenlik</Link>
           <Link to="/hakkimizda" className={navLink}>Hakkımızda</Link>
