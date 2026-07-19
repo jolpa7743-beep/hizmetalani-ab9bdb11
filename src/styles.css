@@ -137,3 +137,39 @@
   font-weight: 800;
   letter-spacing: -0.02em;
 }
+
+@keyframes badge-shimmer {
+  0% { background-position: -150% 0; }
+  100% { background-position: 250% 0; }
+}
+@keyframes badge-wiggle {
+  0%, 100% { transform: rotate(-6deg) scale(1); }
+  50% { transform: rotate(6deg) scale(1.15); }
+}
+@keyframes badge-glow {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, currentColor 40%, transparent); }
+  50% { box-shadow: 0 0 14px 2px color-mix(in oklab, currentColor 55%, transparent); }
+}
+
+@utility badge-animated {
+  position: relative;
+  overflow: hidden;
+  animation: badge-glow 2.4s ease-in-out infinite;
+  background-image: linear-gradient(
+    100deg,
+    color-mix(in oklab, currentColor 0%, transparent) 20%,
+    color-mix(in oklab, white 45%, transparent) 45%,
+    color-mix(in oklab, white 55%, transparent) 55%,
+    color-mix(in oklab, currentColor 0%, transparent) 80%
+  );
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  background-position: -150% 0;
+  animation: badge-shimmer 2.6s linear infinite, badge-glow 2.4s ease-in-out infinite;
+}
+@utility badge-icon-anim {
+  display: inline-block;
+  animation: badge-wiggle 1.6s ease-in-out infinite;
+  transform-origin: center;
+}
+
