@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { CATEGORY_MAP, TYPE_LABEL, formatPrice, type CategoryKey, type ListingType } from "@/lib/categories";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { UserAvatar } from "@/components/UserAvatar";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -471,11 +471,12 @@ function ListingDetail() {
         <div className="space-y-4">
           <div className="bg-surface border border-border rounded-xl p-4">
             <div className="flex items-center gap-3">
-              <Avatar className="size-12">
-                <AvatarFallback className="bg-brand text-brand-foreground">
-                  {(profile?.full_name ?? "?").slice(0, 1).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+              <UserAvatar
+                seed={listing.user_id}
+                name={profile?.full_name}
+                src={profile?.avatar_url}
+                className="size-12"
+              />
               <div className="min-w-0 flex-1">
                 <div className="font-medium truncate">
                   {profile?.full_name ?? "İlan Sahibi"}

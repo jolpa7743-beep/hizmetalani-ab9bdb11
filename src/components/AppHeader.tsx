@@ -15,7 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { UserAvatar } from "@/components/UserAvatar";
 
 export function AppHeader() {
   const { user, loading } = useAuth();
@@ -87,11 +87,12 @@ export function AppHeader() {
                     className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
                     aria-label="Hesap menüsü"
                   >
-                    <Avatar className="size-9 border border-border">
-                      <AvatarFallback className="bg-brand text-brand-foreground text-sm font-semibold">
-                        {(user.email ?? "?").slice(0, 1).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
+                    <UserAvatar
+                      seed={user.id}
+                      name={user.email}
+                      className="size-9 border border-border"
+                      fallbackClassName="text-sm"
+                    />
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">

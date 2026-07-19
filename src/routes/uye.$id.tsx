@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useServerFn } from "@tanstack/react-start";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { UserAvatar } from "@/components/UserAvatar";
 import { CalendarDays, MapPin, ArrowLeft } from "lucide-react";
 import { UserReviews } from "@/components/UserReviews";
 import { getSiteSettings } from "@/lib/settings.functions";
@@ -95,11 +95,14 @@ function MemberProfile() {
 
       <div className="bg-surface border border-border rounded-xl p-6">
         <div className="flex items-start gap-4 flex-wrap">
-          <Avatar className="size-16">
-            <AvatarFallback className="bg-brand text-brand-foreground text-lg">
-              {(p.full_name ?? "?").slice(0, 1).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
+          <UserAvatar
+            seed={p.id}
+            name={p.full_name}
+            src={p.avatar_url}
+            className="size-16"
+            fallbackClassName="text-lg"
+            size={128}
+          />
           <div className="flex-1 min-w-0">
             <h1 className="text-2xl font-bold">{p.full_name ?? "Üye"}</h1>
             <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">

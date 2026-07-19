@@ -6,7 +6,7 @@ import { MessageSquare, Search, ArrowLeft, User as UserIcon } from "lucide-react
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { UserAvatar } from "@/components/UserAvatar";
 import { cn } from "@/lib/utils";
 import { adminListConversations, adminGetConversation } from "@/lib/admin.functions";
 
