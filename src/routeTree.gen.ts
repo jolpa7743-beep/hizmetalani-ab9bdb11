@@ -59,6 +59,7 @@ import { Route as AuthenticatedAdminMesajlarRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminLoglarRouteImport } from './routes/_authenticated.admin.loglar'
 import { Route as AuthenticatedAdminKullanicilarRouteImport } from './routes/_authenticated.admin.kullanicilar'
 import { Route as AuthenticatedAdminKategorilerRouteImport } from './routes/_authenticated.admin.kategoriler'
+import { Route as AuthenticatedAdminIndexDurumuRouteImport } from './routes/_authenticated.admin.index-durumu'
 import { Route as AuthenticatedAdminIlanlarRouteImport } from './routes/_authenticated.admin.ilanlar'
 import { Route as AuthenticatedAdminHavaleRouteImport } from './routes/_authenticated.admin.havale'
 import { Route as AuthenticatedAdminDuyurularRouteImport } from './routes/_authenticated.admin.duyurular'
@@ -332,6 +333,12 @@ const AuthenticatedAdminKategorilerRoute =
     path: '/kategoriler',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminIndexDurumuRoute =
+  AuthenticatedAdminIndexDurumuRouteImport.update({
+    id: '/index-durumu',
+    path: '/index-durumu',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminIlanlarRoute =
   AuthenticatedAdminIlanlarRouteImport.update({
     id: '/ilanlar',
@@ -415,6 +422,7 @@ export interface FileRoutesByFullPath {
   '/admin/duyurular': typeof AuthenticatedAdminDuyurularRoute
   '/admin/havale': typeof AuthenticatedAdminHavaleRoute
   '/admin/ilanlar': typeof AuthenticatedAdminIlanlarRoute
+  '/admin/index-durumu': typeof AuthenticatedAdminIndexDurumuRoute
   '/admin/kategoriler': typeof AuthenticatedAdminKategorilerRoute
   '/admin/kullanicilar': typeof AuthenticatedAdminKullanicilarRoute
   '/admin/loglar': typeof AuthenticatedAdminLoglarRoute
@@ -472,6 +480,7 @@ export interface FileRoutesByTo {
   '/admin/duyurular': typeof AuthenticatedAdminDuyurularRoute
   '/admin/havale': typeof AuthenticatedAdminHavaleRoute
   '/admin/ilanlar': typeof AuthenticatedAdminIlanlarRoute
+  '/admin/index-durumu': typeof AuthenticatedAdminIndexDurumuRoute
   '/admin/kategoriler': typeof AuthenticatedAdminKategorilerRoute
   '/admin/kullanicilar': typeof AuthenticatedAdminKullanicilarRoute
   '/admin/loglar': typeof AuthenticatedAdminLoglarRoute
@@ -533,6 +542,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/duyurular': typeof AuthenticatedAdminDuyurularRoute
   '/_authenticated/admin/havale': typeof AuthenticatedAdminHavaleRoute
   '/_authenticated/admin/ilanlar': typeof AuthenticatedAdminIlanlarRoute
+  '/_authenticated/admin/index-durumu': typeof AuthenticatedAdminIndexDurumuRoute
   '/_authenticated/admin/kategoriler': typeof AuthenticatedAdminKategorilerRoute
   '/_authenticated/admin/kullanicilar': typeof AuthenticatedAdminKullanicilarRoute
   '/_authenticated/admin/loglar': typeof AuthenticatedAdminLoglarRoute
@@ -594,6 +604,7 @@ export interface FileRouteTypes {
     | '/admin/duyurular'
     | '/admin/havale'
     | '/admin/ilanlar'
+    | '/admin/index-durumu'
     | '/admin/kategoriler'
     | '/admin/kullanicilar'
     | '/admin/loglar'
@@ -651,6 +662,7 @@ export interface FileRouteTypes {
     | '/admin/duyurular'
     | '/admin/havale'
     | '/admin/ilanlar'
+    | '/admin/index-durumu'
     | '/admin/kategoriler'
     | '/admin/kullanicilar'
     | '/admin/loglar'
@@ -711,6 +723,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/duyurular'
     | '/_authenticated/admin/havale'
     | '/_authenticated/admin/ilanlar'
+    | '/_authenticated/admin/index-durumu'
     | '/_authenticated/admin/kategoriler'
     | '/_authenticated/admin/kullanicilar'
     | '/_authenticated/admin/loglar'
@@ -1114,6 +1127,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminKategorilerRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/index-durumu': {
+      id: '/_authenticated/admin/index-durumu'
+      path: '/index-durumu'
+      fullPath: '/admin/index-durumu'
+      preLoaderRoute: typeof AuthenticatedAdminIndexDurumuRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/ilanlar': {
       id: '/_authenticated/admin/ilanlar'
       path: '/ilanlar'
@@ -1180,6 +1200,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminDuyurularRoute: typeof AuthenticatedAdminDuyurularRoute
   AuthenticatedAdminHavaleRoute: typeof AuthenticatedAdminHavaleRoute
   AuthenticatedAdminIlanlarRoute: typeof AuthenticatedAdminIlanlarRoute
+  AuthenticatedAdminIndexDurumuRoute: typeof AuthenticatedAdminIndexDurumuRoute
   AuthenticatedAdminKategorilerRoute: typeof AuthenticatedAdminKategorilerRoute
   AuthenticatedAdminKullanicilarRoute: typeof AuthenticatedAdminKullanicilarRoute
   AuthenticatedAdminLoglarRoute: typeof AuthenticatedAdminLoglarRoute
@@ -1206,6 +1227,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminDuyurularRoute: AuthenticatedAdminDuyurularRoute,
   AuthenticatedAdminHavaleRoute: AuthenticatedAdminHavaleRoute,
   AuthenticatedAdminIlanlarRoute: AuthenticatedAdminIlanlarRoute,
+  AuthenticatedAdminIndexDurumuRoute: AuthenticatedAdminIndexDurumuRoute,
   AuthenticatedAdminKategorilerRoute: AuthenticatedAdminKategorilerRoute,
   AuthenticatedAdminKullanicilarRoute: AuthenticatedAdminKullanicilarRoute,
   AuthenticatedAdminLoglarRoute: AuthenticatedAdminLoglarRoute,

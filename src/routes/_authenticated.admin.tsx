@@ -8,7 +8,7 @@ import {
   Megaphone, Send, Star, Flag, ShieldCheck, Inbox, Layers, ChevronDown,
   ShieldAlert, Settings, Database, UsersRound, Mail,
   Wallet, Sparkles, Landmark, CreditCard, Image as ImageIcon,
-  BookText, HardDrive,
+  BookText, HardDrive, Globe,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { adminModerationCounts } from "@/lib/admin.functions";
