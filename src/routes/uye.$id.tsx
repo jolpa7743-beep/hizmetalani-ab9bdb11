@@ -6,7 +6,7 @@ import { UserAvatar } from "@/components/UserAvatar";
 import { CalendarDays, MapPin, ArrowLeft } from "lucide-react";
 import { UserReviews } from "@/components/UserReviews";
 import { getSiteSettings } from "@/lib/settings.functions";
-import { shouldShowBadge, trustBadgeMeta, type BadgeVisibility } from "@/lib/trust";
+import { trustBadgesFor, type BadgeVisibility } from "@/lib/trust";
 import { ListingCard, type ListingRow } from "@/components/ListingCard";
 
 type Profile = {
