@@ -358,6 +358,7 @@ export type Database = {
           available_hours: Json | null
           benefits: string[] | null
           boost_score: number
+          boosted_until: string | null
           category: Database["public"]["Enums"]["listing_category"]
           city: string
           created_at: string
@@ -368,6 +369,7 @@ export type Database = {
           featured_until: string | null
           id: string
           images: string[]
+          is_boosted: boolean
           is_featured: boolean
           is_remote: boolean
           is_showcase: boolean
@@ -398,6 +400,7 @@ export type Database = {
           available_hours?: Json | null
           benefits?: string[] | null
           boost_score?: number
+          boosted_until?: string | null
           category: Database["public"]["Enums"]["listing_category"]
           city: string
           created_at?: string
@@ -408,6 +411,7 @@ export type Database = {
           featured_until?: string | null
           id?: string
           images?: string[]
+          is_boosted?: boolean
           is_featured?: boolean
           is_remote?: boolean
           is_showcase?: boolean
@@ -438,6 +442,7 @@ export type Database = {
           available_hours?: Json | null
           benefits?: string[] | null
           boost_score?: number
+          boosted_until?: string | null
           category?: Database["public"]["Enums"]["listing_category"]
           city?: string
           created_at?: string
@@ -448,6 +453,7 @@ export type Database = {
           featured_until?: string | null
           id?: string
           images?: string[]
+          is_boosted?: boolean
           is_featured?: boolean
           is_remote?: boolean
           is_showcase?: boolean
@@ -543,6 +549,39 @@ export type Database = {
           prev_status?: string | null
           target_id?: string
           target_type?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          is_read: boolean
+          kind: string
+          link: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          kind: string
+          link?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          kind?: string
+          link?: string | null
+          title?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -1295,6 +1334,15 @@ export type Database = {
           avg_rating: number
           review_count: number
           user_id: string
+        }[]
+      }
+      mark_notifications_read: { Args: { _ids?: string[] }; Returns: number }
+      notifications_unread_count: { Args: never; Returns: number }
+      public_weekly_deal_listings: {
+        Args: never
+        Returns: {
+          ends_at: string
+          listing_id: string
         }[]
       }
       slugify_tr: { Args: { input: string }; Returns: string }

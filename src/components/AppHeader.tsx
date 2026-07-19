@@ -1,7 +1,8 @@
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { LogOut, MessageSquare, Plus, User as UserIcon, Menu, X, LayoutList, Shield, LifeBuoy } from "lucide-react";
+import { LogOut, MessageSquare, Plus, User as UserIcon, Menu, X, LayoutList, Shield, LifeBuoy, Flame } from "lucide-react";
 import { BrandLogo } from "./BrandLogo";
+import { NotificationBell } from "./NotificationBell";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { useIsAdmin } from "@/hooks/use-is-admin";
@@ -50,7 +51,9 @@ export function AppHeader() {
             İlanlar
           </Link>
           <Link to="/nasil-calisir" className={navLink}>Nasıl Çalışır?</Link>
-          <Link to="/istanbul" className={navLink}>İstanbul</Link>
+          <Link to="/haftanin-firsatlari" className={navLink}>
+            <span className="inline-flex items-center gap-1"><Flame className="size-3.5 text-red-500" /> Haftanın Fırsatları</span>
+          </Link>
           <Link to="/blog" className={navLink}>Blog</Link>
           <Link to="/guvenlik" className={navLink}>Güvenlik</Link>
           <Link to="/hakkimizda" className={navLink}>Hakkımızda</Link>
@@ -74,6 +77,7 @@ export function AppHeader() {
                   <Plus className="size-4 mr-1" aria-hidden /> Ücretsiz İlan Ver
                 </Link>
               </Button>
+              <NotificationBell />
               <Button variant="ghost" size="icon" asChild aria-label="Mesajlar" className="min-h-11 min-w-11">
                 <Link to="/mesajlar"><MessageSquare className="size-5" aria-hidden /></Link>
               </Button>
@@ -142,8 +146,8 @@ export function AppHeader() {
           <Link to="/nasil-calisir" className="block rounded-md px-3 py-3 text-base font-medium hover:bg-muted" onClick={() => setMobileOpen(false)}>
             Nasıl Çalışır?
           </Link>
-          <Link to="/istanbul" className="block rounded-md px-3 py-3 text-base font-medium hover:bg-muted" onClick={() => setMobileOpen(false)}>
-            İstanbul
+          <Link to="/haftanin-firsatlari" className="block rounded-md px-3 py-3 text-base font-medium hover:bg-muted" onClick={() => setMobileOpen(false)}>
+            <span className="inline-flex items-center gap-1"><Flame className="size-4 text-red-500" /> Haftanın Fırsatları</span>
           </Link>
           <Link to="/blog" className="block rounded-md px-3 py-3 text-base font-medium hover:bg-muted" onClick={() => setMobileOpen(false)}>
             Blog
