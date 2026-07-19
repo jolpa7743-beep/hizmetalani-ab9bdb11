@@ -33,6 +33,7 @@ function timeAgo(iso: string) {
 
 export function NotificationBell() {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
   const qc = useQueryClient();
   const fetchList = useServerFn(listMyNotifications);
   const fetchCount = useServerFn(getUnreadNotificationCount);
