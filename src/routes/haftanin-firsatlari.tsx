@@ -72,16 +72,12 @@ function WeeklyDealsPage() {
           </div>
         )}
 
-        {!isLoading && (data?.length ?? 0) === 0 && (
-          <div className="text-center py-20 border border-dashed rounded-xl bg-surface">
-            <Flame className="size-10 text-red-500/50 mx-auto mb-3" />
-            <div className="font-semibold">Bu hafta henüz fırsat ilanı yok</div>
-            <p className="text-sm text-muted-foreground mt-1 max-w-md mx-auto">
-              İlan sahipleri Haftanın Fırsatı dopingini satın aldıkça burada listelenir.
-              Pazartesi 00:00 itibarıyla aktif olan yeni fırsatları kaçırmayın.
-            </p>
+        {!isLoading && (data?.length ?? 0) > 0 && !data!.some((d) => d.weekly_ends_at) && (
+          <div className="mb-4 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            Bu hafta henüz Haftanın Fırsatı dopingi alınmadı. Bunun yerine sizin için öne çıkan seçkin ilanları listeliyoruz.
           </div>
         )}
+
 
         {!isLoading && (data?.length ?? 0) > 0 && (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

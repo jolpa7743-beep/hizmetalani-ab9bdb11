@@ -43,7 +43,20 @@ export const getWeeklyDeals = createServerFn({ method: "GET" }).handler(async ()
 
   const rows = (promos ?? []) as Array<{ listing_id: string; ends_at: string | null }>;
   const ids = Array.from(new Set(rows.map((p) => p.listing_id)));
-  if (ids.length === 0) return [] as WeeklyDealListing[];
+
+  // Fallback: aktif haftalık fırsat yoksa, öne çıkan ilanlardan 5 tane göster
+  if (ids.length === 0) {
+    const { data: fallback, error: fErr } = await sb
+      .from("listings")
+      .select("id, slug, user_id, title, type, category, city, district, price, price_type, created_at, description, view_count, is_featured, is_showcase, is_urgent, is_boosted, boost_score")
+      .eq("status", "active")
+      .order("is_featured", { ascending: false })
+      .order("boost_score", { ascending: false })
+      .order("created_at", { ascending: false })
+      .limit(5);
+    if (fErr) throw new Error(fErr.message);
+    return ((fallback ?? []) as unknown as WeeklyDealListing[]).map((l) => ({ ...l, weekly_ends_at: null }));
+  }
 
   const endsMap = new Map<string, string | null>();
   for (const p of rows) endsMap.set(p.listing_id, p.ends_at);
