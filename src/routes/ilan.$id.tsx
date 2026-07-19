@@ -24,7 +24,7 @@ import { AdSlot } from "@/components/AdSlot";
 import { StarRow } from "@/components/UserReviews";
 import { getUserReviews } from "@/lib/reviews.functions";
 import { getSiteSettings } from "@/lib/settings.functions";
-import { shouldShowBadge, trustBadgeMeta, type BadgeVisibility } from "@/lib/trust";
+import { trustBadgesFor, type BadgeVisibility } from "@/lib/trust";
 import { PromoteDialog } from "@/components/PromoteDialog";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
